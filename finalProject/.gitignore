@@ -15,7 +15,6 @@ target/
 
 ### IntelliJ IDEA ###
 application.properties
-src/main/resources/application.properties
 
 .idea
 *.iws
@@ -34,3 +33,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Mac OS ###
+.DS_Store
+
