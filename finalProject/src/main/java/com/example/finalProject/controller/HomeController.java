@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.finalProject.domain.repository.NewsRepository;
+import org.springframework.stereotype.Service;
 
 import com.example.finalProject.dto.MemberDTO;
 import com.example.finalProject.dto.MemberResponseDTO;
 import com.example.finalProject.service.MemberService;
 import com.example.finalProject.validate.CheckEmailValidator;
+import com.example.finalProject.service.NewsService;
+import com.example.finalProject.domain.entity.News;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -31,16 +35,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class HomeController {
-	
+
 	private final MemberService memberService;
 	private final CheckEmailValidator checkEmailValidator;
-	
+	private final NewsService newsService;
 
 	// 메인페이지
 	@GetMapping("/")
-	public String Home() {
+	public String Home(Model model) {
+		List<News> newsList = newsService.getAllNews(); //entity News
+		model.addAttribute("newsList", newsList);
 		return "index";
 	}
+
+//	public String Home() {
+//		return "index";
+//	}
 	
 	@GetMapping("/loginMain")
 	public String loginMain() {
