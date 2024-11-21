@@ -160,7 +160,8 @@
                 </a>
               </li>
               <li>
-                <a th:href="@{/logout/result}" sec:authorize="isAuthenticated()" class="rounded-circle bg-light p-2 mx-1">
+                <a th:href="@{/logout/result}" class="rounded-circle bg-light p-2 mx-1"
+                	th:if="${not #strings.isEmpty(session.userId2)}">
                 <img src="images/out.png" alt="outImage" style="width:24px; height:24px;">
                 </a>
               </li>
@@ -196,7 +197,8 @@
                   <!-- <div class="categories sale mb-1 pb-1">목표 설정</div> -->
                   <div class="content-wrapper col-md-7">
                     <!-- <h3 class="item-title fs-5">Baked Products</h3> -->
-                    <a href="dashboard.html" class="d-flex align-items-center nav-link">더보기<svg width="24" height="24"><use xlink:href="#arrow-right"></use></svg></a>
+                    <a th:href="@{/dashboard}" class="d-flex align-items-center nav-link"
+                    th:if="${not #strings.isEmpty(session.userId2)}">더보기<svg width="24" height="24"><use xlink:href="#arrow-right"></use></svg></a>
                   </div>
                 </div>
               </div>
@@ -813,140 +815,220 @@
     </section>
 
 
-      <section id="latest-blog" class="py-1">
-        <div class="container-fluid">
-          <div class="row">
-            <h5 class="section-title" style="margin-bottom: 50px;">김위비 님 추천 뉴스 - 생활경제</h5>
-          </div>
-          <div class="row">
-            <!-- newsList의 뒤에서 3개를 가져오도록 설정 -->
-            <div class="col-md-4" th:each="news, iterStat : ${news2List}">
-              <article class="post-item card border-0 shadow-sm p-3"
-                       th:if="${iterStat.index >= news2List.size() - 3}">
-                <div class="card-body">
-                  <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
-                    <div class="meta-categories">
-                      <svg width="16" height="16"><use xlink:href="#category"></use></svg>
-                      <span th:text="${news.pressSource}">언론사</span>
-                    </div>
-                  </div>
-                  <div class="post-header">
-                    <h3 class="post-title">
-                      <a th:if="${news.url != null}" th:href="${news.url}"
-                         class="text-decoration-none" th:text="${news.title}">뉴스 제목</a>
-                    </h3>
-                    <p th:text="${news.summary.length() > 70 ? #strings.substring(news.summary, 0, 70) + '...' : news.summary}">
-                      요약 내용이 여기에 표시됩니다.
-                    </p>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
+    <section id="latest-blog" class="py-1">
+      <div class="container-fluid">
+        <div class="row">
+          <h5 class="section-title" style="margin-bottom: 50px;"><span th:text="${session.userId2}"></span> 님 추천 뉴스 - 생활경제</h5>
         </div>
-      </section>
-      <section id="latest-blog" class="py-1">
-        <div class="container-fluid">
-          <div class="row">
-            <h5 class="section-title" style="margin-bottom: 50px;">김위비 님 추천 뉴스 - 금융</h5>
-          </div>
-          <div class="row">
-            <!-- newsList의 뒤에서 3개를 가져오도록 설정 -->
-            <div class="col-md-4" th:each="news, iterStat : ${newsList}">
-              <article class="post-item card border-0 shadow-sm p-3"
-                       th:if="${iterStat.index >= newsList.size() - 3}">
-                <div class="card-body">
-                  <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
-                    <div class="meta-categories">
-                      <svg width="16" height="16"><use xlink:href="#category"></use></svg>
-                      <span th:text="${news.pressSource}">언론사</span>
-                    </div>
-                  </div>
-                  <div class="post-header">
-                    <h3 class="post-title">
-                      <a th:if="${news.url != null}" th:href="${news.url}"
-                         class="text-decoration-none" th:text="${news.title}">뉴스 제목</a>
-                    </h3>
-                    <p th:text="${news.summary.length() > 70 ? #strings.substring(news.summary, 0, 70) + '...' : news.summary}">
-                      요약 내용이 여기에 표시됩니다.
-                    </p>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <!-- <section class="py-5">
-        <div class="container-fluid">
-
-          <div class="bg-secondary py-5 my-5 rounded-5" style="background: url('og_images/bg-leaves-img-pattern.png') no-repeat;">
-            <div class="container my-5">
-              <div class="row">
-                <div class="col-md-6 p-5">
-                  <div class="section-header">
-                    <h2 class="section-title display-4">Get <span class="text-primary">25% Discount</span> on your first purchase</h2>
-                  </div>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dictumst amet, metus, sit massa posuere maecenas. At tellus ut nunc amet vel egestas.</p>
-                </div>
-                <div class="col-md-6 p-5">
-                  <form>
-                    <div class="mb-3">
-                      <label for="name" class="form-label">Name</label>
-                      <input type="text"
-                        class="form-control form-control-lg" name="name" id="name" placeholder="Name">
-                    </div>
-                    <div class="mb-3">
-                      <label for="" class="form-label">Email</label>
-                      <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="abc@mail.com">
-                    </div>
-                    <div class="form-check form-check-inline mb-3">
-                      <label class="form-check-label" for="subscribe">
-                      <input class="form-check-input" type="checkbox" id="subscribe" value="subscribe">
-                      Subscribe to the newsletter</label>
-                    </div>
-                    <div class="d-grid gap-2">
-                      <button type="submit" class="btn btn-dark btn-lg">Submit</button>
-                    </div>
-                  </form>
-
-                </div>
-
+        <div class="row">
+          <div class="col-md-4">
+            <article class="post-item card border-0 shadow-sm p-3">
+              <div class="image-holder zoom-effect">
+                <a href="#">
+                  <img src="images/newstoday.PNG" alt="post" class="card-img-top">
+                </a>
               </div>
-
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-
-
-      <section class="py-5 my-5">
-        <div class="container-fluid">
-
-          <div class="bg-warning py-5 rounded-5" style="background-image: url('og_images/bg-pattern-2.png') no-repeat;">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-4">
-                  <img src="og_images/phone.png" alt="phone" class="image-float img-fluid">
+              <div class="card-body">
+                <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
+                  <div class="meta-date"><svg width="16" height="16"><use xlink:href="#calendar"></use></svg>22 Aug 2021</div>
+                  <div class="meta-categories"><svg width="16" height="16"><use xlink:href="#category"></use></svg>tips & tricks</div>
                 </div>
-                <div class="col-md-8">
-                  <h2 class="my-5">Shop faster with foodmart App</h2>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames semper erat ac in suspendisse iaculis. Amet blandit tortor praesent ante vitae. A, enim pretiummi senectus magna. Sagittis sed ptibus liberolectus non et psryroin.</p>
-                  <div class="d-flex gap-2 flex-wrap">
-                    <img src="og_images/app-store.jpg" alt="app-store">
-                    <img src="og_images/google-play.jpg" alt="google-play">
-                  </div>
+                <div class="post-header">
+                  <h3 class="post-title">
+                    <a href="#" class="text-decoration-none">Maximize Your Rewards:</a>
+                  </h3>
+                  <p>How to Leverage Your Card Points from This Month’s Dining and Travel...</p>
                 </div>
               </div>
+            </article>
+          </div>
+          <div class="col-md-4">
+            <article class="post-item card border-0 shadow-sm p-3">
+              <div class="image-holder zoom-effect">
+                <a href="#">
+                  <img src="images/newstoday.PNG" alt="post" class="card-img-top">
+                </a>
+              </div>
+              <div class="card-body">
+                <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
+                  <div class="meta-date"><svg width="16" height="16"><use xlink:href="#calendar"></use></svg>25 Aug 2021</div>
+                  <div class="meta-categories"><svg width="16" height="16"><use xlink:href="#category"></use></svg>trending</div>
+                </div>
+                <div class="post-header">
+                  <h3 class="post-title">
+                    <a href="#" class="text-decoration-none">Budget Check-Up:</a>
+                  </h3>
+                  <p>Essential Tips Based on Your Recent Spending in Entertainment and Groceries...</p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-4">
+            <article class="post-item card border-0 shadow-sm p-3">
+              <div class="image-holder zoom-effect">
+                <a href="#">
+                  <img src="images/newstoday.PNG" alt="post" class="card-img-top">
+                </a>
+              </div>
+              <div class="card-body">
+                <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
+                  <div class="meta-date"><svg width="16" height="16"><use xlink:href="#calendar"></use></svg>28 Aug 2021</div>
+                  <div class="meta-categories"><svg width="16" height="16"><use xlink:href="#category"></use></svg>inspiration</div>
+                </div>
+                <div class="post-header">
+                  <h3 class="post-title">
+                    <a href="#" class="text-decoration-none">Smart Savings:</a>
+                  </h3>
+                  <p>How to Reduce Utility Bills and Boost Savings This Season...</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="latest-blog" class="py-1">
+      <div class="container-fluid">
+        <div class="row">
+          <h5 class="section-title" style="margin-bottom: 50px;"><span th:text="${session.userId2}"></span> 님 추천 뉴스 - 금융</h5>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <article class="post-item card border-0 shadow-sm p-3">
+              <div class="image-holder zoom-effect">
+                <a href="#">
+                  <img src="images/newstoday.PNG" alt="post" class="card-img-top">
+                </a>
+              </div>
+              <div class="card-body">
+                <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
+                  <div class="meta-date"><svg width="16" height="16"><use xlink:href="#calendar"></use></svg>22 Aug 2021</div>
+                  <div class="meta-categories"><svg width="16" height="16"><use xlink:href="#category"></use></svg>tips & tricks</div>
+                </div>
+                <div class="post-header">
+                  <h3 class="post-title">
+                    <a href="#" class="text-decoration-none">Maximize Your Rewards:</a>
+                  </h3>
+                  <p>How to Leverage Your Card Points from This Month’s Dining and Travel...</p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-4">
+            <article class="post-item card border-0 shadow-sm p-3">
+              <div class="image-holder zoom-effect">
+                <a href="#">
+                  <img src="images/newstoday.PNG" alt="post" class="card-img-top">
+                </a>
+              </div>
+              <div class="card-body">
+                <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
+                  <div class="meta-date"><svg width="16" height="16"><use xlink:href="#calendar"></use></svg>25 Aug 2021</div>
+                  <div class="meta-categories"><svg width="16" height="16"><use xlink:href="#category"></use></svg>trending</div>
+                </div>
+                <div class="post-header">
+                  <h3 class="post-title">
+                    <a href="#" class="text-decoration-none">Budget Check-Up:</a>
+                  </h3>
+                  <p>Essential Tips Based on Your Recent Spending in Entertainment and Groceries...</p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <div class="col-md-4">
+            <article class="post-item card border-0 shadow-sm p-3">
+              <div class="image-holder zoom-effect">
+                <a href="#">
+                  <img src="images/newstoday.PNG" alt="post" class="card-img-top">
+                </a>
+              </div>
+              <div class="card-body">
+                <div class="post-meta d-flex text-uppercase gap-3 my-2 align-items-center">
+                  <div class="meta-date"><svg width="16" height="16"><use xlink:href="#calendar"></use></svg>28 Aug 2021</div>
+                  <div class="meta-categories"><svg width="16" height="16"><use xlink:href="#category"></use></svg>inspiration</div>
+                </div>
+                <div class="post-header">
+                  <h3 class="post-title">
+                    <a href="#" class="text-decoration-none">Smart Savings:</a>
+                  </h3>
+                  <p>How to Reduce Utility Bills and Boost Savings This Season...</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- <section class="py-5">
+      <div class="container-fluid">
+
+        <div class="bg-secondary py-5 my-5 rounded-5" style="background: url('og_images/bg-leaves-img-pattern.png') no-repeat;">
+          <div class="container my-5">
+            <div class="row">
+              <div class="col-md-6 p-5">
+                <div class="section-header">
+                  <h2 class="section-title display-4">Get <span class="text-primary">25% Discount</span> on your first purchase</h2>
+                </div>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dictumst amet, metus, sit massa posuere maecenas. At tellus ut nunc amet vel egestas.</p>
+              </div>
+              <div class="col-md-6 p-5">
+                <form>
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text"
+                      class="form-control form-control-lg" name="name" id="name" placeholder="Name">
+                  </div>
+                  <div class="mb-3">
+                    <label for="" class="form-label">Email</label>
+                    <input type="email" class="form-control form-control-lg" name="email" id="email" placeholder="abc@mail.com">
+                  </div>
+                  <div class="form-check form-check-inline mb-3">
+                    <label class="form-check-label" for="subscribe">
+                    <input class="form-check-input" type="checkbox" id="subscribe" value="subscribe">
+                    Subscribe to the newsletter</label>
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-dark btn-lg">Submit</button>
+                  </div>
+                </form>
+                
+              </div>
+              
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+
+
+    <section class="py-5 my-5">
+      <div class="container-fluid">
+
+        <div class="bg-warning py-5 rounded-5" style="background-image: url('og_images/bg-pattern-2.png') no-repeat;">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4">
+                <img src="og_images/phone.png" alt="phone" class="image-float img-fluid">
+              </div>
+              <div class="col-md-8">
+                <h2 class="my-5">Shop faster with foodmart App</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames semper erat ac in suspendisse iaculis. Amet blandit tortor praesent ante vitae. A, enim pretiummi senectus magna. Sagittis sed ptibus liberolectus non et psryroin.</p>
+                <div class="d-flex gap-2 flex-wrap">
+                  <img src="og_images/app-store.jpg" alt="app-store">
+                  <img src="og_images/google-play.jpg" alt="google-play">
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
-      </section> -->
+        
+      </div>
+    </section> -->
 
 
     <!-- <section class="py-5 overflow-hidden">
