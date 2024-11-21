@@ -176,4 +176,15 @@ public class HomeController {
 	public String search() {
 		return "/category/search";
 	}
+	
+    @GetMapping("/dashboard")
+    public String dashboard(Model model) {
+        try {
+            log.info("Dashboard controller called");
+            return "/dashboard/dashboard";  
+        } catch (Exception e) {
+            log.error("Error in dashboard controller", e);
+            return "error";
+        }
+    }
 }
