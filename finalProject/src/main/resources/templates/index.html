@@ -185,11 +185,22 @@
       <div class="col-md-12 d-flex justify-content-center">
         <div class="banner-blocks">
           <div class="banner-ad large bg-info block-1" style="width: 100%; height: auto; max-width: 400px;">
-            <img src="images/cat.png" style="width: 100%; height: auto; object-fit: cover;">
+            <div th:if="${not #strings.isEmpty(session.userId2)}">
+              <img th:src="'data:image/png;base64,' + ${session.fastApiImage}" style="width: 100%; height: auto; object-fit: cover;">
+            </div>
+            <div th:if="${#strings.isEmpty(session.userId2)}">
+              <img src="images/cat.png" style="width: 100%; height: auto; object-fit: cover;">
+            </div>
           </div>
           <div class="banner-ad  block-2" style="background-position: right bottom; width: 400px; border: 2px dashed; border-color:#cb7f00;">
             <div class="row banner-content p-2">
-              <div class="text">당신은 호기심 많은 고양이입니다!🐱🔍</div>
+              <div th:if="${not #strings.isEmpty(session.userId2)}">
+                <div class="text" style="font-size: 20px;" th:text="${session.fastApiPrompt}"></div>
+              </div>
+              <div th:if="${#strings.isEmpty(session.userId2)}">
+                <div class="text" style="font-size: 20px;">당신은 호기심 많은 고양이입니다!🐱🔍</div>
+              </div>
+
             </div>
           </div>
           <div class="banner-ad block-3" style="background-position: right bottom; width: 400px; border: 2px dashed; border-color:#cb7f00">
@@ -201,7 +212,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

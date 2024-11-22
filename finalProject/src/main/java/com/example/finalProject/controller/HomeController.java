@@ -105,22 +105,25 @@ public class HomeController {
 
 		try {
 			// FastAPI 호출
-		String fastApiResponse = fastApiService.sendname(userId);
+			String fastApiResponse = fastApiService.sendname(userId);
 
-		// FastAPI 호출 결과 처리
-		if (fastApiResponse != null) {
-			System.out.println("FastAPI Responsed");
+			// FastAPI 호출 결과 처리
+			if (fastApiResponse != null) {
+				System.out.println("FastAPI Responsed");
 
-			// FastAPI에서 받은 데이터를 JSON 형식으로 파싱하여 모델에 추가
-			model.addAttribute("fastApiPrompt", extractPromptFromResponse(fastApiResponse));
-			model.addAttribute("fastApiImage", extractImageFromResponse(fastApiResponse));
-		} else {
+				// FastAPI에서 받은 데이터를 JSON 형식으로 파싱하여 모델에 추가
+				String prompt = extractPromptFromResponse(fastApiResponse);
+				String image = extractImageFromResponse(fastApiResponse);
+
+				session.setAttribute("fastApiPrompt", prompt);
+				session.setAttribute("fastApiImage", image);
+			} else {
 			System.err.println("FastAPI did not return a valid response.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Error occurred while calling FastAPI.");
 		}
-	} catch (Exception e) {
-		e.printStackTrace();
-		System.err.println("Error occurred while calling FastAPI.");
-	}
 
 		return "redirect:/";
 	}
