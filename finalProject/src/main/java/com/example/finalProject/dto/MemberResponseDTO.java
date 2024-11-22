@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MemberResponseDTO {
-	
+
 	private String email;
 	private String username;
-	
+
 	@Builder
 	public MemberResponseDTO(MemberEntity member) {
 		this.email = member.getEmail();
