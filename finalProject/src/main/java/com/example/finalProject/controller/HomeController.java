@@ -1,4 +1,7 @@
 
+
+
+
 package com.example.finalProject.controller;
 
 import java.security.Principal;
@@ -19,10 +22,20 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import com.example.finalProject.dto.MemberDTO;
 import com.example.finalProject.dto.MemberResponseDTO;
 import com.example.finalProject.service.MemberService;
+
 import com.example.finalProject.validate.CheckEmailValidator;
 
 import com.example.finalProject.domain.entity.NewsEntity;
@@ -43,6 +56,7 @@ public class HomeController {
 	private final FastApiService FastApiService;
 	private final NewsService newsService;
 	private final News2Service news2Service;
+
 
 
 	// 메인페이지
@@ -66,7 +80,10 @@ public class HomeController {
 		return "members/login";
 	}
 
-	// 로그인 결과 페이지
+	@Autowired
+	private FastApiService fastApiService;
+
+	//로그인 결과
 	@GetMapping("/login/result")
 	public String dispLoginResult(Model model, HttpSession session) {
 		// 현재 사용자의 인증 상태 확인
@@ -86,48 +103,49 @@ public class HomeController {
 
 		model.addAttribute("userId", userId);
 
-		// FastAPI 호출을 세션 상태에 따라 한 번만 실행
-		if (session.getAttribute("fastApiCalled") == null) {
-			try {
-				String response = FastApiService.sendname(userId);
-				System.out.println("Response from FastAPI: " + response);
-				session.setAttribute("fastApiCalled", true); // 호출 완료 상태 저장
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println("Failed to send name to FastAPI");
-			}
+		try {
+			// FastAPI 호출
+		String fastApiResponse = fastApiService.sendname(userId);
+
+		// FastAPI 호출 결과 처리
+		if (fastApiResponse != null) {
+			System.out.println("FastAPI Responsed");
+
+			// FastAPI에서 받은 데이터를 JSON 형식으로 파싱하여 모델에 추가
+			model.addAttribute("fastApiPrompt", extractPromptFromResponse(fastApiResponse));
+			model.addAttribute("fastApiImage", extractImageFromResponse(fastApiResponse));
+		} else {
+			System.err.println("FastAPI did not return a valid response.");
 		}
+	} catch (Exception e) {
+		e.printStackTrace();
+		System.err.println("Error occurred while calling FastAPI.");
+	}
 
 		return "redirect:/";
 	}
-//	@GetMapping("/login/result")
-//	public String dispLoginResult(Model model, HttpSession session) {
-//		// 인증된 사용자 ID 가져오기
-//		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-//		System.out.println(userId);
-//
-//		// 세션에 userId 저장
-//		session.setAttribute("userId2", userId);
-//
-//		// 모델에 userId 추가 (화면에서 직접 사용할 경우)
-//		model.addAttribute("userId", userId);
-//
-//		// 로그인 후에만 FastAPI 호출
-//		if (userId != null && session.getAttribute("userId2") != null) {
-//			// FastApiService의 인스턴스를 통해 메서드 호출
-//			try {
-//				// fastApiService를 통해 sendEmail 호출
-//				String response = FastApiService.sendname(userId);
-//				System.out.println("Response from FastAPI: " + response);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				System.err.println("Failed to send email to FastAPI");
-//			}
-//		}
-//
-//		return "redirect:/";
-//	}
 
+	private String extractPromptFromResponse(String fastApiResponse) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, String> responseMap = objectMapper.readValue(fastApiResponse, Map.class);
+			return responseMap.get("prompt");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	private String extractImageFromResponse(String fastApiResponse) {
+		try {
+			// JSON 응답을 Map으로 변환
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, String> responseMap = objectMapper.readValue(fastApiResponse, Map.class);
+			return responseMap.get("image"); // "image" 키에 해당하는 값 반환
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null; // 에러 발생 시 null 반환
+		}
+	}
 
 	@GetMapping("/logout/result")
 	public String dispLogout(HttpServletRequest request) {
@@ -141,12 +159,6 @@ public class HomeController {
 
 		return "redirect:/";
 	}
-
-//    @GetMapping(value = "/login/error")
-//    public String loginError(Model model){
-//        model.addAttribute("loginErrorMsg", "아이디 또는 비밀번호를 확인해주세요");
-//        return "home";
-//    }
 
 
 	// 회원가입 페이지
