@@ -1304,7 +1304,7 @@ ol {
   font-size: 15px;
   font-weight: 500;
   padding: 16px 30px;
-  background-color: #3080E3;
+  background-color: #A6E5B1;
   color: #fff;
   border: none;
   -webkit-transition: all 0.3s ease;
@@ -2101,7 +2101,7 @@ ol {
   right: calc(50% - 1180px);
   width: 1000px;
   height: 1000px;
-  background: #3080E3;
+  background: #A6E5B1;
   position: absolute;
   border-radius: 50%;
   z-index: 1;
@@ -2119,7 +2119,7 @@ ol {
   z-index: 2;
   width: 150px;
   height: 150px;
-  background: #FAB8C4;
+  background: #97A5D3;
   position: absolute;
   border-radius: 50%;
 }
@@ -2135,7 +2135,7 @@ ol {
   left: -180px;
   width: 350px;
   height: 350px;
-  background: #fd723b;
+  background: #83CADF;
   position: absolute;
   border-radius: 50%;
 }
@@ -2151,7 +2151,7 @@ ol {
   left: 30px;
   width: 48px;
   height: 48px;
-  background: #FAB8C4;
+  background: #32A2DB;
   position: absolute;
   border-radius: 50%;
 }
@@ -2196,7 +2196,7 @@ ol {
   left: -45px;
   width: 110px;
   height: 110px;
-  background: #FAB8C4;
+  background: #00B5BD;
   position: absolute;
   border-radius: 50%;
   z-index: -1;
@@ -3005,15 +3005,19 @@ ol {
 	padding: 20px 10px;
 	padding-top: 10px;
 	margin: 10px 0;
+    display: flex; /* Flexbox 활성화 */
+    flex-direction: column; /* 아이템을 세로 방향으로 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
 	transition: box-shadow 0.3s ease-out, transform 0.3s ease-out;
 }
 
 .category-carousel .category-item img {
-	width: 40px;
-	height: 40px;
-	object-fit: contain;
-	max-width: 100%;
-	margin-top: 10px;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  max-width: 100%;
+  margin-top: 0px;
 }
 
 
@@ -3022,13 +3026,13 @@ ol {
 	box-shadow: 0px 21px 44px rgba(0, 0, 0, 0.08);
 }
 .category-carousel .category-item .category-title {
-	font-weight: 600;
-	font-size: 13px;
-	line-height: 27px;
-	letter-spacing: 0.02em;
-	text-transform: capitalize;
-	color: #222222;
-	margin-top: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 27px;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+    color: #222222;
+    margin-top: 10px; /* 간격 유지 */
 }
 
 .category-carousel .category-container {
@@ -3048,7 +3052,7 @@ ol {
 }
 
 .container-fluid {
-  max-width: 768px;
+  /* max-width: 768px; */
   margin: auto;
   margin-top: 10px;
 }
@@ -3225,7 +3229,7 @@ ol {
   height: 42px;
   width: 42px;
   border-radius: 6px;
-  background-color: #3080E3;
+  background-color: #A6E5B1;
   color: #fff;
   text-align: center;
   line-height: 42px;
