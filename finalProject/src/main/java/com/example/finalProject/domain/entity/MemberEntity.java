@@ -24,7 +24,7 @@ import lombok.Setter;
 
 @Entity
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @Table(name="member")
 public class MemberEntity {
@@ -44,7 +44,7 @@ public class MemberEntity {
 //	@Column
 //	private String birth;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 	
 	@Column

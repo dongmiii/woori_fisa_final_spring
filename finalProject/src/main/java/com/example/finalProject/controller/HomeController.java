@@ -1,45 +1,32 @@
-
-
-
-
 package com.example.finalProject.controller;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
-import com.example.finalProject.service.News2Service;
-import com.example.finalProject.service.NewsService;
-import com.example.finalProject.service.FastApiService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+import com.example.finalProject.domain.entity.News2Entity;
+import com.example.finalProject.domain.entity.NewsEntity;
+import com.example.finalProject.domain.repository.MemberRepository;
 import com.example.finalProject.dto.MemberDTO;
 import com.example.finalProject.dto.MemberResponseDTO;
+import com.example.finalProject.service.FastApiService;
 import com.example.finalProject.service.MemberService;
-
+import com.example.finalProject.service.News2Service;
+import com.example.finalProject.service.NewsService;
 import com.example.finalProject.validate.CheckEmailValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.example.finalProject.domain.entity.NewsEntity;
-import com.example.finalProject.domain.entity.News2Entity;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -52,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class HomeController {
 
 	private final MemberService memberService;
+	private final MemberRepository memberRepository;
 	private final CheckEmailValidator checkEmailValidator;
 	private final FastApiService FastApiService;
 	private final NewsService newsService;
@@ -69,6 +57,11 @@ public class HomeController {
 		return "index";
 	}
 
+	@GetMapping("/test")
+	public String test() {
+		return "layout_test";
+	}
+
 	@GetMapping("/loginMain")
 	public String loginMain() {
 		return "members/loginMain"; //view
@@ -83,29 +76,41 @@ public class HomeController {
 	@Autowired
 	private FastApiService fastApiService;
 
-	//로그인 결과
+	//	로그인 결과
 	@GetMapping("/login/result")
 	public String dispLoginResult(Model model, HttpSession session) {
 		// 현재 사용자의 인증 상태 확인
-		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+		String user = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		if (userId == null || "anonymousUser".equals(userId)) {
+		if (user == null || "anonymousUser".equals(user)) {
 			System.out.println("User not authenticated");
 			return "redirect:/login";
 		}
 
-		System.out.println("Authenticated userId: " + userId);
+		System.out.println("Authenticated userId: " + user);
 
 		// 세션에 userId 저장
-		if (session.getAttribute("userId2") == null) {
-			session.setAttribute("userId2", userId);
+		if (session.getAttribute("usermail") == null) {
+			session.setAttribute("usermail", user);
 		}
 
-		model.addAttribute("userId", userId);
+//		model.addAttribute("userId", userName);
 
 		try {
+
+			Long userId = memberService.getAutoIncrementIdByEmail(user);
+			String userName = memberService.getUsernameByEmail(user);
+
+			// 조회된 ID를 세션에 저장
+			session.setAttribute("userid", userId);
+			System.out.println("Authenticated autoID: " + userId);
+
+			session.setAttribute("username", userName);
+			System.out.println("*** username: " + userName);
+
+
 			// FastAPI 호출
-			String fastApiResponse = fastApiService.sendname(userId);
+			String fastApiResponse = fastApiService.sendname(userName);
 
 			// FastAPI 호출 결과 처리
 			if (fastApiResponse != null) {
@@ -118,7 +123,7 @@ public class HomeController {
 				session.setAttribute("fastApiPrompt", prompt);
 				session.setAttribute("fastApiImage", image);
 			} else {
-			System.err.println("FastAPI did not return a valid response.");
+				System.err.println("FastAPI did not return a valid response.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,6 +132,10 @@ public class HomeController {
 
 		return "redirect:/";
 	}
+
+
+
+
 
 	private String extractPromptFromResponse(String fastApiResponse) {
 		try {
@@ -248,5 +257,10 @@ public class HomeController {
 			log.error("Error in dashboard controller", e);
 			return "error";
 		}
+	}
+
+	@GetMapping("/calendar")
+	public String calendar() {
+		return "/calendar/calendar"; // calendar.html로 매핑
 	}
 }

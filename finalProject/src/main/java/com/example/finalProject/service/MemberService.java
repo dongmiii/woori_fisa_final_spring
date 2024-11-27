@@ -50,16 +50,40 @@ public class MemberService implements UserDetailsService{
 
         return memberRepository.save(user).getId(); // 생성된 user의 id 반환
     }
+
     public MemberEntity getMemberByUsername(String username) {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + username));
     }
+
     // userId로 이메일 조회
     public String getEmailById(Long userId) {
         MemberEntity member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
         return member.getEmail();
     }
+
+    public Long getAutoIncrementIdByEmail(String email) {
+        System.out.println("Email to search: " + email);
+        Long id = memberRepository.findIdByEmail(email);
+        if(id == null) {
+            throw new IllegalArgumentException("No user found with eamil:" + email);
+        }
+
+        return id;
+    }
+
+
+    // 이메일로 사용자 이름(username) 조회
+    public String getUsernameByEmail(String email) {
+        String username = memberRepository.findUsernameByEmail(email);
+        if (username == null) {
+            throw new IllegalArgumentException("No user found with email: " + email);
+        }
+        return username;
+    }
+
+
     // 상세 정보를 조회하는 메소드
     @Override
     @Transactional(readOnly = true)
@@ -94,11 +118,17 @@ public class MemberService implements UserDetailsService{
     // 사용자 정보를 제공하는 역할
     private UserDetails toUserDetails(MemberEntity member) {
         return User.builder()
-                .username(member.getUsername())
+                .username(member.getEmail())
                 .password(member.getPassword())
                 .authorities(new SimpleGrantedAuthority(Role.MEMBER.getValue()))
                 .build();
     }
+
+//    public UserDetails loadUserByEmail(String email) throws IllegalArgumentException {
+//        MemberEntity user = memberRepository.findByEmail(email).orElseThrow(
+//                () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다. email = " + email));
+//        return new CustomUserDetails(user);
+//    }
 
     // 회원 목록 조회
     public List<MemberResponseDTO> findMembers(){
