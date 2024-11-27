@@ -1,194 +1,322 @@
+
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>현재 위치 기반 마트 검색</title>
+    <title>현재 위치 기반 대형마트 검색</title>
     <style>
-        .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
-        .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-        .map_wrap {position:relative;width:100%;height:500px;}
+        .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:15px;}
+        .map_wrap {position:relative;width:100%;height:500px;margin-top:100px;}
         #map {width:100%;height:400px;}
-        #menu_wrap {width:100%;margin:10px 0;padding:5px;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+        #menu_wrap {width:100%;margin:20px 0;padding:5px;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
         .bg_white {background:#fff;}
-        #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
-        #placesList li {list-style: none;}
-        #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;display: flex;align-items: center;}
-        #placesList .item .markerbg {flex-shrink: 0;width:36px;height:37px;margin:10px 10px 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
-        #placesList .item .info {padding:10px;flex-grow: 1;}
-        #placesList .item .info h5 {margin: 0;font-size: 14px;}
-        #placesList .info .gray {color:#8a8a8a;}
-        #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
-        #placesList .info .tel {color:#009900;}
-        #pagination {margin:10px auto;text-align: center;}
-        #pagination a {display:inline-block;margin-right:10px;}
-        #pagination .on {font-weight: bold; cursor: default;color:#777;}
+        .toggle {cursor: pointer;margin: 10px 0;background-color: #f1f1f1;border-radius: 5px;padding: 15px;font-size: 20px;text-align: center;width: calc(100% - 30px);box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);transition: background-color 0.3s, color 0.3s;}
+        .toggle:hover {background-color: #e0e0e0;}
+        .toggle.active {background-color: #007BFF;color: white;}
+        .brand_list {display: none;padding: 0 10px;}
+        .brand_item {list-style: none;}
+        body {margin:20px;}
+        .brand_list {display: none; padding: 10px; border: 1px solid #ddd; margin-top: 10px; background-color: #f9f9f9; display: flex; gap: 10px;}
+        .list_left, .list_right {padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow-y: auto;}
+        .list_left {width: 25%; margin-right: 2%;}
+        .list_right {width: 74%; text-align: left; background-color: #f4f4f4;}
+        .no-result-message {color: red;font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
     </style>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
+
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="/css/animate.css" />
+    <link rel="stylesheet" href="/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/css/glightbox.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
+<header th:replace="fragments/header :: headerFragment"></header>
 <div class="map_wrap">
     <div id="map"></div>
     <div id="menu_wrap" class="bg_white">
         <hr>
-        <ul id="placesList"></ul>
-        <div id="pagination"></div>
+        <h1>
+            <span class="wow fadeInUp" data-wow-delay=".4s">
+                <span th:text="${session.userId2}"></span>
+                <th:block th:unless="${not #strings.isEmpty(session.userId2)}">WalletBee</th:block></span>
+            <span class="wow fadeInUp" data-wow-delay=".8s">님, 맞춤형 카드 추천이에요.</span>
+
+        </h1>
+        <div id="storeContainer">
+        </div>
     </div>
-</div>
+    <footer th:replace="fragments/footer :: footerFragment"></footer>
 
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d2eae2e7456e26e3ec04ff300351bd11&libraries=services"></script>
-<script>
-// 마커를 담을 배열입니다
-var markers = [];
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d2eae2e7456e26e3ec04ff300351bd11&libraries=services"></script>
+    <script>
+        // 마커를 담을 배열입니다
+        var markers = [];
+        var mapContainer = document.getElementById('map'),
+            mapOption = {center: new kakao.maps.LatLng(37.559724678698, 126.9818823906), level: 3};
+        var locPosition = null;
+        var bounds = new kakao.maps.LatLngBounds();
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+        var ps = new kakao.maps.services.Places();
+        var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
-var mapContainer = document.getElementById('map'), 
-    mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 기본 서울 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };  
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    locPosition = new kakao.maps.LatLng(lat, lng);
+                    map.setCenter(locPosition);
+                    searchStores(locPosition);
+                    var currentMarkerImage = new kakao.maps.MarkerImage(
+                        'https://github.com/user-attachments/assets/446c316f-528f-483c-b8d0-edeb88da0863',
+                        new kakao.maps.Size(36, 37),
+                        {offset: new kakao.maps.Point(18, 37)}
+                    );
+                    var currentMarker = new kakao.maps.Marker({
+                        position: locPosition,
+                        title: "현재 위치",
+                        image: currentMarkerImage
+                    });
+                    currentMarker.setMap(map);
+                });
+            } else {
+                alert("현재 위치 정보를 사용할 수 없습니다.");
+            }
+        }
 
-// 지도를 생성합니다    
-var map = new kakao.maps.Map(mapContainer, mapOption); 
+        function searchStores(location) {
+            ps.categorySearch('CS2', placesSearchCB, {location: location, useMapBounds: true});
+        }
 
-// 장소 검색 객체를 생성합니다
-var ps = new kakao.maps.services.Places();  
+        function placesSearchCB(data, status, pagination) {
+            if (status === kakao.maps.services.Status.OK) {
+                var currentPosition = map.getCenter();
+                data.sort(function(a, b) {
+                    var distanceA = getDistance(currentPosition, new kakao.maps.LatLng(a.y, a.x));
+                    var distanceB = getDistance(currentPosition, new kakao.maps.LatLng(b.y, b.x));
+                    return distanceA - distanceB;
+                });
+                displayStoresByBrand(data);
+                displayPagination(pagination);
+            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                alert('검색 결과가 존재하지 않습니다.');
+            } else if (status === kakao.maps.services.Status.ERROR) {
+                alert('검색 결과 중 오류가 발생했습니다.');
+            }
+        }
 
-// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+        function getDistance(loc1, loc2) {
+            var polyline = new kakao.maps.Polyline({path: [loc1, loc2]});
+            return polyline.getLength();
+        }
 
-// 현재 위치를 가져오는 함수와 그 위치로 지도를 설정하고 마트 검색을 실행하는 함수입니다
-function getCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude; 
-            var lng = position.coords.longitude; 
-            var locPosition = new kakao.maps.LatLng(lat, lng);
-            map.setCenter(locPosition); 
-            searchMarts(locPosition); // 현재 위치 기반으로 마트 검색 실행
-        });
-    } else { 
-        alert("현재 위치 정보를 사용할 수 없습니다.");
-    }
-}
 
-// 카테고리 코드 'MT1'을 사용하여 마트를 검색합니다
-function searchMarts(location) {
-    ps.categorySearch('MT1', placesSearchCB, {location: location, useMapBounds: true});
-}
+        function displayStoresByBrand(places) {
+            var storeContainer = document.getElementById('storeContainer');
+            storeContainer.innerHTML = ''; // 기존 내용 삭제
+            var brandMap = {};
 
-// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-function placesSearchCB(data, status, pagination) {
-    if (status === kakao.maps.services.Status.OK) {
-        displayPlaces(data);
-        displayPagination(pagination);
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
-    } else if (status === kakao.maps.services.Status.ERROR) {
-        alert('검색 결과 중 오류가 발생했습니다.');
-    }
-}
-
-// 검색 결과 목록과 마커를 표출하는 함수입니다
-function displayPlaces(places) {
-    var listEl = document.getElementById('placesList'), 
-        fragment = document.createDocumentFragment(), 
-        bounds = new kakao.maps.LatLngBounds(); 
-    
-    removeAllChildNods(listEl);
-    removeMarker();
-    
-    for (var i = 0; i < places.length; i++) {
-        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-            marker = addMarker(placePosition, i), 
-            itemEl = getListItem(i, places[i]); 
-
-        bounds.extend(placePosition);
-
-        (function(marker, title) {
-            kakao.maps.event.addListener(marker, 'mouseover', function() {
-                displayInfowindow(marker, title);
+            // 브랜드별로 정리
+            places.forEach(function(place) {
+                var brand = place.place_name.match(/^(이마트(?!24)|롯데마트|홈플러스)$/);
+                if (brand) {
+                    brand = brand[0];
+                    if (!brandMap[brand]) {
+                        brandMap[brand] = [];
+                    }
+                    brandMap[brand].push(place);
+                }
             });
 
-            kakao.maps.event.addListener(marker, 'mouseout', function() {
-                infowindow.close();
-            });
+            // brandMap이 비어 있는지 확인
+            if (Object.keys(brandMap).length === 0) {
+                // brandMap이 비어 있을 경우 메시지 표시
+                var noResultDiv = document.createElement('div');
+                noResultDiv.className = 'no-result-message'; // CSS 클래스 적용
+                noResultDiv.textContent = '근처에 마트가 없습니다.';
+                storeContainer.appendChild(noResultDiv);
+                return; // 함수 종료
+            }
 
-            itemEl.onmouseover = function() {
-                displayInfowindow(marker, title);
+            let currentOpenList = null;
+
+            // 브랜드별로 리스트 생성
+            for (var brand in brandMap) {
+                // 토글 버튼 생성
+                var toggleDiv = document.createElement('div');
+                toggleDiv.className = 'toggle';
+                toggleDiv.innerHTML = brand;
+
+                toggleDiv.onclick = function () {
+                    var nextSibling = this.nextElementSibling;
+
+                    // 현재 열려있는 리스트를 클릭했을 경우 닫기
+                    if (currentOpenList === nextSibling) {
+                        nextSibling.style.display = 'none';
+                        currentOpenList = null; // 열려있는 리스트 상태 해제
+                        this.classList.remove('active'); // 활성화 상태 제거
+                    } else {
+                        // 모든 리스트 닫기
+                        var allLists = document.querySelectorAll('.brand_list');
+                        var allToggles = document.querySelectorAll('.toggle');
+                        allLists.forEach(function (list) {
+                            list.style.display = 'none';
+                        });
+                        allToggles.forEach(function (toggle) {
+                            toggle.classList.remove('active');
+                        });
+
+                        // 현재 리스트 열기
+                        nextSibling.style.display = 'flex'; // flex로 열기
+                        currentOpenList = nextSibling; // 현재 열려있는 리스트 추적
+                        this.classList.add('active'); // 활성화 상태 추가
+                    }
+                };
+
+                storeContainer.appendChild(toggleDiv);
+
+                // 브랜드 리스트를 담을 컨테이너 생성
+                var brandListContainer = document.createElement('div');
+                brandListContainer.className = 'brand_list';
+                brandListContainer.style.display = 'none'; // 디폴트로 닫혀있도록 설정
+
+                // 왼쪽 div 생성
+                var leftDiv = document.createElement('div');
+                leftDiv.className = 'list_left';
+
+                // brandList를 왼쪽 div에 추가
+                var brandList = document.createElement('ul');
+                leftDiv.appendChild(brandList);
+
+                // 오른쪽 div 생성
+                var rightDiv = document.createElement('div');
+                rightDiv.className = 'list_right';
+                rightDiv.innerHTML = `
+            <h4>${brand} 추가 정보</h4>
+            <p>총 ${brandMap[brand].length}개의 매장이 검색되었습니다.</p>
+        `;
+
+                // 브랜드 리스트에 각 장소 추가
+                brandMap[brand].forEach(function (place, index) {
+                    var itemEl = getListItem(index, place); // 리스트 항목 생성
+
+                    // 리스트 클릭 시 지도 이동
+                    itemEl.onclick = function () {
+                        var placePosition = new kakao.maps.LatLng(place.y, place.x);
+                        displayInfowindow(addMarker(placePosition, index, brand), place.place_name); // 마커와 인포윈도우 표시
+                        bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+                        map.setBounds(bounds);
+                    };
+
+                    brandList.appendChild(itemEl); // 리스트 항목을 왼쪽 div의 brandList에 추가
+
+                    // 지도에 마커 추가
+                    var placePosition = new kakao.maps.LatLng(place.y, place.x);
+                    var marker = addMarker(placePosition, index, brand);
+
+                    // 마커 클릭 이벤트
+                    kakao.maps.event.addListener(marker, 'click', function () {
+                        // 특정 토글 버튼 자동 활성화
+                        toggleByPlaceName(place.place_name);
+                    });
+
+                    // 마커에 마우스오버/아웃 이벤트 추가
+                    (function(marker, title) {
+                        kakao.maps.event.addListener(marker, 'mouseover', function() {
+                            displayInfowindow(marker, title);
+                        });
+                        kakao.maps.event.addListener(marker, 'mouseout', function() {
+                            infowindow.close();
+                        });
+                    })(marker, place.place_name);
+                });
+                function toggleByPlaceName(placeName) {
+                    var brandMatch = placeName.match(/^(이마트(?!24)|롯데마트|홈플러스)$/);
+                    if (!brandMatch) return;
+
+                    var brand = brandMatch[0];
+                    // 모든 리스트 닫기
+                    var allLists = document.querySelectorAll('.brand_list');
+                    var allToggles = document.querySelectorAll('.toggle');
+                    allLists.forEach(function (list) {
+                        list.style.display = 'none';
+                    });
+                    allToggles.forEach(function (toggle) {
+                        toggle.classList.remove('active');
+                    });
+                    // 특정 브랜드 토글 열기
+                    var toggles = Array.from(document.querySelectorAll('.toggle'));
+                    var targetToggle = toggles.find(toggle => toggle.textContent === brand);
+                    if (targetToggle) {
+                        var nextSibling = targetToggle.nextElementSibling;
+                        nextSibling.style.display = 'flex'; // 리스트 열기
+                        targetToggle.classList.add('active'); // 활성화 상태 추가
+                    }
+                }
+
+                // 왼쪽 div와 오른쪽 div를 brandListContainer에 추가
+                brandListContainer.appendChild(leftDiv);
+                brandListContainer.appendChild(rightDiv);
+
+                // toggleDiv 아래에 brandListContainer 추가
+                storeContainer.appendChild(brandListContainer);
+            }
+        }
+        function getListItem(index, places) {
+            var el = document.createElement('li');
+            el.className = 'brand_item';
+            el.innerHTML = `<h5>${places.place_name}</h5><p>${places.road_address_name || places.address_name}</p>`;
+            return el;
+        }
+
+        function addMarker(position, idx, brand) {
+            // 브랜드별 마커 이미지 매핑
+            var markerImages = {
+                "이마트": "https://static.vecteezy.com/system/resources/thumbnails/027/293/544/small/map-pointer-marker-pin-with-a-person-user-icon-people-location-concept-3d-png.png",
+                "롯데마트": "https://e7.pngegg.com/pngimages/911/866/png-clipart-computer-icons-symbol-location-marker-miscellaneous-black-and-white-thumbnail.png",
+                "홈플러스": "https://img.favpng.com/2/12/1/location-icon-marker-icon-pin-icon-png-favpng-SeNK6BbMv3nfXgvFJM9TYWChR.jpg"
             };
 
-            itemEl.onmouseout = function() {
-                infowindow.close();
-            };
-        })(marker, places[i].place_name);
+            // 브랜드에 맞는 마커 이미지 URL 가져오기
+            var imageSrc = markerImages[brand]; // 기본 마커
 
-        fragment.appendChild(itemEl);
-    }
+            // 마커 이미지 설정
+            var imageSize = new kakao.maps.Size(36, 37),
+                imgOptions = {
+                    offset: new kakao.maps.Point(13, 37)
+                },
+                markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+                marker = new kakao.maps.Marker({
+                    position: position,
+                    image: markerImage
+                });
 
-    listEl.appendChild(fragment);
-    map.setBounds(bounds);
-}
+            marker.setMap(map); // 지도에 마커 표시
+            markers.push(marker); // 생성된 마커 배열에 추가
+            return marker;
+        }
 
-function getListItem(index, places) {
-    var el = document.createElement('li'),
-        itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                  '<div class="info">' +
-                  '   <h5>' + places.place_name + '</h5>';
+        function removeMarker() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
 
-    if (places.road_address_name) {
-        itemStr += '    <span>' + places.road_address_name + '</span>' +
-                   '   <span class="jibun gray">' +  places.address_name  + '</span>';
-    } else {
-        itemStr += '    <span>' +  places.address_name  + '</span>'; 
-    }
-                     
-    itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-               '</div>';           
+        function displayInfowindow(marker, title) {
+            var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+        }
 
-    el.innerHTML = itemStr;
-    el.className = 'item';
-
-    return el;
-}
-
-function addMarker(position, idx) {
-    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png',
-        imageSize = new kakao.maps.Size(36, 37),  
-        imgOptions =  {
-            spriteSize : new kakao.maps.Size(36, 691),
-            spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), 
-            offset: new kakao.maps.Point(13, 37) 
-        },
-        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-        marker = new kakao.maps.Marker({
-            position: position, 
-            image: markerImage 
-        });
-
-    marker.setMap(map); 
-    markers.push(marker);  
-
-    return marker;
-}
-
-function removeMarker() {
-    for (var i = 0; i < markers.length; i++) {
-        markers[i].setMap(null);
-    }   
-    markers = [];
-}
-
-function displayInfowindow(marker, title) {
-    infowindow.setContent('<div style="padding:5px;text-align:center;">' + title + '</div>');
-    infowindow.open(map, marker);
-}
-
-function removeAllChildNods(el) {   
-    while (el.hasChildNodes()) {
-        el.removeChild (el.lastChild);
-    }
-}
-
-// 페이지가 로드되면 현재 위치를 가져옵니다
-getCurrentLocation();
-</script>
+        window.onload = function() {
+            getCurrentLocation();
+        };
+    </script>
 </body>
 </html>
+
