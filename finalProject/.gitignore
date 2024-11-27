@@ -14,8 +14,6 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-application.properties
-
 .idea
 *.iws
 *.iml
@@ -34,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-.DS_Store
+application.properties

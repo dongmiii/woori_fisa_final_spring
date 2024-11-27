@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="/css/animate.css" />
+    <link rel="stylesheet" href="/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/css/glightbox.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
 	
     <style>
         /* @import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css'); */
@@ -51,6 +59,7 @@
             font-size:25px;
             font-weight: 900;
             color:#333;
+            margin-bottom: 20px;
         }
 
         .size{
@@ -72,16 +81,19 @@
             border:none;
             cursor: pointer;
             border-radius: 5px;
+            margin-bottom: 20px;
         }
         .btn:hover{
             background:#ca296a;
         }
+        
         hr{
             margin-top:20px;
-            background:#eee;
+            background: #000000;
             
         }
         .find{
+         	margin-top: 20px;
             color:#ddd;
             font-size:12px;
         }
@@ -107,6 +119,8 @@
     </style>
 </head>
 <body>
+	<header th:replace="fragments/header :: headerFragment"></header>
+	
 	<div id="con">
     <div id="loginMain_form"><!--로그인 폼-->
     <form method="post">
@@ -128,6 +142,8 @@
     </p>
     </div>
     </div>
+    
+    <footer th:replace="fragments/footer :: footerFragment"></footer>
 
 </body>
 </html>
