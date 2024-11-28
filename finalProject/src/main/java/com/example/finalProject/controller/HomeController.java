@@ -57,10 +57,10 @@ public class HomeController {
 		return "index";
 	}
 
-	@GetMapping("/test")
-	public String test() {
-		return "layout_test";
-	}
+//	@GetMapping("/test")
+//	public String test() {
+//		return "layout_test";
+//	}
 
 	@GetMapping("/loginMain")
 	public String loginMain() {
@@ -262,5 +262,9 @@ public class HomeController {
 	@GetMapping("/calendar")
 	public String calendar() {
 		return "/calendar/calendar"; // calendar.html로 매핑
+	}
+	@GetMapping("/card")
+	public String cardChatbot() {
+		return "/card/chatbot"; // calendar.html로 매핑
 	}
 }
