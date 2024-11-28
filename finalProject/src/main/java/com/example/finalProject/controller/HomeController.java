@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -228,9 +226,9 @@ public class HomeController {
 		return "/category/cafe";
 	}
 
-	@GetMapping("/category/gas")
-	public String gas() {
-		return "/category/gas";
+	@GetMapping("/category/oil")
+	public String oil() {
+		return "category/oil";
 	}
 
 	@GetMapping("/category/movie")
@@ -243,10 +241,6 @@ public class HomeController {
 		return "/category/mart";
 	}
 
-	@GetMapping("/category/search")
-	public String search() {
-		return "/category/search";
-	}
 
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {

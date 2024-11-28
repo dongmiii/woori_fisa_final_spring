@@ -131,4 +131,6 @@ public class CardEntity {
     public void setMart(String mart) {
         this.mart = mart;
     }
+
+
 }

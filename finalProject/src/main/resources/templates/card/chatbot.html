@@ -137,6 +137,14 @@
         .chat-input button:hover {
             background-color: #005bb5;
         }
+        footer {
+            background-color: #f9f9f9;
+            height: 60px;
+            text-align: center;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: auto; /* footer를 콘텐츠 아래로 밀기 */
+        }
     </style>
     <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
 
@@ -173,7 +181,8 @@
         </div>
     </div>
 </div>
-<footer th:replace="fragments/footer :: footerFragment"></footer>
+
+<!--<footer th:replace="fragments/footer :: footerFragment"></footer>-->
 
 <script>
     let conversations = []; // 대화 내역 저장
