@@ -1,8 +1,10 @@
 package com.example.finalProject.controller;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
+import com.example.finalProject.domain.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -87,49 +89,104 @@ public class HomeController {
 
 		System.out.println("Authenticated userId: " + user);
 
-		// 세션에 userId 저장
+		// 세션에 usermail 저장
 		if (session.getAttribute("usermail") == null) {
 			session.setAttribute("usermail", user);
 		}
 
-//		model.addAttribute("userId", userName);
-
 		try {
-
+			// 사용자 정보 가져오기
 			Long userId = memberService.getAutoIncrementIdByEmail(user);
 			String userName = memberService.getUsernameByEmail(user);
 
-			// 조회된 ID를 세션에 저장
+			// 조회된 ID와 사용자 이름을 세션에 저장
 			session.setAttribute("userid", userId);
 			System.out.println("Authenticated autoID: " + userId);
 
 			session.setAttribute("username", userName);
 			System.out.println("*** username: " + userName);
 
-
-			// FastAPI 호출
-			String fastApiResponse = fastApiService.sendname(userName);
-
-			// FastAPI 호출 결과 처리
-			if (fastApiResponse != null) {
-				System.out.println("FastAPI Responsed");
-
-				// FastAPI에서 받은 데이터를 JSON 형식으로 파싱하여 모델에 추가
-				String prompt = extractPromptFromResponse(fastApiResponse);
-				String image = extractImageFromResponse(fastApiResponse);
-
-				session.setAttribute("fastApiPrompt", prompt);
-				session.setAttribute("fastApiImage", image);
+			// 사용자 엔티티에서 추가 정보 가져오기
+			MemberEntity member = memberService.findByEmail(user); // 이메일로 사용자 조회
+			if (member != null) {
+				// 사용자 이미지 처리
+				if (member.getImage() != null) {
+					// 이미지가 BLOB으로 저장된 경우 Base64 인코딩
+					String base64Image = Base64.getEncoder().encodeToString(member.getImage());
+					session.setAttribute("userImage", "data:image/png;base64," + base64Image);
+					System.out.println("User image (Base64) stored in session.");
+				} else if (member.getImageUrl() != null) {
+					// 이미지 URL이 있는 경우 세션에 저장
+					session.setAttribute("userImage", member.getImageUrl());
+					System.out.println("User image URL stored in session: " + member.getImageUrl());
+				} else {
+					System.out.println("User has no image.");
+				}
 			} else {
-				System.err.println("FastAPI did not return a valid response.");
+				System.err.println("No member found for email: " + user);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Error occurred while calling FastAPI.");
+			System.err.println("Error occurred while processing user information.");
 		}
 
 		return "redirect:/";
 	}
+//	@GetMapping("/login/result")
+//	public String dispLoginResult(Model model, HttpSession session) {
+//		// 현재 사용자의 인증 상태 확인
+//		String user = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//		if (user == null || "anonymousUser".equals(user)) {
+//			System.out.println("User not authenticated");
+//			return "redirect:/login";
+//		}
+//
+//		System.out.println("Authenticated userId: " + user);
+//
+//		// 세션에 userId 저장
+//		if (session.getAttribute("usermail") == null) {
+//			session.setAttribute("usermail", user);
+//		}
+//
+////		model.addAttribute("userId", userName);
+//
+//		try {
+//
+//			Long userId = memberService.getAutoIncrementIdByEmail(user);
+//			String userName = memberService.getUsernameByEmail(user);
+//
+//			// 조회된 ID를 세션에 저장
+//			session.setAttribute("userid", userId);
+//			System.out.println("Authenticated autoID: " + userId);
+//
+//			session.setAttribute("username", userName);
+//			System.out.println("*** username: " + userName);
+//
+//
+//			// FastAPI 호출
+//			String fastApiResponse = fastApiService.sendname(userName);
+//
+//			// FastAPI 호출 결과 처리
+//			if (fastApiResponse != null) {
+//				System.out.println("FastAPI Responsed");
+//
+//				// FastAPI에서 받은 데이터를 JSON 형식으로 파싱하여 모델에 추가
+//				String prompt = extractPromptFromResponse(fastApiResponse);
+//				String image = extractImageFromResponse(fastApiResponse);
+//
+//				session.setAttribute("fastApiPrompt", prompt);
+//				session.setAttribute("fastApiImage", image);
+//			} else {
+//				System.err.println("FastAPI did not return a valid response.");
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.err.println("Error occurred while calling FastAPI.");
+//		}
+//
+//		return "redirect:/";
+//	}
 
 
 
