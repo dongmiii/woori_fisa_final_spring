@@ -2912,7 +2912,7 @@ ol {
 }
 
 .services.style2 .single-service h3 {
-  font-size: 20px;
+  font-size: 15px;
 }
 
 .services.style2 .single-service:hover {
@@ -2936,7 +2936,7 @@ ol {
   line-height: 65px;
   border-radius: 15px;
   color: #fff;
-  background-color: #3080E3;
+  background-color: #A6E5B1;
   text-align: center;
   font-size: 30px;
   -webkit-box-shadow: 0px 10px 30px rgba(48, 128, 227, 0.18);
@@ -2944,18 +2944,18 @@ ol {
 }
 
 .single-service h3 {
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 600;
   margin-bottom: 20px;
   margin-top: 40px;
 }
 
 .single-service p {
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .single-service a {
-  color: #3080E3;
+  color: #A6E5B1;
   margin-top: 40px;
   display: inline-block;
   font-weight: 500;
@@ -2974,23 +2974,23 @@ ol {
 }
 
 .single-service.two .service-icon {
-  background-color: #fd723b;
+  background-color: #83CADF;
   -webkit-box-shadow: 0px 10px 30px rgba(253, 114, 59, 0.25);
           box-shadow: 0px 10px 30px rgba(253, 114, 59, 0.25);
 }
 
 .single-service.two a {
-  color: #fd723b;
+  color: #83CADF;
 }
 
 .single-service.three .service-icon {
-  background-color: #FFA842;
+  background-color: #97A5D3;
   -webkit-box-shadow: 0px 10px 30px rgba(255, 168, 66, 0.26);
           box-shadow: 0px 10px 30px rgba(255, 168, 66, 0.26);
 }
 
 .single-service.three a {
-  color: #FFA842;
+  color: #97A5D3;
 }
 
 
