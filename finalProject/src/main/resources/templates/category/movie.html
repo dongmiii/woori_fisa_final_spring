@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +24,83 @@
         .list_left {width: 25%; margin-right: 2%;}
         .list_right {width: 74%; text-align: left; background-color: #f4f4f4;}
         .no-result-message {color: red;font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
+        .centered-text {
+            font-size: 30x; /* 글씨 크기 설정 */
+            text-align: center; /* 가운데 정렬 */
+            font-weight: bold; /* 글씨 굵게 */
+            margin-top: 10px; /* 위쪽 여백 추가 */
+            margin-bottom: 10px;
+        }
+        #userSession, #userSessionId {display: none;}
+        .cardContainer {display: flex;
+            flex-wrap: nowrap; /* 한 줄에 모든 카드 표시 */
+            gap: 10px; /* 카드 간격 */
+            overflow-x: auto; /* 가로 스크롤 활성화 (카드가 많을 경우) */
+        }
+        .card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            width: 150px; /* 카드 너비 조정 */
+            text-align: center;
+            flex-shrink: 0; /* 카드 크기 축소 방지 */
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wrapper {
+            flex: 1; /* 동적으로 확장 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .map_wrap {
+            flex: 1; /* 지도 영역이 동적으로 확장 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        #storeContainer {
+            padding: 20px;
+            min-height: 200px; /* 기본 높이 설정 */
+        }
+
+        footer {
+            background-color: #f9f9f9;
+            height: 60px;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto; /* footer를 콘텐츠 아래로 밀기 */
+        }
+        .brand_list {display: none; padding: 10px; border: 1px solid #ddd; margin-top: 10px; background-color: #f9f9f9; display: flex; gap: 10px;}
+        .list_left, .list_right {padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow-y: auto;}
+        .list_left {width: 25%; margin-right: 2%;}
+        .list_right {width: 74%; text-align: left; background-color: #f4f4f4;}
+        .no-result-message {color: red;font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
+        .centered-text {
+            font-size: 30x; /* 글씨 크기 설정 */
+            text-align: center; /* 가운데 정렬 */
+            font-weight: bold; /* 글씨 굵게 */
+            margin-top: 10px; /* 위쪽 여백 추가 */
+            margin-bottom: 10px;
+        }
+        #userSession, #userSessionId {display: none;}
+        .cardContainer {display: flex;
+            flex-wrap: nowrap; /* 한 줄에 모든 카드 표시 */
+            gap: 10px; /* 카드 간격 */
+            overflow-x: auto; /* 가로 스크롤 활성화 (카드가 많을 경우) */
+        }
     </style>
     <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
 
@@ -34,29 +113,56 @@
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-<header th:replace="fragments/header :: headerFragment"></header>
-<div class="map_wrap">
-    <div id="map"></div>
-    <div id="menu_wrap" class="bg_white">
-        <hr>
-        <h1>
-            <span class="wow fadeInUp" data-wow-delay=".4s">
-                <span th:text="${session.userId2}"></span>
-                <th:block th:unless="${not #strings.isEmpty(session.userId2)}">WalletBee</th:block></span>
-            <span class="wow fadeInUp" data-wow-delay=".8s">님, 맞춤형 카드 추천이에요.</span>
-
-        </h1>
-        <div id="storeContainer">
+<div class="wrapper">
+    <header th:replace="fragments/header :: headerFragment"></header>
+    <div class="map_wrap">
+        <div id="map"></div>
+        <div id="menu_wrap" class="bg_white">
+            <hr>
+            <h1>
+                        <span class="wow fadeInUp" data-wow-delay=".4s">
+                            <span th:text="${session.userId2}"></span>
+                            <th:block th:unless="${not #strings.isEmpty(session.userId2)}">WalletBee</th:block>
+                        </span>
+                <span class="wow fadeInUp" data-wow-delay=".8s">님, 맞춤형 카드 추천이에요.</span>
+            </h1>
+            <div id="userSession" aria-hidden="true">[[${session.username}]]</div>
+            <div id="userSessionId" aria-hidden="true">[[${session.userid}]]</div>
+            <div id="storeContainer"></div>
         </div>
     </div>
     <footer th:replace="fragments/footer :: footerFragment"></footer>
+</div>
 
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=d2eae2e7456e26e3ec04ff300351bd11&libraries=services"></script>
     <script>
+        const userSession = document.getElementById('userSession');
+        const userSessionId = document.getElementById('userSessionId');
+        const username = userSession.textContent.trim(); // 텍스트 내용 가져오기
+        const userId = userSessionId.textContent.trim(); // 텍스트 내용 가져오기
+
+        console.log("Username:", username);
+        console.log("userId:", userId);
+
+        fetch('/api/cards')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                console.log("API 응답 성공:", response);
+                return response.json();
+            })
+            .then(cards => {
+                console.log("받은 카드 데이터:", cards); // 카드 데이터를 출력
+            })
+            .catch(error => {
+                console.error("API 호출 중 오류:", error);
+            });
+
         // 마커를 담을 배열입니다
         var markers = [];
         var mapContainer = document.getElementById('map'),
-            mapOption = {center: new kakao.maps.LatLng(37.559724678698, 126.9818823906), level: 3};
+            mapOption = {center: new kakao.maps.LatLng(37.559724678698, 126.9818823906), level: 5};
         var locPosition = null;
         var bounds = new kakao.maps.LatLngBounds();
         var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -89,10 +195,10 @@
         }
 
         function searchStores(location) {
-            ps.categorySearch('CS2', placesSearchCB, {location: location, useMapBounds: true});
+            ps.categorySearch('CT1', placesSearchCB, {location: location, useMapBounds: true});
         }
 
-        function placesSearchCB(data, status, pagination) {
+        function placesSearchCB(data, status) {
             if (status === kakao.maps.services.Status.OK) {
                 var currentPosition = map.getCenter();
                 data.sort(function(a, b) {
@@ -101,7 +207,6 @@
                     return distanceA - distanceB;
                 });
                 displayStoresByBrand(data);
-                displayPagination(pagination);
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                 alert('검색 결과가 존재하지 않습니다.');
             } else if (status === kakao.maps.services.Status.ERROR) {
@@ -114,6 +219,60 @@
             return polyline.getLength();
         }
 
+
+        function fetchAndDisplayCards(cardContainer, brand) {
+            if (username !== null && username.trim() !== "") {
+                // 로그인한 경우 카드 정보 가져오기
+                const type = "convenience";
+                fetch(`/api/cards?userId=${userId}&type=${type}&keyword=${brand}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json(); // JSON 데이터로 변환
+                    })
+                    .then(data => {
+                        console.log("Fetched Cards:", data);
+                        let cardHtml = ''; // 카드 HTML 생성
+
+                        if (data.message) {
+                            // 전체 카드 리스트가 비어 있는 경우
+                            cardHtml = `
+                                <p style="font-size: 16px; font-weight: bold; text-align: center; color: red;">
+                                    ${data.message}
+                                </p>`;
+                        } else if (data.length === 0) {
+                            // 특정 토글에서 카드 리스트가 비어 있는 경우
+                            cardHtml = `
+                                <p style="font-size: 16px; font-weight: bold; text-align: center; color: red;">
+                                    ${brand}에서 사용 가능한 카드가 없습니다.
+                                </p>`;
+                        } else {
+                            // 카드 리스트가 있는 경우 카드 생성
+                            data.forEach(card => {
+                                cardHtml += `
+                        <div class="card">
+                            <h4>${card.name}</h4>
+                            <img src="${card.imgUrl}" alt="${card.name}" />
+                            <p>${card.convenience}</p>
+                        </div>`;
+                            });
+                        }
+
+                        cardContainer.innerHTML = cardHtml; // 카드 HTML을 cardContainer에 추가
+                    })
+                    .catch(error => {
+                        console.error("Error fetching cards:", error);
+                        cardContainer.innerHTML = '<p style="color: red;">카드 정보를 불러오는 중 오류가 발생했습니다.</p>';
+                    });
+            } else {
+                // 로그인하지 않은 경우 안내 메시지 표시
+                cardContainer.innerHTML = `
+                                        <p style="font-size: 16px; font-weight: bold; text-align: center;">
+                                            로그인을 하시면 맞춤형 카드 추천을 받을 수 있습니다.
+                                        </p>`;
+            }
+        }
 
         function displayStoresByBrand(places) {
             var storeContainer = document.getElementById('storeContainer');
@@ -174,6 +333,13 @@
                         nextSibling.style.display = 'flex'; // flex로 열기
                         currentOpenList = nextSibling; // 현재 열려있는 리스트 추적
                         this.classList.add('active'); // 활성화 상태 추가
+
+                        // 클릭된 브랜드 이름 가져오기
+                        const brand = this.innerHTML.trim();
+                        // 카드 컨테이너 가져오기
+                        const cardContainer = nextSibling.querySelector('.cardContainer');
+                        // 브랜드 이름을 기반으로 카드 정보 로드
+                        fetchAndDisplayCards(cardContainer, brand);
                     }
                 };
 
@@ -195,10 +361,15 @@
                 // 오른쪽 div 생성
                 var rightDiv = document.createElement('div');
                 rightDiv.className = 'list_right';
-                rightDiv.innerHTML = `
-            <h4>${brand} 추가 정보</h4>
-            <p>총 ${brandMap[brand].length}개의 매장이 검색되었습니다.</p>
-        `;
+
+                // 카드 컨테이너 생성 및 추가
+                const cardContainer = document.createElement('div'); // 'div' 요소 생성
+                cardContainer.className = 'cardContainer'; // 클래스 이름 설정
+                rightDiv.appendChild(cardContainer);
+
+                // 카드 정보 표시
+                fetchAndDisplayCards(cardContainer);
+
 
                 // 브랜드 리스트에 각 장소 추가
                 brandMap[brand].forEach(function (place, index) {
@@ -225,17 +396,18 @@
                     });
 
                     // 마커에 마우스오버/아웃 이벤트 추가
-                    (function(marker, title) {
-                        kakao.maps.event.addListener(marker, 'mouseover', function() {
+                    (function (marker, title) {
+                        kakao.maps.event.addListener(marker, 'mouseover', function () {
                             displayInfowindow(marker, title);
                         });
-                        kakao.maps.event.addListener(marker, 'mouseout', function() {
+                        kakao.maps.event.addListener(marker, 'mouseout', function () {
                             infowindow.close();
                         });
                     })(marker, place.place_name);
                 });
+
                 function toggleByPlaceName(placeName) {
-                    var brandMatch = placeName.match(/CGV|롯데시네마|메가박스/);
+                    var brandMatch = placeName.match(/GS25|세븐일레븐|CU|이마트24|미니스톱/);
                     if (!brandMatch) return;
 
                     var brand = brandMatch[0];
@@ -266,6 +438,7 @@
                 storeContainer.appendChild(brandListContainer);
             }
         }
+
         function getListItem(index, places) {
             var el = document.createElement('li');
             el.className = 'brand_item';
