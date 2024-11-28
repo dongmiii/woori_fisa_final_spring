@@ -36,6 +36,12 @@ public class MemberService implements UserDetailsService{
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 이메일로 사용자 조회
+    public MemberEntity findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + email));
+    }
+
     // 회원가입을 처리하는 메소드
     @Transactional
     public Long join(MemberDTO memberdto) {

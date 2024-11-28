@@ -122,8 +122,8 @@
             <hr>
             <h1>
                         <span class="wow fadeInUp" data-wow-delay=".4s">
-                            <span th:text="${session.userId2}"></span>
-                            <th:block th:unless="${not #strings.isEmpty(session.userId2)}">WalletBee</th:block>
+                            <span th:text="${session.username}">님, </span>
+                            <th:block th:unless="${not #strings.isEmpty(session.username)}">WalletBee</th:block>
                         </span>
                 <span class="wow fadeInUp" data-wow-delay=".8s">님, 맞춤형 카드 추천이에요.</span>
             </h1>
