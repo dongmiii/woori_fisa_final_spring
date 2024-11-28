@@ -42,6 +42,14 @@
 	
 	<header th:replace="fragments/header :: headerFragment"></header>
 
+<!--    <h1>홈 화면</h1>-->
+<!--    <div class="character-title">-->
+<!--        [[${character != null ? character : '캐릭터를 선택하세요.'}]]-->
+<!--    </div>-->
+<!--    <div>-->
+<!--        <img th:src="@{'/images/' + ${character} + '.png'}" class="character-image" alt="캐릭터 이미지" />-->
+<!--    </div>-->
+
     <!-- Start Hero Area -->
     <section class="hero-area">
         <div class="main__circle"></div>
@@ -71,7 +79,14 @@
                 <div class="col-lg-7 col-12">
                     <div class="app-image">
                         <div class="image-bg-shape"></div>
-                        <img src="/images/hero/app.svg" alt="#">
+                        <div th:if="${session.userImage != null}">
+                            <!-- 로그인된 경우 사용자 이미지 표시 -->
+                            <img th:src="${session.userImage}" alt="사용자 이미지">
+                        </div>
+                        <div th:if="${session.userImage == null}">
+                            <!-- 기본 이미지 표시 -->
+                            <img src="/images/hero/app.svg" alt="기본 이미지">
+                        </div>
                     </div>
                 </div>
             </div>

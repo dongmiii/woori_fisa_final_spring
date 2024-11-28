@@ -32,29 +32,37 @@ public class MemberEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	
-	@Column(nullable = false)
-	private String username;
-	
-	@Column(nullable = false) // not null 제약조건
-	private String password;
 
-	
-//	@Column
-//	private String birth;
-	
-	@Column(nullable = false, unique = true)
-	private String email;
-	
-	@Column
-	private String agegroup;
-	
-	@Column
-	private String gender;
-	
-	@Column
-	private String category;
+
+	@Column(nullable = true, length = 255)
+	private String agegroup; // varchar(255)
+
+	@Column(nullable = true, length = 255)
+	private String category; // varchar(255)
+
+	@Column(nullable = true, length = 255, unique = true)
+	private String email; // varchar(255)
+
+	@Column(nullable = true, length = 255)
+	private String gender; // varchar(255)
+
+	@Column(nullable = false, length = 255)
+	private String password; // varchar(255)
+
+	@Column(nullable = false, length = 255)
+	private String username; // varchar(255)
+
+	@Column(columnDefinition = "TEXT")
+	private String prompt; // text
+
+	@Column(columnDefinition = "MEDIUMBLOB")
+	private byte[] image; // mediumblob
+
+	@Column(nullable = true, length = 1000)
+	private String imageUrl; // varchar(1000)
+
+	@Column(nullable = true)
+	private Integer honey; // int
 	
 //	@Enumerated(EnumType.STRING)
 //	private Role role;
