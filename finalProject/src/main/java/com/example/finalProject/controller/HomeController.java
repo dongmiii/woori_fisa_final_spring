@@ -96,7 +96,7 @@ public class HomeController {
 
 		try {
 			// 사용자 정보 가져오기
-			Long userId = memberService.getAutoIncrementIdByEmail(user);
+			int userId = memberService.getAutoIncrementIdByEmail(user);
 			String userName = memberService.getUsernameByEmail(user);
 			int honey = memberService.getHoneyByEmail(user);
 

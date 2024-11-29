@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public interface MovieRepository extends JpaRepository<CardEntity, Long> {
+public interface MovieRepository extends JpaRepository<CardEntity, Integer> {
 
     @Query("SELECT c FROM CardEntity c WHERE c.name IN " +
             "(SELECT DISTINCT p.cardName FROM PaymentEntity p WHERE p.memberId = :userId) " +
