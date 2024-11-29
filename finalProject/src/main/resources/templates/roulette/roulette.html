@@ -36,7 +36,7 @@
         .roulette-title {
             font-size: 2rem;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
         }
 
         canvas {
@@ -81,30 +81,46 @@
             transform: translateX(-50%);
             z-index: 22;
         }
+
+        button:disabled {
+            background: #ccc; /* 비활성화 상태 배경색 */
+            cursor: not-allowed; /* 비활성화 상태 커서 */
+        }
     </style>
 </head>
 <body>
 <header th:replace="fragments/header :: headerFragment"></header>
 <div class="roulette-container">
-    <div class="roulette-title">캐릭터 선택하기</div>
+    <div class="roulette-title">
+    <span th:if="${session.username != null}"
+          th:text="${session.username + '님만의 캐릭터를 골라봐요.'}"></span>
+        <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요.</span>
+    </div>
     <div class="roulette">
         <canvas width="380" height="380"></canvas>
-        <button onclick="rotate()">룰렛 돌리기</button>
+        <button th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
+        <button th:unless="${session.username != null}"
+                onclick="location.href='/loginMain'">로그인하기</button>
     </div>
+    <div id="userSessionId" style="display: none;" aria-hidden="true">[[${session.userid}]]</div>
+
 </div>
 
 <script>
+    const userSessionId = document.getElementById('userSessionId');
+    const userId = userSessionId.textContent.trim(); // 텍스트 내용 가져오기
+
     const $c = document.querySelector("canvas");
     const ctx = $c.getContext(`2d`);
 
     const product = [
         "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "아기곰", "펭귄", "아기호랑이",
-        "아기사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치", "너구리"
+        "아기사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
     ];
 
     const colors = [
         "#dc0936", "#e6471d", "#f7a416", "#efe61f", "#60b236", "#209b6c", "#169ed8", "#3f297e",
-        "#87207b", "#be107f", "#e7167b", "#a29bfe", "#00cec9", "#6c5ce7", "#e17055", "#fd79a8"
+        "#87207b", "#be107f", "#e7167b", "#a29bfe", "#00cec9", "#6c5ce7", "#e17055"
     ];
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
@@ -144,6 +160,10 @@
     }
 
     const rotate = () => {
+        const button = document.querySelector('button[onclick="rotate()"]');
+
+        // 버튼 비활성화
+        button.disabled = true;
         $c.style.transform = `initial`;
         $c.style.transition = `initial`;
 
@@ -151,7 +171,7 @@
             const ran = Math.floor(Math.random() * product.length);
 
             const arc = 360 / product.length;
-            const rotate = (ran * arc) + 3600 + (arc * 3) - (arc/4);
+            const rotate = (ran * arc) + 3628 + (arc * 3) - (arc/4);
 
             $c.style.transform = `rotate(-${rotate}deg)`;
             $c.style.transition = `2s`;
@@ -160,27 +180,15 @@
             setTimeout(() => {
                 // Redirect to loading screen
                 const selectedCharacter = product[ran];
-                window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
+                console.log(selectedCharacter);
+                // 1.5초 후 페이지 이동
+                setTimeout(() => {
+                    window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
+                }, 500);
+
             }, 2000);
         }, 1);
     };
-
-    // const rotate = () => {
-    //     $c.style.transform = `initial`;
-    //     $c.style.transition = `initial`;
-    //
-    //     setTimeout(() => {
-    //         const ran = Math.floor(Math.random() * product.length);
-    //
-    //         const arc = 360 / product.length;
-    //         const rotate = (ran * arc) + 3600 + (arc * 3) - (arc/4);
-    //
-    //         $c.style.transform = `rotate(-${rotate}deg)`;
-    //         $c.style.transition = `2s`;
-    //
-    //         setTimeout(() => alert(`캐릭터는 ${product[ran]} 어떠신가요?`), 2000);
-    //     }, 1);
-    // };
 
     newMake();
 </script>
