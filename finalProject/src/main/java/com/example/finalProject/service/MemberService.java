@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -69,10 +66,10 @@ public class MemberService implements UserDetailsService{
         return member.getEmail();
     }
 
-    public Long getAutoIncrementIdByEmail(String email) {
+    public int getAutoIncrementIdByEmail(String email) {
         System.out.println("Email to search: " + email);
-        Long id = memberRepository.findIdByEmail(email);
-        if(id == null) {
+        int id = memberRepository.findIdByEmail(email);
+        if(id == 0) {
             throw new IllegalArgumentException("No user found with eamil:" + email);
         }
 
@@ -89,6 +86,14 @@ public class MemberService implements UserDetailsService{
         return username;
     }
 
+    public String getPromptByEmail(String email) {
+        String prompt = memberRepository.findPromptByEmail(email);
+        if (prompt == null) {
+            throw new IllegalArgumentException("No prompt found with email: " + email);
+        }
+        return prompt;
+    }
+
     public int getHoneyByEmail(String email) {
         // MemberRepository에서 이메일로 Member 엔티티를 조회
         MemberEntity member = memberRepository.findByEmail(email)
@@ -97,6 +102,8 @@ public class MemberService implements UserDetailsService{
         // honey 값 반환
         return member.getHoney();
     }
+
+
 
 
     // 상세 정보를 조회하는 메소드
