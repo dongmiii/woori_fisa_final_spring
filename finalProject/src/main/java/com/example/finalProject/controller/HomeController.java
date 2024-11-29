@@ -98,6 +98,7 @@ public class HomeController {
 			// 사용자 정보 가져오기
 			Long userId = memberService.getAutoIncrementIdByEmail(user);
 			String userName = memberService.getUsernameByEmail(user);
+			int honey = memberService.getHoneyByEmail(user);
 
 			// 조회된 ID와 사용자 이름을 세션에 저장
 			session.setAttribute("userid", userId);
@@ -105,6 +106,9 @@ public class HomeController {
 
 			session.setAttribute("username", userName);
 			System.out.println("*** username: " + userName);
+
+			session.setAttribute("honey", honey);
+			System.out.println("*** honey: " + honey);
 
 			// 사용자 엔티티에서 추가 정보 가져오기
 			MemberEntity member = memberService.findByEmail(user); // 이메일로 사용자 조회

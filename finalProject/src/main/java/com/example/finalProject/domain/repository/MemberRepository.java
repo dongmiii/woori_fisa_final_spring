@@ -28,4 +28,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 	String findUsernameByEmail(@Param("email") String email);
 
 
+
+
+
+
 }
