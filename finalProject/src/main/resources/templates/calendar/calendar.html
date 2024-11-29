@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
 
         // API 호출
-        axios.get(`/api/payments/date`, {
+        axios.get(`/api/payments/totalUser`, {
           params: { date: selectedDate }
         }).then(response => {
           const payments = response.data; // API에서 받은 데이터
