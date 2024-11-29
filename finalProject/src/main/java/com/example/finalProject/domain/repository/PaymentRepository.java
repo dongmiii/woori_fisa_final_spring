@@ -12,4 +12,8 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, String> 
     // 특정 날짜 범위의 결제 내역 조회
     @Query("SELECT p FROM PaymentEntity p WHERE p.datetime >= :start AND p.datetime < :end")
     List<PaymentEntity> findByDatetime(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    
+
+    @Query("SELECT SUM(p.amount) FROM PaymentEntity p WHERE p.datetime >= :start AND p.datetime < :end")
+    Long calculateTotalAmount(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

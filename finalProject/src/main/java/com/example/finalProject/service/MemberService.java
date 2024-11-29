@@ -89,6 +89,15 @@ public class MemberService implements UserDetailsService{
         return username;
     }
 
+    public int getHoneyByEmail(String email) {
+        // MemberRepository에서 이메일로 Member 엔티티를 조회
+        MemberEntity member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("No user found with email for honey: " + email));
+
+        // honey 값 반환
+        return member.getHoney();
+    }
+
 
     // 상세 정보를 조회하는 메소드
     @Override
