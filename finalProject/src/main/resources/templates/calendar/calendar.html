@@ -13,7 +13,62 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+
 	 <!-- ========================= CSS here ========================= -->
+
+    <style>
+        /* 네비게이션 바와 콘텐츠 사이 여백 추가 */
+        #main-content {
+            margin-top: 150px; /* 여백을 150px로 늘려 더 아래로 배치 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* 캘린더 크기 조정 */
+        #calendar {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+        /* 결제 내역 표 스타일 */
+        #payment-details {
+            max-width: 800px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #payment-details th, #payment-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        #payment-details th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        #payment-details tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* 네비게이션 바에 z-index 설정 */
+        header {
+            position: fixed; /* 상단 고정 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* 캘린더보다 위에 위치 */
+            background-color: #fff; /* 배경색 설정 */
+        }
+    </style>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/images/0_honeypot.png" />
+
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
     <link rel="stylesheet" href="/css/animate.css" />
