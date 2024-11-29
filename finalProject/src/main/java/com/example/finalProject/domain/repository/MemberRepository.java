@@ -27,6 +27,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
 	@Query("SELECT m.username FROM MemberEntity m WHERE m.email = :email")
 	String findUsernameByEmail(@Param("email") String email);
 
+	@Query("SELECT m.prompt FROM MemberEntity m WHERE m.email = :email")
+	String findPromptByEmail(@Param("email") String email);
 
 
 
