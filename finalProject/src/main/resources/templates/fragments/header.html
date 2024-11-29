@@ -60,6 +60,11 @@
                                     </li>
                                 </ul>
                             </div> <!-- navbar collapse -->
+                            <div class="honey-container" th:if="${not #strings.isEmpty(session.userid)}">
+                                <img src="/images/honeypot.png" width="20px" height="20px" >
+                                <span class="honey-text" th:text="${session.honey}">점</span>
+                                <img src="/images/honeypot.png" width="20px" height="20px" >
+                            </div>
                             <div class="button">
                                 <a th:href="@{/loginMain}" class="signin" th:unless="${not #strings.isEmpty(session.userid)}">Sign In</a>
                                	<a th:href="@{/logout/result}" class="signup" th:if="${not #strings.isEmpty(session.userid)}">
