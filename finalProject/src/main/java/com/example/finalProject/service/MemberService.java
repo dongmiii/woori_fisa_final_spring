@@ -66,10 +66,10 @@ public class MemberService implements UserDetailsService{
         return member.getEmail();
     }
 
-    public Long getAutoIncrementIdByEmail(String email) {
+    public int getAutoIncrementIdByEmail(String email) {
         System.out.println("Email to search: " + email);
-        Long id = memberRepository.findIdByEmail(email);
-        if(id == null) {
+        int id = memberRepository.findIdByEmail(email);
+        if(id == 0) {
             throw new IllegalArgumentException("No user found with eamil:" + email);
         }
 
