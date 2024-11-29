@@ -1,8 +1,6 @@
 package com.example.finalProject.controller;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.example.finalProject.domain.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,14 +47,7 @@ public class HomeController {
 
 
 	// 메인페이지
-	@GetMapping("/")
-	public String Home(Model model) {
-		List<NewsEntity> newsList = newsService.getAllNews(); //entity News
-		List<News2Entity> news2List = news2Service.getAllNews();
-		model.addAttribute("newsList", newsList);
-		model.addAttribute("news2List", news2List);
-		return "index";
-	}
+
 
 //	@GetMapping("/test")
 //	public String test() {
@@ -98,6 +90,8 @@ public class HomeController {
 			// 사용자 정보 가져오기
 			int userId = memberService.getAutoIncrementIdByEmail(user);
 			String userName = memberService.getUsernameByEmail(user);
+			String prompt = memberService.getPromptByEmail(user);
+
 			int honey = memberService.getHoneyByEmail(user);
 
 			// 조회된 ID와 사용자 이름을 세션에 저장
@@ -106,6 +100,19 @@ public class HomeController {
 
 			session.setAttribute("username", userName);
 			System.out.println("*** username: " + userName);
+
+			session.setAttribute("prompt", prompt);
+			System.out.println("*** prompt: " + prompt);
+
+			if (prompt != null && !prompt.isEmpty()) {
+				List<String> promptLines = Arrays.stream(prompt.split("\n"))
+						.map(String::trim) // 각 줄의 공백 제거
+						.filter(line -> !line.isEmpty()) // 빈 줄 제외
+						.toList();
+				session.setAttribute("promptLines", promptLines);
+			} else {
+				session.setAttribute("promptLines", Collections.emptyList());
+			}
 
 			session.setAttribute("honey", honey);
 			System.out.println("*** honey: " + honey);
@@ -119,14 +126,12 @@ public class HomeController {
 					String base64Image = Base64.getEncoder().encodeToString(member.getImage());
 					session.setAttribute("userImage", "data:image/png;base64," + base64Image);
 					System.out.println("User image (Base64) stored in session.");
-				} else if (member.getImageUrl() != null) {
-					// 이미지 URL이 있는 경우 세션에 저장
-					session.setAttribute("userImage", member.getImageUrl());
-					System.out.println("User image URL stored in session: " + member.getImageUrl());
 				} else {
+					session.setAttribute("userImage", null); // 이미지 없음 처리
 					System.out.println("User has no image.");
 				}
 			} else {
+				session.setAttribute("userImage", null); // 사용자 없음 처리
 				System.err.println("No member found for email: " + user);
 			}
 		} catch (Exception e) {
@@ -134,89 +139,65 @@ public class HomeController {
 			System.err.println("Error occurred while processing user information.");
 		}
 
+
+
 		return "redirect:/";
 	}
-//	@GetMapping("/login/result")
-//	public String dispLoginResult(Model model, HttpSession session) {
-//		// 현재 사용자의 인증 상태 확인
-//		String user = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//		if (user == null || "anonymousUser".equals(user)) {
-//			System.out.println("User not authenticated");
-//			return "redirect:/login";
-//		}
-//
-//		System.out.println("Authenticated userId: " + user);
-//
-//		// 세션에 userId 저장
-//		if (session.getAttribute("usermail") == null) {
-//			session.setAttribute("usermail", user);
-//		}
-//
-////		model.addAttribute("userId", userName);
-//
-//		try {
-//
-//			Long userId = memberService.getAutoIncrementIdByEmail(user);
-//			String userName = memberService.getUsernameByEmail(user);
-//
-//			// 조회된 ID를 세션에 저장
-//			session.setAttribute("userid", userId);
-//			System.out.println("Authenticated autoID: " + userId);
-//
-//			session.setAttribute("username", userName);
-//			System.out.println("*** username: " + userName);
-//
-//
-//			// FastAPI 호출
-//			String fastApiResponse = fastApiService.sendname(userName);
-//
-//			// FastAPI 호출 결과 처리
-//			if (fastApiResponse != null) {
-//				System.out.println("FastAPI Responsed");
-//
-//				// FastAPI에서 받은 데이터를 JSON 형식으로 파싱하여 모델에 추가
-//				String prompt = extractPromptFromResponse(fastApiResponse);
-//				String image = extractImageFromResponse(fastApiResponse);
-//
-//				session.setAttribute("fastApiPrompt", prompt);
-//				session.setAttribute("fastApiImage", image);
-//			} else {
-//				System.err.println("FastAPI did not return a valid response.");
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			System.err.println("Error occurred while calling FastAPI.");
-//		}
-//
-//		return "redirect:/";
-//	}
 
+	@GetMapping("/")
+	public String Home(@RequestParam(value = "forceRefresh", required = false) String forceRefresh,
+					   HttpSession session,
+					   Model model) {
+		// 특정 세션 속성 초기화 로직
+		if ("true".equals(forceRefresh)) {
+			// 기존 세션 속성 제거
+			session.removeAttribute("userImage");
+			session.removeAttribute("prompt");
 
+			// 새로운 데이터를 불러오기
+			String userEmail = (String) session.getAttribute("usermail"); // 세션에서 사용자 이메일 가져오기
+			if (userEmail != null) {
+				// 사용자 정보 가져오기
+				MemberEntity member = memberService.findByEmail(userEmail); // 이메일로 사용자 조회
+				if (member != null) {
+					// 이미지 처리
+					if (member.getImage() != null) {
+						// 이미지가 BLOB으로 저장된 경우 Base64 인코딩
+						String base64Image = Base64.getEncoder().encodeToString(member.getImage());
+						session.setAttribute("userImage", "data:image/png;base64," + base64Image);
+					} else if (member.getImageUrl() != null) {
+						// URL로 저장된 이미지 처리
+						session.setAttribute("userImage", member.getImageUrl());
+					} else {
+						session.setAttribute("userImage", null); // 이미지 없음 처리
+					}
 
+					// prompt 값 불러오기
+					String prompt = memberService.getPromptByEmail(userEmail);
+					if (prompt != null && !prompt.isEmpty()) {
+						List<String> promptLines = Arrays.stream(prompt.split("\n"))
+								.map(String::trim) // 각 줄의 공백 제거
+								.filter(line -> !line.isEmpty()) // 빈 줄 제외
+								.toList();
+						session.setAttribute("promptLines", promptLines);
+					} else {
+						session.setAttribute("promptLines", Collections.emptyList());
+					}
 
+				}
+			}
 
-	private String extractPromptFromResponse(String fastApiResponse) {
-		try {
-			ObjectMapper objectMapper = new ObjectMapper();
-			Map<String, String> responseMap = objectMapper.readValue(fastApiResponse, Map.class);
-			return responseMap.get("prompt");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			return "redirect:/"; // 파라미터 제거를 위해 리다이렉트
 		}
+		List<NewsEntity> newsList = newsService.getAllNews(); //entity News
+		List<News2Entity> news2List = news2Service.getAllNews();
+		model.addAttribute("newsList", newsList);
+		model.addAttribute("news2List", news2List);
+		return "index";
 	}
-	private String extractImageFromResponse(String fastApiResponse) {
-		try {
-			// JSON 응답을 Map으로 변환
-			ObjectMapper objectMapper = new ObjectMapper();
-			Map<String, String> responseMap = objectMapper.readValue(fastApiResponse, Map.class);
-			return responseMap.get("image"); // "image" 키에 해당하는 값 반환
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null; // 에러 발생 시 null 반환
-		}
-	}
+
+
+
 
 	@GetMapping("/logout/result")
 	public String dispLogout(HttpServletRequest request) {
