@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.example.finalProject.domain.entity.News2Entity;
-import com.example.finalProject.domain.entity.NewsEntity;
+import com.example.finalProject.domain.entity.LifeEntity;
+import com.example.finalProject.domain.entity.FinanceEntity;
 import com.example.finalProject.domain.repository.MemberRepository;
 import com.example.finalProject.dto.MemberDTO;
 import com.example.finalProject.dto.MemberResponseDTO;
 import com.example.finalProject.service.FastApiService;
 import com.example.finalProject.service.MemberService;
-import com.example.finalProject.service.News2Service;
-import com.example.finalProject.service.NewsService;
+import com.example.finalProject.service.LifeService;
+import com.example.finalProject.service.FinanceService;
 import com.example.finalProject.validate.CheckEmailValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,8 +41,8 @@ public class HomeController {
 	private final MemberRepository memberRepository;
 	private final CheckEmailValidator checkEmailValidator;
 	private final FastApiService FastApiService;
-	private final NewsService newsService;
-	private final News2Service news2Service;
+	private final FinanceService newsService;
+	private final LifeService news2Service;
 
 
 
@@ -189,10 +189,10 @@ public class HomeController {
 
 			return "redirect:/"; // 파라미터 제거를 위해 리다이렉트
 		}
-		List<NewsEntity> newsList = newsService.getAllNews(); //entity News
-		List<News2Entity> news2List = news2Service.getAllNews();
-		model.addAttribute("newsList", newsList);
-		model.addAttribute("news2List", news2List);
+//		List<FinanceEntity> newsList = newsService.getAllNews(); //entity News
+//		List<LifeEntity> news2List = news2Service.getAllNews();
+//		model.addAttribute("newsList", newsList);
+//		model.addAttribute("news2List", news2List);
 		return "index";
 	}
 

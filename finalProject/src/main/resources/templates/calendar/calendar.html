@@ -308,6 +308,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+	
+    // 로그인 상태 확인
+    axios.get('/api/auth/check')
+        .then(response => {
+            if (!response.data) {
+                alert('로그인을 해주세요.');
+                window.location.href = '/login'; // 로그인 페이지로 리다이렉션
+            }
+        })
+        .catch(error => {
+            console.error('로그인 상태 확인 중 오류 발생:', error);
+            alert('로그인 상태 확인에 실패했습니다. 다시 시도해주세요.');
+            window.location.href = '/login'; // 오류 발생 시 로그인 페이지로 리다이렉션
+        });
+	
     var calendarEl = document.getElementById('calendar');
     var paymentTableBody = document.querySelector('#payment-details tbody');
     var summaryEl = document.getElementById('summary');

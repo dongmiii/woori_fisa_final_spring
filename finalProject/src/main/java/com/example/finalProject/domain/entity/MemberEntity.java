@@ -1,21 +1,15 @@
 package com.example.finalProject.domain.entity;
 
-import com.example.finalProject.domain.Role;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * model - 회원 정보 데이터를 저장할 회원 엔티티
@@ -61,14 +55,21 @@ public class MemberEntity {
 	@Column(nullable = true, length = 1000)
 	private String imageUrl; // varchar(1000)
 
-	@Column(nullable = true)
-	private Integer honey; // int
+    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
+    private Integer honey = 0; // Java 기본값
+    
+    @PrePersist
+    protected void onCreate() {
+        if (honey == null) {
+            honey = 0; // null 방지
+        }
+    }
 	
 //	@Enumerated(EnumType.STRING)
 //	private Role role;
 	
 	@Builder
-	public MemberEntity(Long id, String username, String password,String email, String agegroup, String gender, String category) {
+	public MemberEntity(Long id, String username, String password,String email, String agegroup, String gender, String category, Integer honey) {
 	      this.id = id;
 	        this.username = username;
 	        this.password = password;
@@ -76,6 +77,7 @@ public class MemberEntity {
 	        this.agegroup = agegroup;
 	        this.gender = gender;
 	        this.category = category;
+	        this.honey  = honey;
 	}
 
 }
