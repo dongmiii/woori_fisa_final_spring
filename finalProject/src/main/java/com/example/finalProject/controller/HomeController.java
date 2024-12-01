@@ -1,8 +1,11 @@
 package com.example.finalProject.controller;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-import com.example.finalProject.domain.entity.MemberEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,25 +15,23 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.finalProject.domain.entity.News2Entity;
-import com.example.finalProject.domain.entity.NewsEntity;
+import com.example.finalProject.domain.entity.MemberEntity;
 import com.example.finalProject.domain.repository.MemberRepository;
 import com.example.finalProject.dto.MemberDTO;
 import com.example.finalProject.dto.MemberResponseDTO;
 import com.example.finalProject.service.FastApiService;
+import com.example.finalProject.service.FinanceService;
+import com.example.finalProject.service.LifeService;
 import com.example.finalProject.service.MemberService;
-import com.example.finalProject.service.News2Service;
-import com.example.finalProject.service.NewsService;
 import com.example.finalProject.validate.CheckEmailValidator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,18 +42,10 @@ public class HomeController {
 	private final MemberRepository memberRepository;
 	private final CheckEmailValidator checkEmailValidator;
 	private final FastApiService FastApiService;
-	private final NewsService newsService;
-	private final News2Service news2Service;
+	private final FinanceService financeService;
+	private final LifeService lifeService;
 
 
-
-	// 메인페이지
-
-
-//	@GetMapping("/test")
-//	public String test() {
-//		return "layout_test";
-//	}
 
 	@GetMapping("/loginMain")
 	public String loginMain() {
@@ -130,6 +123,12 @@ public class HomeController {
 					session.setAttribute("userImage", null); // 이미지 없음 처리
 					System.out.println("User has no image.");
 				}
+				
+				if(member.getImageUrl() == null || member.getImageUrl().isEmpty()) {
+					System.out.println("Redirecting to roulette.html because img_url is empty");
+					return "redirect:/roulette/roulette";
+				}
+				
 			} else {
 				session.setAttribute("userImage", null); // 사용자 없음 처리
 				System.err.println("No member found for email: " + user);
@@ -138,8 +137,6 @@ public class HomeController {
 			e.printStackTrace();
 			System.err.println("Error occurred while processing user information.");
 		}
-
-
 
 		return "redirect:/";
 	}
@@ -189,10 +186,10 @@ public class HomeController {
 
 			return "redirect:/"; // 파라미터 제거를 위해 리다이렉트
 		}
-		List<NewsEntity> newsList = newsService.getAllNews(); //entity News
-		List<News2Entity> news2List = news2Service.getAllNews();
-		model.addAttribute("newsList", newsList);
-		model.addAttribute("news2List", news2List);
+//		List<FinanceEntity> newsList = newsService.getAllNews(); //entity News
+//		List<LifeEntity> news2List = news2Service.getAllNews();
+//		model.addAttribute("newsList", newsList);
+//		model.addAttribute("news2List", news2List);
 		return "index";
 	}
 

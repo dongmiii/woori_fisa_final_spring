@@ -97,6 +97,8 @@
             flex: 1;
             padding: 10px;
             overflow-y: auto;
+            max-height: 500px; /* 제한된 높이로 설정 */
+            overflow-y: scroll; /* 스크롤이 생기도록 설정 */
         }
         .chat-content .message {
             margin: 5px 0;
@@ -157,7 +159,7 @@
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-<header th:replace="fragments/header :: headerFragment"></header>
+<header th:replace="~{fragments/header :: headerFragment}"></header> <!-- Thymeleaf fragment 수정 -->
 <div class="chat-container">
     <div class="chat-history">
         <h3>대화 내역</h3>
@@ -177,174 +179,153 @@
         </div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
-            <button onclick="sendMessage()">전송</button>
+            <button id="sendButton" onclick="sendMessage()">전송</button> <!-- id 추가 -->
         </div>
     </div>
 </div>
 
-<!--<footer th:replace="fragments/footer :: footerFragment"></footer>-->
-
 <script>
-    let conversations = []; // 대화 내역 저장
-    let activeConversationIndex = 0; // 현재 활성화된 대화
+    const fastApiUrl = "http://localhost:8888"; // FastAPI 서버 URL
 
     async function sendMessage() {
         const chatContent = document.getElementById('chatContent');
         const userInput = document.getElementById('userInput');
 
-        const userMessage = userInput.value.trim(); // 입력값 확인
-        if (userMessage === '') {
-            return; // 빈 입력값은 무시
+        const userMessage = userInput.value.trim();
+        if (!userMessage) {
+            return;
         }
 
-        // 사용자 메시지 추가
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.className = 'message user';
-        userMessageDiv.textContent = userMessage;
-        chatContent.appendChild(userMessageDiv);
-
-        // 입력 필드 초기화
+        appendMessage(userMessage, 'user');
         userInput.value = '';
 
-        // 챗봇 응답 준비 상태 표시
-        const botMessageDiv = document.createElement('div');
-        botMessageDiv.className = 'message bot';
-        botMessageDiv.textContent = '챗봇이 응답 중...';
-        chatContent.appendChild(botMessageDiv);
+        appendMessage('챗봇이 응답 중...', 'bot');
 
-        // 스크롤을 하단으로 이동
-        chatContent.scrollTop = chatContent.scrollHeight;
-
+        // FastAPI로부터 응답 받기
         try {
-            // OpenAI API 호출
-            const botResponse = await fetch('/api/chat', {
+            const response = await fetch("/cardchat", {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ prompt: userMessage }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: userMessage })
             });
 
-            const botMessage = await botResponse.text();
+            if (!response.ok) {
+                throw new Error("Spring Boot 서버 응답 실패");
+            }
 
-            // 챗봇 응답 업데이트
-            botMessageDiv.textContent = botMessage;
+            const data = await response.json(); // 서버에서 JSON 응답 받기
+
+            // botMessage 처리
+            const botMessage = data.response || "서버에서 응답이 없습니다.";
+            updateLastBotMessageRaw(botMessage);
+
+            // 카드 정보 출력
+            if (data.cards && data.cards.length > 0) {
+                data.cards.forEach((card, index) => {
+                    const cardInfo = `
+                    <div class="message bot">
+                        <strong>${card}</strong><br>
+                        <img src="${data.img_urls[index]}" alt="${card}" style="width: 150px; height: auto; margin-bottom: 10px; object-fit: cover;"><br>
+                    </div>
+                `;
+                    chatContent.innerHTML += cardInfo;
+                });
+            }
         } catch (error) {
-            console.error('챗봇 응답 중 오류 발생:', error);
-            botMessageDiv.textContent = '챗봇과의 연결에 문제가 발생했습니다. 다시 시도해주세요.';
+            console.error('Error:', error);
+            updateLastBotMessageRaw('오류가 발생했습니다. 다시 시도해주세요.');
         }
 
-        // 스크롤을 하단으로 이동
         chatContent.scrollTop = chatContent.scrollHeight;
     }
 
+    // raw 메시지 처리 (줄바꿈을 <br>로 변환)
+    function updateLastBotMessageRaw(message) {
+        const chatContent = document.getElementById('chatContent');
+        const lastMessage = chatContent.querySelector('.message.bot:last-child');
+
+        // 줄바꿈을 <br>로 변환
+        const formattedMessage = message.replace(/\n/g, '<br>');
+
+        if (lastMessage) {
+            lastMessage.innerHTML = formattedMessage; // HTML로 삽입하여 raw 메시지 출력
+        } else {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.innerHTML = formattedMessage; // HTML로 삽입하여 raw 메시지 출력
+            chatContent.appendChild(messageDiv);
+        }
+    }
+
+    function appendMessage(message, sender) {
+        const chatContent = document.getElementById('chatContent');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
+        messageDiv.textContent = message;
+        chatContent.appendChild(messageDiv);
+    }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const userInput = document.getElementById('userInput');
+
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (event.isComposing || event.keyCode === 229) return;
+                sendMessage();
+            }
+        });
+
+        document.getElementById('sendButton').addEventListener('click', sendMessage); // 버튼 클릭 이벤트 추가
+    });
+
+    let conversations = [];
+    let activeConversationIndex = 0;
+
     function addNewConversation() {
         const historyContent = document.getElementById('historyContent');
-        const newConversation = {
-            title: `대화 ${conversations.length + 1}`,
-            messages: []
-        };
-
+        const newConversation = { title: `대화 ${conversations.length + 1}`, messages: [] };
         conversations.push(newConversation);
 
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         historyItem.dataset.index = conversations.length - 1;
-        // 전체 history-item 클릭 시 대화로 이동
-        historyItem.onclick = (event) => {
-            // 삭제 버튼 클릭 방지
-            if (event.target.className !== 'delete-button') {
-                loadConversation(parseInt(historyItem.dataset.index));
-            }
-        };
+
+        historyItem.onclick = () => loadConversation(conversations.length - 1);
 
         const titleDiv = document.createElement('span');
         titleDiv.textContent = newConversation.title;
-        titleDiv.style.cursor = 'pointer';
-        // 클릭 시 해당 대화로 이동
-        titleDiv.onclick = () => loadConversation(parseInt(historyItem.dataset.index));
-
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'delete-button';
         deleteButton.textContent = '삭제';
-        deleteButton.onclick = () => deleteConversation(parseInt(historyItem.dataset.index));
+        deleteButton.onclick = (e) => {
+            e.stopPropagation();
+            deleteConversation(conversations.length - 1);
+        };
 
         historyItem.appendChild(titleDiv);
         historyItem.appendChild(deleteButton);
         historyContent.appendChild(historyItem);
-
-        historyContent.scrollTop = historyContent.scrollHeight;
-
-        // 새로운 대화로 바로 이동
         loadConversation(conversations.length - 1);
-    }
-
-    function deleteConversation(index) {
-        const historyContent = document.getElementById('historyContent');
-        if (activeConversationIndex === index) {
-            alert("현재 활성화된 대화는 삭제할 수 없습니다.");
-            return;
-        }
-
-        conversations.splice(index, 1);
-        historyContent.innerHTML = '';
-        conversations.forEach((conv, idx) => {
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            historyItem.dataset.index = idx;
-
-            const titleDiv = document.createElement('span');
-            titleDiv.textContent = conv.title;
-            titleDiv.style.cursor = 'pointer';
-            titleDiv.onclick = () => loadConversation(idx);
-
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'delete-button';
-            deleteButton.textContent = '삭제';
-            deleteButton.onclick = () => deleteConversation(idx);
-
-            historyItem.appendChild(titleDiv);
-            historyItem.appendChild(deleteButton);
-            historyContent.appendChild(historyItem);
-        });
     }
 
     function loadConversation(index) {
         const chatContent = document.getElementById('chatContent');
-        const chatHeader = document.getElementById('chatHeader');
-
-        activeConversationIndex = index;
-        const selectedConversation = conversations[index];
-
-        chatHeader.textContent = selectedConversation.title;
         chatContent.innerHTML = '';
-
-        selectedConversation.messages.forEach(message => {
-            addMessageToChat(message);
-        });
+        activeConversationIndex = index;
     }
 
-    function addMessageToChat(message) {
-        const chatContent = document.getElementById('chatContent');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${message.sender}`;
-        messageDiv.textContent = message.text;
-        chatContent.appendChild(messageDiv);
-        chatContent.scrollTop = chatContent.scrollHeight;
+    function deleteConversation(index) {
+        if (activeConversationIndex === index) {
+            alert('현재 활성화된 대화는 삭제할 수 없습니다.');
+            return;
+        }
+        conversations.splice(index, 1);
+        loadConversation(0);
     }
-
-    // // 엔터 키를 눌렀을 때 메시지 전송
-    // document.getElementById('userInput').addEventListener('keydown', function (event) {
-    //     if (event.key === 'Enter') {
-    //         event.preventDefault(); // 폼 제출 기본 동작 방지
-    //         sendMessage(); // 메시지 전송
-    //     }
-    // });
-
-    // 초기 대화 추가
-    addNewConversation();
-    loadConversation(0);
 </script>
+
 </body>
 </html>

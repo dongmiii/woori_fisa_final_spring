@@ -259,6 +259,8 @@
         <div class="summary" id="summary">
             
         </div>
+        
+       	<!-- 해당 날짜의 소비 평가 -->
         <div class="feedback-buttons">
             <span id="today">오늘의 소비는?</span>
               <img src="/images/ThumbUp.png"  alt="좋아요" class="feedback-image" id="good-button" width="50" height="50">
@@ -274,6 +276,7 @@
 
 <footer th:replace="fragments/footer :: footerFragment"></footer>
 
+<!-- 내역 추가 모달 -->
    <div class="modal" id="transactionModal">
         <div class="modal-content">
             <span class="close" id="closeModal">&times;</span>
@@ -308,6 +311,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+	
+    // 로그인 상태 확인
+    axios.get('/api/auth/check')
+        .then(response => {
+            if (!response.data) {
+                alert('로그인을 해주세요.');
+                window.location.href = '/login'; // 로그인 페이지로 리다이렉션
+            }
+        })
+        .catch(error => {
+            console.error('로그인 상태 확인 중 오류 발생:', error);
+            alert('로그인 상태 확인에 실패했습니다. 다시 시도해주세요.');
+            window.location.href = '/login'; // 오류 발생 시 로그인 페이지로 리다이렉션
+        });
+	
     var calendarEl = document.getElementById('calendar');
     var paymentTableBody = document.querySelector('#payment-details tbody');
     var summaryEl = document.getElementById('summary');
@@ -390,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
           });
 
         // API 호출
-        axios.get(`/api/payments/date`, {
+        axios.get(`/api/payments/totalUser`, {
           params: { date: selectedDate }
         }).then(response => {
           const payments = response.data; // API에서 받은 데이터

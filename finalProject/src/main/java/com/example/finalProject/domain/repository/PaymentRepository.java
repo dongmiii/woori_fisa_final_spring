@@ -2,9 +2,11 @@ package com.example.finalProject.domain.repository;
 
 import com.example.finalProject.domain.entity.PaymentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,7 +20,27 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer>
     Long calculateTotalAmount(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
 
-	List<PaymentEntity> findByMemberId(Long memberId);
+//	List<PaymentEntity> findByMemberId(Integer memberId);
+    
+    @Query("SELECT p FROM PaymentEntity p WHERE p.memberId = :memberId")
+    List<PaymentEntity> findByMemberId(@Param("memberId") Integer memberId);
+
+
+    @Query("SELECT p FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime BETWEEN :start AND :end")
+    List<PaymentEntity> findByMemberIdAndDatetimeBetween(
+        @Param("memberId") Integer memberId,
+        @Param("start") LocalDateTime start,
+        @Param("end") LocalDateTime end
+    );
+
+
+    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime BETWEEN :start AND :end")
+    Long calculateTotalAmountForUser(
+        @Param("memberId") Integer memberId,
+        @Param("start") LocalDateTime start,
+        @Param("end") LocalDateTime end
+    );
+
     
     
 }

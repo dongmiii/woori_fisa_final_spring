@@ -1,19 +1,14 @@
 package com.example.finalProject.dto;
 
 public class ChatRequestDTO {
-    private String prompt;
+    private String question;
 
-    public ChatRequestDTO() {}
-
-    public ChatRequestDTO(String prompt) {
-        this.prompt = prompt;
+    // Getter and Setter for 'question'
+    public String getQuestion() {
+        return question;
     }
 
-    public String getPrompt() {
-        return prompt;
-    }
-
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 }

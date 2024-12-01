@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f8fc;
+            font-family: Pretendard, Arial, sans-serif;
+        }
+
+        .loading-container {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ccc;
+            border-top-color: #febf00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="loading-container">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">
+        [[${character}]] 캐릭터 생성 중...
+    </div>
+    <div id="userSessionId" style="display: none;" aria-hidden="true">[[${session.userid}]]</div>
+</div>
+
+<script>
+    const userSessionId = document.getElementById('userSessionId');
+    const userId = userSessionId.textContent.trim();
+
+    setTimeout(() => {
+        const params = new URLSearchParams(window.location.search);
+        const character = params.get("character");
+
+        // Spring Boot에서 FastAPI URL과 엔드포인트 가져오기
+        fetch("/api/fastapi-endpoints")
+            .then(response => response.json())
+            .then(config => {
+                const fastApiUrl = config.url; // FastAPI URL
+                const processUserDataEndpoint = config.processUserData; // 엔드포인트 경로
+
+                // FastAPI로 userId와 character를 POST 요청
+                return fetch(`${fastApiUrl}${processUserDataEndpoint}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        character: character,
+                    }),
+                });
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response from FastAPI:", data);
+                // 홈화면으로 리다이렉트
+                window.location.href = `/?forceRefresh=true`;
+            })
+            .catch(error => console.error("Error:", error));
+    }, 3000); // 3초 후 실행
+</script>
+</body>
+</html>
