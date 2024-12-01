@@ -42,5 +42,11 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer>
     );
 
     
+    @Query("SELECT COUNT(p) > 0 FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime BETWEEN :start AND :end")
+    boolean existsByMemberIdAndDatetimeBetween(
+        @Param("memberId") Integer memberId,
+        @Param("start") LocalDateTime start,
+        @Param("end") LocalDateTime end);
+    
     
 }

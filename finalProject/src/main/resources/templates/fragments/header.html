@@ -68,8 +68,8 @@
                             </div> <!-- navbar collapse -->
                             <div class="honey-container" th:if="${not #strings.isEmpty(session.userid)}">
                             	<img src="/images/honeypot.png" width="20px" height="20px" >
-                            	<span th:text="${session.username  + ' 님, '}"></span>
-                                <span class="honey-text" th:text="${session.honey}"></span>
+                            	<span th:text="${session.username  + ' 님, '}" style=margin-right:7px;></span>
+                                <span id="honey-score" class="honey-text" th:text="${session.honey}"></span>
                                 <img src="/images/honeypot.png" width="20px" height="20px" >
                             </div>
                             <div class="button">

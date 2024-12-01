@@ -124,8 +124,8 @@ public class HomeController {
 					System.out.println("User has no image.");
 				}
 				
-				if(member.getImageUrl() == null || member.getImageUrl().isEmpty()) {
-					System.out.println("Redirecting to roulette.html because img_url is empty");
+				if(member.getPrompt() == null || member.getPrompt().isEmpty()) {
+					System.out.println("Redirecting to roulette.html because Prompt is empty");
 					return "redirect:/roulette/roulette";
 				}
 				

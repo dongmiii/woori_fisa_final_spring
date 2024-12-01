@@ -104,6 +104,15 @@ public class MemberService implements UserDetailsService{
         return member.getHoney();
     }
     
+    public void addHoney(Integer memberId, int points) {
+    	Long memberIdAsLong = memberId.longValue();
+    	MemberEntity member = memberRepository.findById(memberIdAsLong)
+    			.orElseThrow(() -> new IllegalArgumentException("addHoney :: 사용자를 찾을 수 없습니다."));
+    	
+    	member.setHoney(member.getHoney() + points);
+    	memberRepository.save(member);
+    }
+    
     // 하루에 한 번만 점수 추가
 //    public boolean updateHoneyForDate(String email, String date) {
 //    	MemberEntity member = memberRepository.findByEmail(email)
