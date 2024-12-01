@@ -38,7 +38,13 @@
                                         <a th:href="@{/card}" aria-label="Toggle navigation">CARDCHAT</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a th:href="@{/}" aria-label="Toggle navigation">NEWS</a>
+                                        <a class="dd-menu collapsed" href="javascript:void(0)" data-bs-toggle="collapse"
+                                            data-bs-target="#submenu-1-2" aria-controls="navbarSupportedContent"
+                                            aria-expanded="false" aria-label="Toggle navigation">NEWS</a>
+                                        <ul class="sub-menu collapse" id="submenu-1-2">
+                                            <li class="nav-item"><a th:href="@{/finance}">금융</a></li>
+                                            <li class="nav-item"><a th:href="@{/life}">생활경제</a></li>
+                                        </ul>
                                     </li>
                                   	<li class="nav-item">
                                         <a th:href="@{/dashboard}" aria-label="Toggle navigation">DASHBOARD</a>
@@ -61,8 +67,9 @@
                                 </ul>
                             </div> <!-- navbar collapse -->
                             <div class="honey-container" th:if="${not #strings.isEmpty(session.userid)}">
-                                <img src="/images/honeypot.png" width="20px" height="20px" >
-                                <span class="honey-text" th:text="${session.honey}">점</span>
+                            	<img src="/images/honeypot.png" width="20px" height="20px" >
+                            	<span th:text="${session.username  + ' 님, '}"></span>
+                                <span class="honey-text" th:text="${session.honey}"></span>
                                 <img src="/images/honeypot.png" width="20px" height="20px" >
                             </div>
                             <div class="button">

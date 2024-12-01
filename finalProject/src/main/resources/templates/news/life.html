@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:sec=""
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NENWS</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/images/logo/bee3.png" />
+
+	 <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="/css/animate.css" />
+    <link rel="stylesheet" href="/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/css/glightbox.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/newsMain.css" />
+    <link rel="stylesheet" href="/css/dashboardmain.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
+
+</head>
+<body>
+<header th:replace="fragments/header :: headerFragment"></header>
+
+    <!-- Start Services Area -->
+    <div class="services section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Today NEWS</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s"><span th:text="${session.username  + ' 님'}"></span>을 위한 뉴스</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">생활경제 뉴스를 만나보세요!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-grid-alt"></i>
+                        </div>
+                        <h4 class="text-title">Brand Identity Design</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-keyword-research"></i>
+                        </div>
+                        <h4 class="text-title">Digital Marketing</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-vector"></i>
+                        </div>
+                        <h4 class="text-title">Design and Development</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-book"></i>
+                        </div>
+                        <h4 class="text-title">IT Consulting Service</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-cloud-network"></i>
+                        </div>
+                        <h4 class="text-title">Cloud Computing</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-display-alt"></i>
+                        </div>
+                        <h4 class="text-title">Graphics Design</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+               	<div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-book"></i>
+                        </div>
+                        <h4 class="text-title">IT Consulting Service</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-cloud-network"></i>
+                        </div>
+                        <h4 class="text-title">Cloud Computing</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-display-alt"></i>
+                        </div>
+                        <h4 class="text-title">Graphics Design</h4>
+                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
+                            market.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Services Area -->
+
+
+
+<footer th:replace="fragments/footer :: footerFragment"></footer>
+
+</body>
+</html>
