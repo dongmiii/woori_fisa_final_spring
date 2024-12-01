@@ -89,7 +89,7 @@ public class MemberService implements UserDetailsService{
     public String getPromptByEmail(String email) {
         String prompt = memberRepository.findPromptByEmail(email);
         if (prompt == null) {
-            throw new IllegalArgumentException("No prompt found with email: " + email);
+            return null;
         }
         return prompt;
     }
