@@ -105,21 +105,21 @@ public class MemberService implements UserDetailsService{
     }
     
     // 하루에 한 번만 점수 추가
-    public boolean updateHoneyForDate(String email, String date) {
-    	MemberEntity member = memberRepository.findByEmail(email)
-    			.orElseThrow(() -> new IllegalStateException("honey :: 회원 정보가 없습니다."));
-    	
-    	// 특정 날짜에 이미 점수가 쌓였는지 확인
-    	boolean isAlreadyUpdated = memberRepository.checkHoneyUpdateForDate(email, date);
-    	if(!isAlreadyUpdated) {
-    		member.setHoney(member.getHoney() +1);
-    		memberRepository.save(member);
-//    		memberRepository.recordHoneyUpdate(email,date);
-    		return true;
-    	}
-    	
-    	return false;
-    }
+//    public boolean updateHoneyForDate(String email, String date) {
+//    	MemberEntity member = memberRepository.findByEmail(email)
+//    			.orElseThrow(() -> new IllegalStateException("honey :: 회원 정보가 없습니다."));
+//    	
+//    	// 특정 날짜에 이미 점수가 쌓였는지 확인
+//    	boolean isAlreadyUpdated = memberRepository.checkHoneyUpdateForDate(email, date);
+//    	if(!isAlreadyUpdated) {
+//    		member.setHoney(member.getHoney() +1);
+//    		memberRepository.save(member);
+////    		memberRepository.recordHoneyUpdate(email,date);
+//    		return true;
+//    	}
+//    	
+//    	return false;
+//    }
 
 
     // 상세 정보를 조회하는 메소드
