@@ -97,6 +97,8 @@
             flex: 1;
             padding: 10px;
             overflow-y: auto;
+            max-height: 500px; /* 제한된 높이로 설정 */
+            overflow-y: scroll; /* 스크롤이 생기도록 설정 */
         }
         .chat-content .message {
             margin: 5px 0;
@@ -157,7 +159,7 @@
     <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body>
-<header th:replace="fragments/header :: headerFragment"></header>
+<header th:replace="~{fragments/header :: headerFragment}"></header> <!-- Thymeleaf fragment 수정 -->
 <div class="chat-container">
     <div class="chat-history">
         <h3>대화 내역</h3>
@@ -177,65 +179,84 @@
         </div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
-            <button onclick="sendMessage()">전송</button>
+            <button id="sendButton" onclick="sendMessage()">전송</button> <!-- id 추가 -->
         </div>
     </div>
 </div>
 
-<!--<footer th:replace="fragments/footer :: footerFragment"></footer>-->
-
 <script>
-    // FastAPI 서버 주소
-    const fastApiUrl = "http://localhost:5555"; // 예: http://127.0.0.1:8000
+    const fastApiUrl = "http://localhost:8888"; // FastAPI 서버 URL
 
-    // 메시지 전송 함수
     async function sendMessage() {
         const chatContent = document.getElementById('chatContent');
         const userInput = document.getElementById('userInput');
 
-        const userMessage = userInput.value.trim(); // 입력값 확인
+        const userMessage = userInput.value.trim();
         if (!userMessage) {
-            return; // 빈 입력값은 무시
+            return;
         }
 
-        // 사용자 메시지 추가
         appendMessage(userMessage, 'user');
-
-        // 입력 필드 초기화
         userInput.value = '';
 
-        // 챗봇 응답 준비 상태 표시
         appendMessage('챗봇이 응답 중...', 'bot');
 
+        // FastAPI로부터 응답 받기
         try {
-            // FastAPI로 메시지 전송
-            const response = await fetch(`${fastApiUrl}/cardchat`, {
+            const response = await fetch("/cardchat", {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ question: userMessage }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: userMessage })
             });
 
             if (!response.ok) {
-                throw new Error("FastAPI 서버 응답 실패");
+                throw new Error("Spring Boot 서버 응답 실패");
             }
 
-            const data = await response.json();
-            const botMessage = data.response || "서버에서 응답이 없습니다.";
+            const data = await response.json(); // 서버에서 JSON 응답 받기
 
-            // 마지막 봇 메시지 업데이트
-            updateLastBotMessage(botMessage);
+            // botMessage 처리
+            const botMessage = data.response || "서버에서 응답이 없습니다.";
+            updateLastBotMessageRaw(botMessage);
+
+            // 카드 정보 출력
+            if (data.cards && data.cards.length > 0) {
+                data.cards.forEach((card, index) => {
+                    const cardInfo = `
+                    <div class="message bot">
+                        <strong>${card}</strong><br>
+                        <img src="${data.img_urls[index]}" alt="${card}" style="width: 150px; height: auto; margin-bottom: 10px; object-fit: cover;"><br>
+                    </div>
+                `;
+                    chatContent.innerHTML += cardInfo;
+                });
+            }
         } catch (error) {
-            console.error('FastAPI 응답 중 오류 발생:', error);
-            updateLastBotMessage('오류가 발생했습니다. 다시 시도해주세요.');
+            console.error('Error:', error);
+            updateLastBotMessageRaw('오류가 발생했습니다. 다시 시도해주세요.');
         }
 
-        // 스크롤을 하단으로 이동
         chatContent.scrollTop = chatContent.scrollHeight;
     }
 
-    // 메시지 추가
+    // raw 메시지 처리 (줄바꿈을 <br>로 변환)
+    function updateLastBotMessageRaw(message) {
+        const chatContent = document.getElementById('chatContent');
+        const lastMessage = chatContent.querySelector('.message.bot:last-child');
+
+        // 줄바꿈을 <br>로 변환
+        const formattedMessage = message.replace(/\n/g, '<br>');
+
+        if (lastMessage) {
+            lastMessage.innerHTML = formattedMessage; // HTML로 삽입하여 raw 메시지 출력
+        } else {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.innerHTML = formattedMessage; // HTML로 삽입하여 raw 메시지 출력
+            chatContent.appendChild(messageDiv);
+        }
+    }
+
     function appendMessage(message, sender) {
         const chatContent = document.getElementById('chatContent');
         const messageDiv = document.createElement('div');
@@ -244,36 +265,24 @@
         chatContent.appendChild(messageDiv);
     }
 
-    // 마지막 봇 메시지 업데이트
-    function updateLastBotMessage(message) {
-        const chatContent = document.getElementById('chatContent');
-        const lastMessage = chatContent.querySelector('.message.bot:last-child');
-        if (lastMessage) {
-            lastMessage.textContent = message;
-        }
-    }
 
-    // DOMContentLoaded 시 이벤트 초기화
     document.addEventListener('DOMContentLoaded', () => {
         const userInput = document.getElementById('userInput');
-        const sendButton = document.getElementById('sendButton');
 
-        // 엔터 키 입력 시 메시지 전송
         userInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                event.preventDefault(); // 기본 동작 방지
-                if (event.isComposing || event.keyCode === 229) {
-                    return; // IME(한글 입력 등) 조합 상태일 때 실행 중지
-                }
+                event.preventDefault();
+                if (event.isComposing || event.keyCode === 229) return;
                 sendMessage();
             }
         });
 
-        // 전송 버튼 클릭 시 메시지 전송
-        sendButton.addEventListener('click', sendMessage);
+        document.getElementById('sendButton').addEventListener('click', sendMessage); // 버튼 클릭 이벤트 추가
     });
 
-    // 초기 대화 생성
+    let conversations = [];
+    let activeConversationIndex = 0;
+
     function addNewConversation() {
         const historyContent = document.getElementById('historyContent');
         const newConversation = { title: `대화 ${conversations.length + 1}`, messages: [] };
@@ -317,7 +326,6 @@
         loadConversation(0);
     }
 </script>
-
 
 </body>
 </html>

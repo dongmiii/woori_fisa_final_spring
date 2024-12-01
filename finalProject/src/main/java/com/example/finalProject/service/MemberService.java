@@ -66,6 +66,11 @@ public class MemberService implements UserDetailsService{
         return member.getEmail();
     }
 
+    public MemberEntity getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + email));
+    }
+
     public int getAutoIncrementIdByEmail(String email) {
         System.out.println("Email to search: " + email);
         int id = memberRepository.findIdByEmail(email);
