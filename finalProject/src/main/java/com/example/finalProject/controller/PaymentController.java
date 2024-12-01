@@ -2,6 +2,7 @@ package com.example.finalProject.controller;
 
 import com.example.finalProject.domain.entity.PaymentEntity;
 import com.example.finalProject.domain.repository.PaymentRepository;
+import com.example.finalProject.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -16,9 +17,11 @@ import java.util.List;
 public class PaymentController {
 	
     private final PaymentRepository paymentRepository;
+    private final MemberService memberService;
 
-    public PaymentController(PaymentRepository paymentRepository) {
+    public PaymentController(PaymentRepository paymentRepository, MemberService memberService) {
         this.paymentRepository = paymentRepository;
+        this.memberService = memberService; 
     }
 
     // 모든 결제 내역 가져오기
@@ -162,5 +165,7 @@ public class PaymentController {
         // 데이터 저장
         return paymentRepository.save(payment);
     }
+    
+    
     
 }

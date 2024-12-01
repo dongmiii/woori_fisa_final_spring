@@ -1,27 +1,40 @@
 package com.example.finalProject.controller;
 
-import com.example.finalProject.domain.entity.LifeEntity;
-import com.example.finalProject.service.LifeService;
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import com.example.finalProject.service.LifeService;
 
 @Controller
 public class LifeController {
 
-    private final LifeService news2Service;
+    private final LifeService lifeService;
 
-    public LifeController(LifeService newsService) {
-        this.news2Service = newsService;
+    public LifeController(LifeService lifeService) {
+        this.lifeService = lifeService;
     }
 
-    // 기존 news 요청
+    
     @GetMapping("/life")
     public String showNews(Model model) {
-        List<LifeEntity> newsList = news2Service.getAllNews();
-        model.addAttribute("newsList", newsList);
-        return "/news/life";
+    	Pageable pageable = PageRequest.of(0, 9);
+    	List<Object[]> newsList= lifeService.getPagedFinanceNews(pageable);
+    	
+    	model.addAttribute("lifeList", newsList);
+        return "news/life";
+    }
+    
+    
+    @GetMapping("/life/api/news")
+    @ResponseBody
+    public List<Object[]> getpagedNews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size){
+    	return lifeService.getPagedFinanceNews(PageRequest.of(page, size));
     }
 }
