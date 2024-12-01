@@ -19,6 +19,37 @@
     <link rel="stylesheet" href="/css/newsMain.css" />
     <link rel="stylesheet" href="/css/dashboardmain.css" />
     <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.svg" />
+    
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <style>
+    	
+    	button {
+    		background: #5DC8CD;
+			  display: block;
+			  position: relative;
+			  float: center;
+			  width: 120px;
+			  padding: 0;
+			  margin-top: 30px;
+			  font-weight: 600;
+			  text-align: center;
+			  line-height: 50px;
+			  color: #FFF;
+			  border-radius: 5px;
+			  border:none;
+			  transition: all 0.2s ;
+			}
+    	
+		.btnLightBlue.btnBorder {
+		  box-shadow: 0px 0px 0px 0px #01939A;
+		}
+		
+		.btnLightBlue.btnBorder:hover {
+		  box-shadow: 0px 0px 0px 5px #01939A;
+		}
+    </style>
 
 </head>
 <body>
@@ -30,111 +61,83 @@
             <div class="row">
                 <div class="col-12">
                     <div class="section-title">
-                        <h3 class="wow zoomIn" data-wow-delay=".2s">Today NEWS</h3>
-                        <h2 class="wow fadeInUp" data-wow-delay=".4s"><span th:text="${session.username  + ' 님'}"></span>을 위한 뉴스</h2>
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Today's NEWS</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s" th:if="${not #strings.isEmpty(session.userid)}">
+                            <span th:text="${session.username + ' 님'}"></span>을 위한 뉴스
+                        </h2>
                         <p class="wow fadeInUp" data-wow-delay=".6s">생활경제 뉴스를 만나보세요!</p>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
+
+  			<div class="row" id="news-con">
+                <!-- 반복문으로 뉴스 데이터 렌더링 -->
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s" th:each="news : ${lifeList}">
                     <div class="single-service">
                         <div class="main-icon">
-                            <i class="lni lni-grid-alt"></i>
+                            <i class="lni lni-keyword-research"></i> <!-- 아이콘은 고정 -->
                         </div>
-                        <h4 class="text-title">Brand Identity Design</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-keyword-research"></i>
-                        </div>
-                        <h4 class="text-title">Digital Marketing</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-vector"></i>
-                        </div>
-                        <h4 class="text-title">Design and Development</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-book"></i>
-                        </div>
-                        <h4 class="text-title">IT Consulting Service</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-cloud-network"></i>
-                        </div>
-                        <h4 class="text-title">Cloud Computing</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-display-alt"></i>
-                        </div>
-                        <h4 class="text-title">Graphics Design</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-               	<div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-book"></i>
-                        </div>
-                        <h4 class="text-title">IT Consulting Service</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-cloud-network"></i>
-                        </div>
-                        <h4 class="text-title">Cloud Computing</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-display-alt"></i>
-                        </div>
-                        <h4 class="text-title">Graphics Design</h4>
-                        <p>Invest in Bitcoin on the regular or save with one of the highest interest rates on the
-                            market.</p>
+                        <!-- 제목 (title) -->
+                        <h4 class="text-title" th:text="${news[0]}">Title</h4>
+                        <!-- 요약 (summary) -->
+                        <p th:text="${news[1]}">Summary</p>
                     </div>
                 </div>
             </div>
+           	
+             <!-- 더보기 버튼 -->
+		   <div class="row">
+		            <div class="col-12 text-center">
+		                <button id="load-more" class="button btnBorder btnLightBlue" onclick="loadMoreNews()">더보기</button>
+		            </div>
+		  	</div> 
         </div>
     </div>
     <!-- End Services Area -->
 
-
-
 <footer th:replace="fragments/footer :: footerFragment"></footer>
+
+<script th:inline="javascript">
+    let currentPage = 1;
+
+    function loadMoreNews() {
+        axios.get('/life/api/news', {
+            params: {
+                page: currentPage,
+                size: 9
+            }
+        }).then(response => {
+            const newsContainer = document.getElementById('news-con');
+            const newsList = response.data;
+
+            if (newsList.length === 0) {
+                document.getElementById('load-more').innerText = '더 이상 뉴스가 없습니다.';
+                document.getElementById('load-more').disabled = true;
+                return;
+            }
+
+            // Append new news items
+            newsList.forEach(news => {
+                const newsHtml = `
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="single-service">
+                            <div class="main-icon">
+                                <i class="lni lni-keyword-research"></i>
+                            </div>
+                            <h4 class="text-title">${news[0]}</h4> <!-- 인덱스 기반 접근 -->
+                            <p>${news[1]}</p>
+                        </div>
+                    </div>
+                `;
+                newsContainer.insertAdjacentHTML('beforeend', newsHtml);
+            });
+
+            currentPage++;
+        }).catch(error => {
+            console.error('뉴스를 가져오는 중 오류가 발생했습니다:', error);
+        });
+    }
+</script>
 
 </body>
 </html>
