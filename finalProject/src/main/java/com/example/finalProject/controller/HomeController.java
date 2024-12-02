@@ -124,8 +124,8 @@ public class HomeController {
 					System.out.println("User has no image.");
 				}
 				
-				if(member.getImageUrl() == null || member.getImageUrl().isEmpty()) {
-					System.out.println("Redirecting to roulette.html because img_url is empty");
+				if(member.getPrompt() == null || member.getPrompt().isEmpty()) {
+					System.out.println("Redirecting to roulette.html because Prompt is empty");
 					return "redirect:/roulette/roulette";
 				}
 				
@@ -296,8 +296,9 @@ public class HomeController {
 	public String calendar() {
 		return "/calendar/calendar"; // calendar.html로 매핑
 	}
+	
 	@GetMapping("/card")
 	public String cardChatbot() {
-		return "/card/chatbot"; // calendar.html로 매핑
+		return "/card/chatbot"; // chatbot.html로 매핑
 	}
 }

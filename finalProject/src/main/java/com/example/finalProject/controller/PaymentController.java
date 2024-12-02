@@ -1,16 +1,23 @@
 package com.example.finalProject.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.finalProject.domain.entity.PaymentEntity;
 import com.example.finalProject.domain.repository.PaymentRepository;
 import com.example.finalProject.service.MemberService;
 
 import jakarta.servlet.http.HttpSession;
-
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/payments")
@@ -161,9 +168,39 @@ public class PaymentController {
 
         // 결제 내역에 사용자의 memberId 설정
         payment.setMemberId(memberId);
+        
+        // 특정 날짜에 이미 내역을 추가했는지 확인
+        LocalDate today = LocalDate.now();
+        boolean alreadyAdd = paymentRepository.existsByMemberIdAndDatetimeBetween(
+                memberId, today.atStartOfDay(), today.plusDays(1).atStartOfDay());
 
+        if(!alreadyAdd) {
+        	memberService.addHoney(memberId, 1);
+        }
+        
         // 데이터 저장
         return paymentRepository.save(payment);
+    }
+    
+    @PostMapping("/feedback")
+    public void addFeedback(HttpSession session) {
+    	Object sessionUserId = session.getAttribute("userid");
+    	if(sessionUserId == null) {
+    		throw new IllegalStateException("addFeedback :: 로그인된 사용자 없음");
+    	}
+    	
+    	Integer memberId = (Integer) sessionUserId;
+    	memberService.addHoney(memberId, 1);
+    }
+    
+    @GetMapping("/honey")
+    public Integer getHoney(HttpSession session) {
+        Object sessionUsermail = session.getAttribute("usermail");
+        if (sessionUsermail == null) {
+            throw new IllegalStateException("getHoney :: 로그인된 사용자가 없습니다.");
+        }
+        String memberMail = (String) sessionUsermail;
+        return memberService.getHoneyByEmail(memberMail);
     }
     
     

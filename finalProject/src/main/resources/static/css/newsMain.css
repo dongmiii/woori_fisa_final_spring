@@ -1685,8 +1685,8 @@ ol {
 .services .single-service:hover {
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
-  border-top-color: #7E57FF;
-  border-bottom-color: #7E57FF;
+  border-top-color: #97a5d3;
+  border-bottom-color: #97a5d3;
 }
 
 .services .single-service .main-icon {
@@ -1694,7 +1694,7 @@ ol {
   width: 65px;
   line-height: 65px;
   text-align: center;
-  background-color: #7E57FF;
+  background-color: #97a5d3;
   color: #fff;
   border-radius: 10px;
   font-size: 27px;

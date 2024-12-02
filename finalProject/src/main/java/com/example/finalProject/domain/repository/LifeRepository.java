@@ -14,9 +14,9 @@ import java.util.List;
 public interface LifeRepository extends JpaRepository<LifeEntity, Long> {
 
 
-    @Query(value = "SELECT DISTINCT f.title, f.summary FROM LifeEntity f")
+    @Query(value = "SELECT DISTINCT f.title, f.summary, f.url FROM LifeEntity f")
     List<Object[]> findlifeDistinct();
 
-    @Query("SELECT DISTINCT f.title, f.summary FROM LifeEntity f")
+    @Query("SELECT DISTINCT f.title, f.summary, f.url FROM LifeEntity f")
 	Page<Object[]> findPagedlifeDistinct(Pageable pageable);
 }

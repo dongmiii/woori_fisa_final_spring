@@ -26,7 +26,7 @@
     <style>
     	
     	button {
-    		background: #5DC8CD;
+    		background: #97a5d3;
 			  display: block;
 			  position: relative;
 			  float: center;
@@ -43,11 +43,11 @@
 			}
     	
 		.btnLightBlue.btnBorder {
-		  box-shadow: 0px 0px 0px 0px #01939A;
+		  box-shadow: 0px 0px 0px 0px #8598d4;
 		}
 		
 		.btnLightBlue.btnBorder:hover {
-		  box-shadow: 0px 0px 0px 5px #01939A;
+		  box-shadow: 0px 0px 0px 5px #8598d4;
 		}
     </style>
 
@@ -70,20 +70,19 @@
                 </div>
             </div>
 
-  			<div class="row" id="news-con">
-                <!-- 반복문으로 뉴스 데이터 렌더링 -->
-                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s" th:each="news : ${lifeList}">
-                    <div class="single-service">
-                        <div class="main-icon">
-                            <i class="lni lni-keyword-research"></i> <!-- 아이콘은 고정 -->
-                        </div>
-                        <!-- 제목 (title) -->
-                        <h4 class="text-title" th:text="${news[0]}">Title</h4>
-                        <!-- 요약 (summary) -->
-                        <p th:text="${news[1]}">Summary</p>
-                    </div>
-                </div>
-            </div>
+			<div class="row" id="news-con">
+			    <!-- 반복문으로 뉴스 데이터 렌더링 -->
+			    <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s" th:each="news : ${lifeList}">
+			        <div class="single-service">
+			            <a th:href="${news[2]}" target="_blank" style="text-decoration: none; color: inherit;"> <!-- 링크 추가 -->
+			                <!-- 제목 (title) -->
+			                <h4 class="text-title" th:text="${news[0]}">Title</h4>
+			                <!-- 요약 (summary) -->
+			                <p th:text="${news[1]}">Summary</p>
+			            </a>
+			        </div>
+			    </div>
+			</div>
            	
              <!-- 더보기 버튼 -->
 		   <div class="row">
@@ -121,11 +120,10 @@
                 const newsHtml = `
                     <div class="col-lg-4 col-md-6 col-12">
                         <div class="single-service">
-                            <div class="main-icon">
-                                <i class="lni lni-keyword-research"></i>
-                            </div>
-                            <h4 class="text-title">${news[0]}</h4> <!-- 인덱스 기반 접근 -->
-                            <p>${news[1]}</p>
+                            <a href="${news[2]}" target="_blank" style="text-decoration: none; color: inherit;">
+                                <h4 class="text-title">${news[0]}</h4> <!-- 인덱스 기반 접근 -->
+                                <p>${news[1]}</p>
+                            </a>
                         </div>
                     </div>
                 `;
