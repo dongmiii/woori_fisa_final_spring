@@ -98,21 +98,26 @@
     </div>
     <div class="roulette">
         <canvas width="380" height="380"></canvas>
-        <button id="spinButton" th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
+        <button th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
         <button th:unless="${session.username != null}"
                 onclick="location.href='/loginMain'">로그인하기</button>
     </div>
     <div id="userSessionId" style="display: none;" aria-hidden="true">[[${session.userid}]]</div>
-
+    <div id="userSessionMail" style="display: none;" aria-hidden="true">[[${session.usermail}]]</div>
 </div>
 
 <script>
     const userSessionId = document.getElementById('userSessionId');
     const userId = userSessionId.textContent.trim(); // 텍스트 내용 가져오기
+    
 
-    const spinButton = document.getElementById("spinButton");
+    const userMail = document.getElementById('userSessionMail').textContent.trim();
+    console.log("userMail :: ", userMail);
+
     const $c = document.querySelector("canvas");
     const ctx = $c.getContext(`2d`);
+    
+    
 
     const product = [
         "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "아기곰", "펭귄", "아기호랑이",
@@ -162,7 +167,21 @@
 
     const rotate = () => {
         const button = document.querySelector('button[onclick="rotate()"]');
-
+        
+        // 꿀 확인 및 룰렛 돌리기 가능 여부 검증
+        fetch(`/roulette/checkHoneyAndSpin?usermail=${encodeURIComponent(userMail)}`, { method: 'POST' })
+			.then(response => response.json())
+			.then(data => {
+	               if (!data.success) {
+	                    alert(data.message);
+	                    button.disabled = false; // 버튼 재활성화
+	                    return;
+	                }
+			})
+			
+		const currentHoney = data.currentHoney;
+        document.getElementById('honey-score').textContent = currentHoney;
+        
         // 버튼 비활성화
         button.disabled = true;
         $c.style.transform = `initial`;
@@ -182,6 +201,7 @@
                 // Redirect to loading screen
                 const selectedCharacter = product[ran];
                 console.log(selectedCharacter);
+                
                 // 1.5초 후 페이지 이동
                 setTimeout(() => {
                     window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
@@ -189,6 +209,45 @@
 
             }, 2000);
         }, 1);
+    };
+    
+    function rotate() {
+        spinButton.disabled = true;
+
+        fetch(`/roulette/checkHoneyAndSpin?userid=${encodeURIComponent(userId)}`, { method: 'POST' })
+        .then(response => {
+            console.log("HTTP Status:", response.status);
+            console.log("Content-Type:", response.headers.get("content-type"));
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Server Response:", data);
+            if (!data.success) {
+                alert(data.message);
+                spinButton.disabled = false;
+                return;
+            }
+            honeyScoreElement.textContent = data.currentHoney;
+            
+            const randomIndex = Math.floor(Math.random() * products.length);
+            const arc = 360 / products.length;
+            const rotateDegrees = (randomIndex * arc) + 720;
+            canvas.style.transform = `rotate(-${rotateDegrees}deg)`;
+            canvas.style.transition = "2s";
+
+            setTimeout(() => {
+                alert(`축하합니다! 선택된 캐릭터는 ${products[randomIndex]}입니다.`);
+                spinButton.disabled = false;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err.message);
+            alert("서버와의 통신 중 문제가 발생했습니다.");
+            spinButton.disabled = false;
+        });
     };
 
     newMake();

@@ -296,8 +296,9 @@ public class HomeController {
 	public String calendar() {
 		return "/calendar/calendar"; // calendar.html로 매핑
 	}
+	
 	@GetMapping("/card")
 	public String cardChatbot() {
-		return "/card/chatbot"; // calendar.html로 매핑
+		return "/card/chatbot"; // chatbot.html로 매핑
 	}
 }

@@ -95,6 +95,7 @@
 	    .payment-all{
 	    	display: flex;
 	        flex-direction: column;
+	        margin-top: 57px;
 	    	
 	    }
 	
@@ -214,6 +215,33 @@
 		.modal-content {
 		    position: relative;
 		}
+		
+		/* 특정 커스텀 버튼 스타일 */
+		.fc-addEventBtn-button {
+		    background-color: #A6E5B1 !important; /* 커스텀 버튼 배경색 */
+		    color: white !important;
+		    border: 2px solid #d3e3ed !important; /* 테두리 추가 */
+		    font-weight: bold !important; /* 글자 굵게 */
+		}
+		
+		/* 버튼 hover 효과 */
+		.fc-addEventBtn-button:hover {
+		    background-color: #9ae3a7 !important; /* hover 시 배경색 */
+		    color: #fff !important;
+		}
+		
+		.fc-prev-button, .fc-next-button {
+		    background-color: #A6E5B1 !important; /* 파란색 배경 */
+		    color: white !important; /* 흰색 텍스트 */ 
+		    border: 2px solid #d3e3ed !important;
+		    padding: 5px 10px !important; /* 내부 여백 */
+		    font-size: 14px !important; /* 글자 크기 */
+		    cursor: pointer !important; /* 클릭 가능 표시 */
+		}
+		
+		.fc-prev-button:hover, .fc-next-button:hover {
+		    background-color: #9ae3a7 !important;
+		}
 	
 	    /* 네비게이션 바에 z-index 설정 */
 	    header {
@@ -257,7 +285,6 @@
     <!-- 요약 문구와 버튼 영역 -->
     <div id="summary-container">
         <div class="summary" id="summary">
-            
         </div>
         
        	<!-- 해당 날짜의 소비 평가 -->
@@ -270,9 +297,6 @@
     </div>
    </div>
 </div>
-
-
-
 
 <footer th:replace="fragments/footer :: footerFragment"></footer>
 
@@ -478,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		        axios.post('/api/payments/user', formData)
 		        .then(() => {
 		            updateHoneyScore();
-		            transactionForm.reset();
+		            document.getElementById('transactionForm');
 		            transactionModal.style.display = 'none';
 		        })
 		        .catch(error => console.error('내역 추가 실패:', error));

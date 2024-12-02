@@ -16,10 +16,10 @@ public interface FinanceRepository extends JpaRepository<FinanceEntity, Long> {
 //    @Query(value = "SELECT DISTINCT title, url, summary, press_source FROM finance_news_articles ORDER BY id DESC LIMIT 3", nativeQuery = true)
 //    List<FinanceEntity> findLatestThree();
 	
-    @Query(value = "SELECT DISTINCT f.title, f.summary FROM FinanceEntity f")
+    @Query(value = "SELECT DISTINCT f.title, f.summary, f.url FROM FinanceEntity f")
     List<Object[]> findFinanceDistinct();
 
-    @Query("SELECT DISTINCT f.title, f.summary FROM FinanceEntity f")
+    @Query("SELECT DISTINCT f.title, f.summary, f.url FROM FinanceEntity f")
 	Page<Object[]> findPagedFinanceDistinct(Pageable pageable);
 	
 //	@Query(value = "SELECT DISTINCT f.title, f.summary FROM FinanceEntity f")
