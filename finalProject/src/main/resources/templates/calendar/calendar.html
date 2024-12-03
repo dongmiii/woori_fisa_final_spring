@@ -95,6 +95,7 @@
 	    .payment-all{
 	    	display: flex;
 	        flex-direction: column;
+	        margin-top: 57px;
 	    	
 	    }
 	
@@ -214,6 +215,33 @@
 		.modal-content {
 		    position: relative;
 		}
+		
+		/* 특정 커스텀 버튼 스타일 */
+		.fc-addEventBtn-button {
+		    background-color: #A6E5B1 !important; /* 커스텀 버튼 배경색 */
+		    color: white !important;
+		    border: 2px solid #d3e3ed !important; /* 테두리 추가 */
+		    font-weight: bold !important; /* 글자 굵게 */
+		}
+		
+		/* 버튼 hover 효과 */
+		.fc-addEventBtn-button:hover {
+		    background-color: #9ae3a7 !important; /* hover 시 배경색 */
+		    color: #fff !important;
+		}
+		
+		.fc-prev-button, .fc-next-button {
+		    background-color: #A6E5B1 !important; /* 파란색 배경 */
+		    color: white !important; /* 흰색 텍스트 */ 
+		    border: 2px solid #d3e3ed !important;
+		    padding: 5px 10px !important; /* 내부 여백 */
+		    font-size: 14px !important; /* 글자 크기 */
+		    cursor: pointer !important; /* 클릭 가능 표시 */
+		}
+		
+		.fc-prev-button:hover, .fc-next-button:hover {
+		    background-color: #9ae3a7 !important;
+		}
 	
 	    /* 네비게이션 바에 z-index 설정 */
 	    header {
@@ -257,7 +285,6 @@
     <!-- 요약 문구와 버튼 영역 -->
     <div id="summary-container">
         <div class="summary" id="summary">
-            
         </div>
         
        	<!-- 해당 날짜의 소비 평가 -->
@@ -270,9 +297,6 @@
     </div>
    </div>
 </div>
-
-
-
 
 <footer th:replace="fragments/footer :: footerFragment"></footer>
 
@@ -351,17 +375,27 @@ document.addEventListener('DOMContentLoaded', function () {
     if (hour < 10) hour = '0' + hour;
     if (min < 10) min = '0' + min;
 
-    const formattedToday = `${yyyy}-${mm}-${dd}T00:00`;
+    const formattedToday = `${yyyy}-${mm}-${dd}T23:59:59`;
     const formattedDateTime = `${yyyy}-${mm}-${dd}T${hour}:${min}`;
 
     // datetime-local input에 오늘 날짜를 max로 설정
     const dateInput = document.getElementById("date");
     dateInput.setAttribute("max", formattedToday);
+    
     dateInput.value = formattedDateTime;
     
     // 날짜별 평가 데이터를 저장하는 객체
     const feedbackData = {};
     let selectedDate = null;
+    
+    function updateHoneyScore() {
+        axios.get('/api/payments/honey')
+            .then(response => {
+                const honeyScore = response.data || 0;
+                document.getElementById('honey-score').textContent = honeyScore;
+            })
+            .catch(error => console.error('Honey 점수 업데이트 실패:', error));
+    }
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth', // 월간 보기
@@ -451,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
     closeModalBtn.addEventListener('click', function () {
         transactionModal.style.display = 'none';
     });
-    
+   
     // 폼 입력 이벤트
         transactionForm.addEventListener('submit', function (event) {
         event.preventDefault(); // 폼 기본 동작 방지
@@ -465,56 +499,42 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         // 서버로 데이터 전송
-        axios.post('/api/payments/user', formData)
-            .then(response => {
-            	console.log('서버 응답 :: ', response);
-                let newPayment = response.data; // 서버에서 반환된 새 데이터
-                console.log('응답데이터 :: ',newPayment);
-
-                // 테이블에 새 데이터 추가
-                let row = `
-                    <tr>
-	                    <td>${new Date(payment.datetime).toLocaleString()}</td>
-	                    <td>${payment.categoryName}</td>
-	                    <td>${payment.storeName}</td>
-	                    <td>${payment.amount.toLocaleString()} 원</td>
-                    </tr>
-                `;
-                paymentTableBody.innerHTML += row;
-
-                // 모달 창 닫기 및 폼 초기화
-                transactionForm.reset();
-                transactionModal.style.display = 'none';
-                
-            })
-            .catch(error => {
-                console.error('데이터를 저장하는 중 오류 발생:',error.response || error);
-                if (error.response) {
-                    // 서버 응답 에러 로그 출력
-                    console.error('** 서버 에러 응답:', error.response.data);
-                    console.error('** 서버 상태 코드:', error.response.status);
-                }
-                alert('데이터를 저장하는 중 오류가 발생했습니다.');
-  	          });
-    	});
-    
-        // 좋아요 버튼 클릭 이벤트
-        goodButton.addEventListener('click', function () {
-            feedbackResult.textContent = '좋은 소비였군요!';
-            feedbackData[selectedDate] = '좋은 소비였군요!'; // 평가 내용 저장
-            goodButton.style.display = 'none'; // 좋아요 이미지 숨기기
-            badButton.style.display = 'none'; // 별로 이미지 숨기기
-            todayResult.style.display = 'none';
-        });
-
-        // 별로 버튼 클릭 이벤트
-        badButton.addEventListener('click', function () {
-            feedbackResult.textContent = '내일은 더 좋은 소비를!';
-            feedbackData[selectedDate] = '내일은 더 좋은 소비를!'; // 평가 내용 저장
-            goodButton.style.display = 'none'; // 좋아요 이미지 숨기기
-            badButton.style.display = 'none'; // 별로 이미지 숨기기
-            todayResult.style.display = 'none';
-        });
+		        axios.post('/api/payments/user', formData)
+		        .then(() => {
+		            updateHoneyScore();
+		            document.getElementById('transactionForm');
+		            transactionModal.style.display = 'none';
+		        })
+		        .catch(error => console.error('내역 추가 실패:', error));
+		});
+		
+		goodButton.addEventListener('click', function () {
+		    axios.post('/api/payments/feedback')
+		        .then(() => {
+		            feedbackResult.textContent = '좋은 소비였군요!';
+		            feedbackData[selectedDate] = '좋은 소비였군요!'; // 평가 내용 저장
+		            goodButton.style.display = 'none'; // 좋아요 이미지 숨기기
+		            badButton.style.display = 'none'; // 별로 이미지 숨기기
+		            todayResult.style.display = 'none';
+		            updateHoneyScore();
+		        })
+		        .catch(error => console.error('소비 평가 실패:', error));
+		});
+		
+		badButton.addEventListener('click', function () {
+		    axios.post('/api/payments/feedback')
+		        .then(() => {
+		            feedbackResult.textContent = '내일은 더 좋은 소비를!';
+		            feedbackData[selectedDate] = '내일은 더 좋은 소비를!'; // 평가 내용 저장
+		            goodButton.style.display = 'none'; // 좋아요 이미지 숨기기
+		            badButton.style.display = 'none'; // 별로 이미지 숨기기
+		            todayResult.style.display = 'none';
+		            updateHoneyScore();
+		        })
+		        .catch(error => console.error('소비 평가 실패:', error));
+		});
+		
+		updateHoneyScore();
     
     
     calendar.render();

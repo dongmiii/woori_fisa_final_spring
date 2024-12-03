@@ -18,11 +18,7 @@
         }
 
         body {
-            background-image: url('/images/pig2.png'); /* 배경 이미지 경로 */
-            background-size: cover; /* 이미지가 요소를 완전히 덮도록 설정 */
-            background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
-            background-repeat: no-repeat; /* 이미지 반복 금지 */
-            padding:20px;
+            background: #f7f8fc;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -40,8 +36,7 @@
         .roulette-title {
             font-size: 2rem;
             font-weight: bold;
-            margin-top: 4rem;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
         }
 
         canvas {
@@ -50,8 +45,8 @@
         }
 
         button {
-            background: #fed22c;
-            margin-top: 4rem;
+            background: #febf00;
+            margin-top: 1rem;
             padding: .8rem 1.8rem;
             border: none;
             font-size: 1.5rem;
@@ -98,49 +93,41 @@
 <div class="roulette-container">
     <div class="roulette-title">
     <span th:if="${session.username != null}"
-          th:text="${session.username + '님만의 캐릭터를 골라봐요 !'}"></span>
+          th:text="${session.username + '님만의 캐릭터를 골라봐요.'}"></span>
         <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요.</span>
     </div>
     <div class="roulette">
-        <canvas width="400" height="400"></canvas>
-        <button id="spinButton" th:if="${session.username != null}" onclick="rotate()">START</button>
+        <canvas width="380" height="380"></canvas>
+        <button th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
         <button th:unless="${session.username != null}"
                 onclick="location.href='/loginMain'">로그인하기</button>
     </div>
     <div id="userSessionId" style="display: none;" aria-hidden="true">[[${session.userid}]]</div>
-
+    <div id="userSessionMail" style="display: none;" aria-hidden="true">[[${session.usermail}]]</div>
 </div>
 
 <script>
     const userSessionId = document.getElementById('userSessionId');
     const userId = userSessionId.textContent.trim(); // 텍스트 내용 가져오기
+    
 
-    const spinButton = document.getElementById("spinButton");
+    const userMail = document.getElementById('userSessionMail').textContent.trim();
+    console.log("userMail :: ", userMail);
+
     const $c = document.querySelector("canvas");
     const ctx = $c.getContext(`2d`);
+    
+    
 
     const product = [
-        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "곰", "펭귄", "호랑이",
-        "사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
+        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "아기곰", "펭귄", "아기호랑이",
+        "아기사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
     ];
 
     const colors = [
-    "#f8a3b9",
-    "#f4b09b",
-    "#fcd19b",
-    "#fbf29d",
-    "#b4e2a1",
-    "#89d4c0",
-    "#89d3eb",
-    "#9d96cc",
-    "#c991cc",
-    "#e3a2c5",
-    "#f4a2c4",
-    "#d6d5f7",
-    "#a9ebde",
-    "#b9a7ed",
-    "#f4b1a8"
-];
+        "#dc0936", "#e6471d", "#f7a416", "#efe61f", "#60b236", "#209b6c", "#169ed8", "#3f297e",
+        "#87207b", "#be107f", "#e7167b", "#a29bfe", "#00cec9", "#6c5ce7", "#e17055"
+    ];
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
         const arc = Math.PI / (product.length / 2);
@@ -180,7 +167,21 @@
 
     const rotate = () => {
         const button = document.querySelector('button[onclick="rotate()"]');
-
+        
+        // 꿀 확인 및 룰렛 돌리기 가능 여부 검증
+        fetch(`/roulette/checkHoneyAndSpin?usermail=${encodeURIComponent(userMail)}`, { method: 'POST' })
+			.then(response => response.json())
+			.then(data => {
+	               if (!data.success) {
+	                    alert(data.message);
+	                    button.disabled = false; // 버튼 재활성화
+	                    return;
+	                }
+			})
+			
+		const currentHoney = data.currentHoney;
+        document.getElementById('honey-score').textContent = currentHoney;
+        
         // 버튼 비활성화
         button.disabled = true;
         $c.style.transform = `initial`;
@@ -200,6 +201,7 @@
                 // Redirect to loading screen
                 const selectedCharacter = product[ran];
                 console.log(selectedCharacter);
+                
                 // 1.5초 후 페이지 이동
                 setTimeout(() => {
                     window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
@@ -207,6 +209,45 @@
 
             }, 2000);
         }, 1);
+    };
+    
+    function rotate() {
+        spinButton.disabled = true;
+
+        fetch(`/roulette/checkHoneyAndSpin?userid=${encodeURIComponent(userId)}`, { method: 'POST' })
+        .then(response => {
+            console.log("HTTP Status:", response.status);
+            console.log("Content-Type:", response.headers.get("content-type"));
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Server Response:", data);
+            if (!data.success) {
+                alert(data.message);
+                spinButton.disabled = false;
+                return;
+            }
+            honeyScoreElement.textContent = data.currentHoney;
+            
+            const randomIndex = Math.floor(Math.random() * products.length);
+            const arc = 360 / products.length;
+            const rotateDegrees = (randomIndex * arc) + 720;
+            canvas.style.transform = `rotate(-${rotateDegrees}deg)`;
+            canvas.style.transition = "2s";
+
+            setTimeout(() => {
+                alert(`축하합니다! 선택된 캐릭터는 ${products[randomIndex]}입니다.`);
+                spinButton.disabled = false;
+            }, 2000);
+        })
+        .catch(err => {
+            console.error("Fetch Error:", err.message);
+            alert("서버와의 통신 중 문제가 발생했습니다.");
+            spinButton.disabled = false;
+        });
     };
 
     newMake();

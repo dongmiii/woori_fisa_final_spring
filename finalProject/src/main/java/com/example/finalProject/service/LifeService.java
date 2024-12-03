@@ -27,6 +27,7 @@ public class LifeService {
             LifeEntity entity = new LifeEntity();
             entity.setTitle((String) row[0]);
             entity.setSummary((String) row[1]);
+            entity.setUrl((String) row[2]);
             result.add(entity);
         }
 

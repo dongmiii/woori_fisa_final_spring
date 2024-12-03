@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -26,12 +27,18 @@ public class FinanceService {
     
     public List<FinanceEntity> getLatestThreeDistinctNews() {
         List<Object[]> rawResults = financeRepository.findFinanceDistinct();
+        
+        for (Object[] row : rawResults) {
+            System.out.println("Row length: " + row.length + ", Data: " + Arrays.toString(row));
+        }
+        
         List<FinanceEntity> result = new ArrayList<>();
 
         for (Object[] row : rawResults) {
             FinanceEntity entity = new FinanceEntity();
             entity.setTitle((String) row[0]);
             entity.setSummary((String) row[1]);
+            entity.setUrl((String) row[2]);
             result.add(entity);
         }
 
