@@ -18,7 +18,11 @@
         }
 
         body {
-            background: #f7f8fc;
+            background-image: url('/images/pig2.png'); /* 배경 이미지 경로 */
+            background-size: cover; /* 이미지가 요소를 완전히 덮도록 설정 */
+            background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
+            background-repeat: no-repeat; /* 이미지 반복 금지 */
+            padding:20px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -36,7 +40,8 @@
         .roulette-title {
             font-size: 2rem;
             font-weight: bold;
-            margin-bottom: 2rem;
+            margin-top: 4rem;
+            margin-bottom: 4rem;
         }
 
         canvas {
@@ -45,8 +50,8 @@
         }
 
         button {
-            background: #febf00;
-            margin-top: 1rem;
+            background: #fed22c;
+            margin-top: 4rem;
             padding: .8rem 1.8rem;
             border: none;
             font-size: 1.5rem;
@@ -93,12 +98,12 @@
 <div class="roulette-container">
     <div class="roulette-title">
     <span th:if="${session.username != null}"
-          th:text="${session.username + '님만의 캐릭터를 골라봐요.'}"></span>
+          th:text="${session.username + '님만의 캐릭터를 골라봐요 !'}"></span>
         <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요.</span>
     </div>
     <div class="roulette">
-        <canvas width="380" height="380"></canvas>
-        <button id="spinButton" th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
+        <canvas width="400" height="400"></canvas>
+        <button id="spinButton" th:if="${session.username != null}" onclick="rotate()">START</button>
         <button th:unless="${session.username != null}"
                 onclick="location.href='/loginMain'">로그인하기</button>
     </div>
@@ -115,14 +120,27 @@
     const ctx = $c.getContext(`2d`);
 
     const product = [
-        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "아기곰", "펭귄", "아기호랑이",
-        "아기사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
+        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "곰", "펭귄", "호랑이",
+        "사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
     ];
 
     const colors = [
-        "#dc0936", "#e6471d", "#f7a416", "#efe61f", "#60b236", "#209b6c", "#169ed8", "#3f297e",
-        "#87207b", "#be107f", "#e7167b", "#a29bfe", "#00cec9", "#6c5ce7", "#e17055"
-    ];
+    "#f8a3b9",
+    "#f4b09b",
+    "#fcd19b",
+    "#fbf29d",
+    "#b4e2a1",
+    "#89d4c0",
+    "#89d3eb",
+    "#9d96cc",
+    "#c991cc",
+    "#e3a2c5",
+    "#f4a2c4",
+    "#d6d5f7",
+    "#a9ebde",
+    "#b9a7ed",
+    "#f4b1a8"
+];
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
         const arc = Math.PI / (product.length / 2);
