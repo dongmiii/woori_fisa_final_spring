@@ -3,6 +3,7 @@ package com.example.finalProject.controller;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.finalProject.domain.entity.MemberEntity;
 import com.example.finalProject.domain.repository.MemberRepository;
@@ -150,9 +152,9 @@ public class HomeController {
 			// 기존 세션 속성 제거
 			session.removeAttribute("userImage");
 			session.removeAttribute("prompt");
-
 			// 새로운 데이터를 불러오기
 			String userEmail = (String) session.getAttribute("usermail"); // 세션에서 사용자 이메일 가져오기
+			
 			if (userEmail != null) {
 				// 사용자 정보 가져오기
 				MemberEntity member = memberService.findByEmail(userEmail); // 이메일로 사용자 조회
@@ -181,19 +183,26 @@ public class HomeController {
 						session.setAttribute("promptLines", Collections.emptyList());
 					}
 
+	                // 최신 honey 값 가져와 세션에 저장
+	                int updatedHoney = member.getHoney();
+	                session.setAttribute("honey", updatedHoney);
+	                System.out.println("Updated honey value in session: " + updatedHoney);
 				}
 			}
 
 			return "redirect:/"; // 파라미터 제거를 위해 리다이렉트
 		}
-//		List<FinanceEntity> newsList = newsService.getAllNews(); //entity News
-//		List<LifeEntity> news2List = news2Service.getAllNews();
-//		model.addAttribute("newsList", newsList);
-//		model.addAttribute("news2List", news2List);
+		
+		
+	    // 세션에서 현재 값을 가져와 모델에 추가
+	    String userEmail = (String) session.getAttribute("usermail");
+	    if (userEmail != null) {
+	        int currentHoney = (int) session.getAttribute("honey");
+	        model.addAttribute("honey", currentHoney);
+	    }
+		
 		return "index";
 	}
-
-
 
 
 	@GetMapping("/logout/result")

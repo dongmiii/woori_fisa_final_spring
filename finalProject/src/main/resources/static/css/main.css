@@ -2909,14 +2909,6 @@ ol {
   background-color: #F4F7FA;
 }
 
-.services.section {
-  background-image: url('/images/green.png'); /* 배경 이미지 경로 */
-  background-size: cover; /* 이미지가 요소를 완전히 덮도록 설정 */
-  background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
-  background-repeat: no-repeat; /* 이미지 반복 금지 */
-  padding: 20px; /* 상하 여백 */
-}
-
 .services .section-title {
   margin-bottom: 50px;
 }
