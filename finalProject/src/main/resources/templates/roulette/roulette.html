@@ -15,13 +15,19 @@
     <link rel="stylesheet" href="/css/main.css" />
    	<link rel="shortcut icon" type="image/x-icon" href="/images/0_honeypot.png" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    
+    <link rel="shortcut icon" type="image/x-icon" href="/images/beeee.png" />
+
     <style>
         * {
             font-family: Pretendard;
         }
 
         body {
+            background-image: url('/images/pig2.png'); /* 배경 이미지 경로 */
+            background-size: cover; /* 이미지가 요소를 완전히 덮도록 설정 */
+            background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
+            background-repeat: no-repeat; /* 이미지 반복 금지 */
+            padding: 20px;
             background: #f7f8fc;
             display: flex;
             justify-content: center;
@@ -40,6 +46,8 @@
         .roulette-title {
             font-size: 2rem;
             font-weight: bold;
+            margin-top: 4rem;
+            margin-bottom: 5rem;
             margin-bottom: 2rem;
         }
 
@@ -79,11 +87,24 @@
             width: 10px;
             height: 50px;
             border-radius: 5px;
-            background: #000;
+            background: #727272;
             top: -20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 22;
+        }
+
+        .roulette::after {
+            content: "";
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: #83CADF;
+            border-radius: 50%;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1; /* 돌림판보다 뒤에 배치 */
         }
 
         button:disabled {
@@ -97,6 +118,8 @@
 <div class="roulette-container">
     <div class="roulette-title">
     <span th:if="${session.username != null}"
+          th:text="${session.username + '님만의 캐릭터를 골라봐요 !'}"></span>
+        <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요 !</span>
           th:text="${session.username + '님만의 캐릭터를 골라봐요.'}"></span>
         <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요.</span>
     </div>
@@ -107,7 +130,6 @@
                 onclick="location.href='/loginMain'">로그인하기</button>
     </div>
     <div id="userSessionId" style="display: none;" aria-hidden="true">[[${session.userid}]]</div>
-
 </div>
 
 <script>
@@ -119,13 +141,13 @@
     const ctx = $c.getContext(`2d`);
 
     const product = [
-        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "아기곰", "펭귄", "아기호랑이",
-        "아기사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
+        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "곰", "펭귄", "호랑이",
+        "사자", "북극곰", "거북이", "돌고래"
     ];
-
     const colors = [
-        "#dc0936", "#e6471d", "#f7a416", "#efe61f", "#60b236", "#209b6c", "#169ed8", "#3f297e",
-        "#87207b", "#be107f", "#e7167b", "#a29bfe", "#00cec9", "#6c5ce7", "#e17055"
+        "#f8a3b9", "#f4b09b", "#fcd19b", "#fbf29d", "#b4e2a1",
+        "#89d4c0", "#89d3eb", "#9d96cc", "#c991cc", "#e3a2c5",
+        "#f4a2c4", "#d6d5f7", "#a9ebde", "#b9a7ed", "#e6c8d4"
     ];
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
@@ -133,7 +155,7 @@
 
         for (let i = 0; i < product.length; i++) {
             ctx.beginPath();
-            ctx.fillStyle = colors[i % (colors.length -1)];
+            ctx.fillStyle = colors[i % (colors.length - 1)];
             ctx.moveTo(cw, ch);
             ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
             ctx.fill();
@@ -162,7 +184,7 @@
 
             ctx.restore();
         }
-    }
+    };
 
     const rotate = () => {
         const button = document.querySelector('button[onclick="rotate()"]');
