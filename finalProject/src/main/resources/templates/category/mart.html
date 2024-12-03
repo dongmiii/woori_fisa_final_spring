@@ -13,17 +13,17 @@
         #map {width:100%;height:400px;}
         #menu_wrap {width:100%;margin:20px 0;padding:5px;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
         .bg_white {background:#fff;}
-        .toggle {cursor: pointer;margin: 10px 0;background-color: #f1f1f1;border-radius: 5px;padding: 15px;font-size: 20px;text-align: center;width: calc(100% - 30px);box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);transition: background-color 0.3s, color 0.3s;}
-        .toggle:hover {background-color: #e0e0e0;}
-        .toggle.active {background-color: #007BFF;color: white;}
-        .brand_list {display: none;padding: 0 10px;}
+        .toggle {cursor: pointer;margin: 10px 0; color: #ffffff; background-color: rgba(131, 202, 223, 0.8);border-radius: 20px;padding: 20px;font-size: 20px;font-weight: bold;text-align: center;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);transition: background-color 0.3s, color 0.3s;}
+        .toggle:hover {background-color: #A6E5B1;}
+        .toggle.active {background-color: #83CADF;color: white;}
+        .brand_list {display: none;padding: 20px;}
         .brand_item {list-style: none;}
         body {margin:20px;}
         .brand_list {display: none; padding: 10px; border: 1px solid #ddd; margin-top: 10px; background-color: #f9f9f9; display: flex; gap: 10px;}
         .list_left, .list_right {padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow-y: auto;}
         .list_left {width: 25%; margin-right: 2%;}
         .list_right {width: 74%; text-align: left; background-color: #f4f4f4;}
-        .no-result-message {color: red;font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
+        .no-result-message {color: red; font-size: 20px; font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
         .centered-text {
             font-size: 30x; /* 글씨 크기 설정 */
             text-align: center; /* 가운데 정렬 */
@@ -42,12 +42,13 @@
             padding: 10px;
             border-radius: 8px;
             background-color: #f9f9f9;
-            width: 150px; /* 카드 너비 조정 */
-            text-align: center;
+            width: 313px; /* 카드 너비 조정 */
             flex-shrink: 0; /* 카드 크기 축소 방지 */
+            display: flex;
+            align-items: center; /* 세로 정렬 */
         }
         .card img {
-            width: 100%;
+            width: 70%;
             height: auto;
             border-radius: 4px;
         }
@@ -87,7 +88,6 @@
         .list_left, .list_right {padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow-y: auto;}
         .list_left {width: 25%; margin-right: 2%;}
         .list_right {width: 74%; text-align: left; background-color: #f4f4f4;}
-        .no-result-message {color: red;font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
         .centered-text {
             font-size: 30x; /* 글씨 크기 설정 */
             text-align: center; /* 가운데 정렬 */
@@ -119,12 +119,12 @@
         <div id="map"></div>
         <div id="menu_wrap" class="bg_white">
             <hr>
-            <h1>
+            <h1 style="text-align: center; margin-top: 25px; padding: 15px">
                         <span class="wow fadeInUp" data-wow-delay=".4s">
-                            <span th:text="${session.username}">님, </span>
+                            <span th:text="${session.username}" style="font-size: 23px">님, </span>
                             <th:block th:unless="${not #strings.isEmpty(session.username)}">WalletBee</th:block>
                         </span>
-                <span class="wow fadeInUp" data-wow-delay=".8s">님, 맞춤형 카드 추천이에요.</span>
+                <span class="wow fadeInUp" data-wow-delay=".8s" style="font-size: 23px">님, 맞춤형 카드 추천이에요 !</span>
             </h1>
             <div id="userSession" aria-hidden="true">[[${session.username}]]</div>
             <div id="userSessionId" aria-hidden="true">[[${session.userid}]]</div>
@@ -179,7 +179,7 @@
                     map.setCenter(locPosition);
                     searchStores(locPosition);
                     var currentMarkerImage = new kakao.maps.MarkerImage(
-                        'https://github.com/user-attachments/assets/446c316f-528f-483c-b8d0-edeb88da0863',
+                        'https://github.com/user-attachments/assets/0ed497c0-eece-49a1-8cd6-e0b758a204c2',
                         new kakao.maps.Size(36, 37),
                         {offset: new kakao.maps.Point(18, 37)}
                     );
