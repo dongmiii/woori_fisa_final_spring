@@ -2,21 +2,18 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROULETTE</title>
-    
-    
-        <!-- ========================= CSS here ========================= -->
+    <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
     <link rel="stylesheet" href="/css/animate.css" />
     <link rel="stylesheet" href="/css/tiny-slider.css" />
     <link rel="stylesheet" href="/css/glightbox.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
-   	<link rel="shortcut icon" type="image/x-icon" href="/images/0_honeypot.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-    <link rel="shortcut icon" type="image/x-icon" href="/images/beeee.png" />
-
+    <link rel="shortcut icon" type="image/x-icon" href="/images/logo/beeee.png" />
+    
     <style>
         * {
             font-family: Pretendard;
@@ -28,7 +25,6 @@
             background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
             background-repeat: no-repeat; /* 이미지 반복 금지 */
             padding: 20px;
-            background: #f7f8fc;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -48,7 +44,6 @@
             font-weight: bold;
             margin-top: 4rem;
             margin-bottom: 5rem;
-            margin-bottom: 2rem;
         }
 
         canvas {
@@ -57,8 +52,8 @@
         }
 
         button {
-            background: #febf00;
-            margin-top: 1rem;
+            background: #fed22c;
+            margin-top: 4rem;
             padding: .8rem 1.8rem;
             border: none;
             font-size: 1.5rem;
@@ -120,12 +115,10 @@
     <span th:if="${session.username != null}"
           th:text="${session.username + '님만의 캐릭터를 골라봐요 !'}"></span>
         <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요 !</span>
-          th:text="${session.username + '님만의 캐릭터를 골라봐요.'}"></span>
-        <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요.</span>
     </div>
     <div class="roulette">
-        <canvas width="380" height="380"></canvas>
-        <button id="spinButton" th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
+        <canvas width="400" height="400"></canvas>
+        <button id="spinButton" th:if="${session.username != null}" onclick="rotate()">START</button>
         <button th:unless="${session.username != null}"
                 onclick="location.href='/loginMain'">로그인하기</button>
     </div>
@@ -144,11 +137,13 @@
         "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "곰", "펭귄", "호랑이",
         "사자", "북극곰", "거북이", "돌고래"
     ];
+
     const colors = [
         "#f8a3b9", "#f4b09b", "#fcd19b", "#fbf29d", "#b4e2a1",
         "#89d4c0", "#89d3eb", "#9d96cc", "#c991cc", "#e3a2c5",
         "#f4a2c4", "#d6d5f7", "#a9ebde", "#b9a7ed", "#e6c8d4"
     ];
+
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
         const arc = Math.PI / (product.length / 2);
@@ -188,47 +183,9 @@
 
     const rotate = () => {
         const button = document.querySelector('button[onclick="rotate()"]');
-        const userSessionId = document.getElementById('userSessionId');
-        const userId = userSessionId.textContent.trim();
 
+        // 버튼 비활성화
         button.disabled = true;
-
-        // 서버로 honey 검사 요청
-        fetch(`/roulette/checkHoneyAndSpin?userid=${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    // honey 차감 성공 -> 룰렛 돌림
-                    updateHoneyValueInHeader(data.currentHoney); // Header의 honey 값 업데이트
-                    performRouletteSpin(); // 룰렛 스핀 함수 호출
-                } else {
-                    // honey 부족 경고
-                    alert(data.message);
-                    button.disabled = false; // 버튼 다시 활성화
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
-                button.disabled = false; // 버튼 다시 활성화
-            });
-    };
-
-    // Header의 honey 값을 업데이트하는 함수
-    function updateHoneyValueInHeader(newHoneyValue) {
-        const honeyValueElement = document.getElementById('honey-score');
-        if (honeyValueElement) {
-            honeyValueElement.textContent = newHoneyValue;
-        }
-    }
-
-    // 룰렛 스핀 함수
-    function performRouletteSpin() {
         $c.style.transform = `initial`;
         $c.style.transition = `initial`;
 
@@ -241,16 +198,19 @@
             $c.style.transform = `rotate(-${rotate}deg)`;
             $c.style.transition = `2s`;
 
+            // Show loading screen and redirect
             setTimeout(() => {
+                // Redirect to loading screen
                 const selectedCharacter = product[ran];
                 console.log(selectedCharacter);
+                // 1.5초 후 페이지 이동
                 setTimeout(() => {
-                	window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
+                    window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
                 }, 500);
+
             }, 2000);
         }, 1);
-    }
-
+    };
 
     newMake();
 </script>
