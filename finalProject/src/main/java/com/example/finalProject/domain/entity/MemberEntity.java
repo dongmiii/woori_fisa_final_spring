@@ -55,13 +55,13 @@ public class MemberEntity {
 	@Column(nullable = true, length = 1000)
 	private String imageUrl; // varchar(1000)
 
-    @Column(nullable = false, columnDefinition = "INT DEFAULT 0")
-    private Integer honey = 0; // Java 기본값
+    @Column(columnDefinition = "INT DEFAULT 5")
+    private Integer honey = 5; // Java 기본값
     
     @PrePersist
     protected void onCreate() {
         if (honey == null) {
-            honey = 0; // null 방지
+            honey = 5;
         }
     }
 	

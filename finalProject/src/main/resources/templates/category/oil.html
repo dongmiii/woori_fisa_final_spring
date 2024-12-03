@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,17 +13,17 @@
         #map {width:100%;height:400px;}
         #menu_wrap {width:100%;margin:20px 0;padding:5px;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
         .bg_white {background:#fff;}
-        .toggle {cursor: pointer;margin: 10px 0; color: #ffffff; background-color: rgba(131, 202, 223, 0.8);border-radius: 20px;padding: 20px;font-size: 20px;font-weight: bold;text-align: center;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);transition: background-color 0.3s, color 0.3s;}
-        .toggle:hover {background-color: #A6E5B1;}
-        .toggle.active {background-color: #83CADF;color: white;}
-        .brand_list {display: none;padding: 20px;}
+        .toggle {cursor: pointer;margin: 10px 0;background-color: #f1f1f1;border-radius: 5px;padding: 15px;font-size: 20px;text-align: center;width: calc(100% - 30px);box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);transition: background-color 0.3s, color 0.3s;}
+        .toggle:hover {background-color: #e0e0e0;}
+        .toggle.active {background-color: #007BFF;color: white;}
+        .brand_list {display: none;padding: 0 10px;}
         .brand_item {list-style: none;}
         body {margin:20px;}
         .brand_list {display: none; padding: 10px; border: 1px solid #ddd; margin-top: 10px; background-color: #f9f9f9; display: flex; gap: 10px;}
         .list_left, .list_right {padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #ffffff; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); overflow-y: auto;}
         .list_left {width: 25%; margin-right: 2%;}
         .list_right {width: 74%; text-align: left; background-color: #f4f4f4;}
-        .no-result-message {color: red; font-size: 20px; font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
+        .no-result-message {color: red;font-weight: bold;text-align: center;padding: 20px;} /* noResultDiv 스타일 정의 */
         .centered-text {
             font-size: 30x; /* 글씨 크기 설정 */
             text-align: center; /* 가운데 정렬 */
@@ -38,13 +42,12 @@
             padding: 10px;
             border-radius: 8px;
             background-color: #f9f9f9;
-            width: 313px; /* 카드 너비 조정 */
+            width: 150px; /* 카드 너비 조정 */
+            text-align: center;
             flex-shrink: 0; /* 카드 크기 축소 방지 */
-            display: flex;
-            align-items: center; /* 세로 정렬 */
         }
         .card img {
-            width: 70%;
+            width: 100%;
             height: auto;
             border-radius: 4px;
         }
@@ -99,7 +102,7 @@
             overflow-x: auto; /* 가로 스크롤 활성화 (카드가 많을 경우) */
         }
     </style>
-    <link rel="shortcut icon" type="image/x-icon" href="/images/beeee.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="/images/0_honeypot.png" />
 
     <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -116,12 +119,12 @@
         <div id="map"></div>
         <div id="menu_wrap" class="bg_white">
             <hr>
-            <h1 style="text-align: center; margin-top: 25px; padding: 15px">
+            <h1>
                         <span class="wow fadeInUp" data-wow-delay=".4s">
-                            <span th:text="${session.username}" style="font-size: 23px">님, </span>
+                            <span th:text="${session.username}">님, </span>
                             <th:block th:unless="${not #strings.isEmpty(session.username)}">WalletBee</th:block>
                         </span>
-                <span class="wow fadeInUp" data-wow-delay=".8s" style="font-size: 23px">님, 맞춤형 카드 추천이에요 !</span>
+                <span class="wow fadeInUp" data-wow-delay=".8s">님, 맞춤형 카드 추천이에요.</span>
             </h1>
             <div id="userSession" aria-hidden="true">[[${session.username}]]</div>
             <div id="userSessionId" aria-hidden="true">[[${session.userid}]]</div>
@@ -176,7 +179,7 @@
                     map.setCenter(locPosition);
                     searchStores(locPosition);
                     var currentMarkerImage = new kakao.maps.MarkerImage(
-                        'https://github.com/user-attachments/assets/0ed497c0-eece-49a1-8cd6-e0b758a204c2',
+                        'https://github.com/user-attachments/assets/446c316f-528f-483c-b8d0-edeb88da0863',
                         new kakao.maps.Size(36, 37),
                         {offset: new kakao.maps.Point(18, 37)}
                     );
@@ -249,11 +252,11 @@
                             // 카드 리스트가 있는 경우 카드 생성
                             data.forEach(card => {
                                 cardHtml += `
-                            <div class="card">
-                                <h3 style="font-size: 17px; padding: 20px; margin-bottom: 10px;">${card.name}</h3>
-                                <img src="${card.imgUrl}" alt="${card.name}" style="margin-bottom: 20px;" />
-                                <p style="font-size: 16px; text-align: left; padding: 10px; margin-bottom: 10px;">${card.convenience}</p>
-                            </div>`;
+                        <div class="card">
+                            <h4>${card.name}</h4>
+                            <img src="${card.imgUrl}" alt="${card.name}" />
+                            <p>${card.convenience}</p>
+                        </div>`;
                             });
                         }
 
@@ -407,8 +410,9 @@
                 });
 
                 function toggleByPlaceName(placeName) {
-                    var brandMatch = placeName.match(/GS칼텍스|SK에너지|S-OIL|에이치디현대오일뱅크/);
+                    var brandMatch = placeName.match(/GS25|세븐일레븐|CU|이마트24|미니스톱/);
                     if (!brandMatch) return;
+
                     var brand = brandMatch[0];
                     // 모든 리스트 닫기
                     var allLists = document.querySelectorAll('.brand_list');
@@ -451,10 +455,10 @@
         function addMarker(position, idx, brand) {
             // 브랜드별 마커 이미지 매핑
             var markerImages = {
-                "GS칼텍스": "https://github.com/user-attachments/assets/38b1577c-9bf3-4953-98ba-1838ee61683a",
-                "SK에너지": "https://github.com/user-attachments/assets/ce0194ba-ec3e-4aae-97cc-00073734551d",
-                "S-OIL": "https://github.com/user-attachments/assets/4aa42308-5720-43f4-9585-43b54277c0aa",
-                "에이치디현대오일뱅크": "https://github.com/user-attachments/assets/ffc4c23e-6e8c-44e9-b4c2-afd95f5225f9"
+                "GS칼텍스": "https://static.vecteezy.com/system/resources/thumbnails/027/293/544/small/map-pointer-marker-pin-with-a-person-user-icon-people-location-concept-3d-png.png",
+                "SK에너지": "https://e7.pngegg.com/pngimages/911/866/png-clipart-computer-icons-symbol-location-marker-miscellaneous-black-and-white-thumbnail.png",
+                "S-OIL": "https://img.favpng.com/2/12/1/location-icon-marker-icon-pin-icon-png-favpng-SeNK6BbMv3nfXgvFJM9TYWChR.jpg",
+                "에이치디현대오일뱅크": "https://img.favpng.com/2/12/1/location-icon-marker-icon-pin-icon-png-favpng-SeNK6BbMv3nfXgvFJM9TYWChR.jpg"
             };
 
             // 브랜드에 맞는 마커 이미지 URL 가져오기

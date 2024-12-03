@@ -5,10 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>가계부 달력</title>
+    <title>CALENDAR</title>
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet" />
+
     <link rel="shortcut icon" type="image/x-icon" href="/images/beeee.png" />
+
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -199,7 +201,7 @@
 		    width: 100%;
 		    padding: 10px;
 		    border: none;
-		    background-color: #007bff; /* 파란색 배경 */
+		    background-color: #9ae3a7; /* 파란색 배경 */
 		    color: white;
 		    font-size: 16px;
 		    font-weight: bold;
@@ -312,19 +314,19 @@
                 <input type="number" id="amount" name="amount" required><br><br>
                 <label for="category">카테고리:</label>
                 <select id="category" name="category" required>
-				    <option value="store">편의점</option>
-				    <option value="cafe">카페/디저트</option>
-				    <option value="restaurant">외식</option>
-				    <option value="oil">주유</option>
-				    <option value="culture">영화/문화</option>
-				   	<option value="mart">마트</option>
-				    <option value="shopping">쇼핑</option>
-				    <option value="hospital">병원/약국</option>
-				    <option value="education">교육/육아</option>
-				    <option value="mobileCarrier">통신사</option>
-				   	<option value="car">자동차/하이패스</option>
-				    <option value="travel">여행/숙박</option>
-				    <option value="publicTransportation">대중교통</option>
+				    <option value="편의점">편의점</option>
+				    <option value="카페/디저트">카페/디저트</option>
+				    <option value="외식">외식</option>
+				    <option value="주유">주유</option>
+				    <option value="영화/문화">영화/문화</option>
+				   	<option value="마트">마트</option>
+				    <option value="쇼핑">쇼핑</option>
+				    <option value="병원/약국">병원/약국</option>
+				    <option value="교육/육아">교육/육아</option>
+				    <option value="통신사">통신사</option>
+				   	<option value="자동차/하이패스">자동차/하이패스</option>
+				    <option value="여행/숙박">여행/숙박</option>
+				    <option value="대중교통">대중교통</option>
                 </select><br><br>
                 <label for="date">일시:</label>
                 <input type="datetime-local" id="date" name="date" required><br><br>
@@ -408,6 +410,7 @@ document.addEventListener('DOMContentLoaded', function () {
     		  text: "내역 추가",
     		  click: function(){
     			  transactionModal.style.display = 'block';
+    			  resetTransactionForm();
     		  }
     	  }  
       },
@@ -538,6 +541,29 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     calendar.render();
+    
+ // 폼 초기화 함수
+    function resetTransactionForm() {
+        document.getElementById('content').value = ''; // 결제내용 필드 초기화
+        document.getElementById('amount').value = ''; // 금액 필드 초기화
+        document.getElementById('category').selectedIndex = 0; // 카테고리 첫 번째 옵션 선택
+        const dateInput = document.getElementById('date');
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // 월은 0부터 시작하므로 +1
+        let dd = today.getDate();
+        let hour = today.getHours();
+        let min = today.getMinutes();
+
+        if (mm < 10) mm = '0' + mm; // 월 10보다 작으면 앞에 0 추가
+        if (dd < 10) dd = '0' + dd; // 일이 10보다 작으면 앞에 0 추가
+        if (hour < 10) hour = '0' + hour;
+        if (min < 10) min = '0' + min;
+
+        const formattedDateTime = `${yyyy}-${mm}-${dd}T${hour}:${min}`;
+        dateInput.value = formattedDateTime; // 날짜 필드 초기화
+    }
+ 
   });
 </script>
 </body>
