@@ -147,32 +147,32 @@
 
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
-        const arc = 2 * Math.PI / product.length; // 각 섹션의 라디안 각도 계산
+        const arc = Math.PI / (product.length / 2);
 
         for (let i = 0; i < product.length; i++) {
-            // 섹션 채우기
             ctx.beginPath();
-            ctx.fillStyle = colors[i % colors.length];
+            ctx.fillStyle = colors[i % (colors.length - 1)];
             ctx.moveTo(cw, ch);
-            ctx.arc(cw, ch, cw, arc * i, arc * (i + 1)); // 각 섹션 그리기
+            ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
             ctx.fill();
             ctx.closePath();
         }
 
-        // 텍스트 설정
         ctx.fillStyle = "#fff";
         ctx.font = "18px Pretendard";
         ctx.textAlign = "center";
 
         for (let i = 0; i < product.length; i++) {
-            const angle = arc * i + arc / 2; // 각 섹션의 중심 각도 계산
+            const angle = (arc * i) + (arc / 2);
 
             ctx.save();
+
             ctx.translate(
-                cw + Math.cos(angle) * (cw - 50), // 중심에서 텍스트 위치까지의 거리
-                ch + Math.sin(angle) * (ch - 50)
+                cw + Math.cos(angle) * (cw - 50),
+                ch + Math.sin(angle) * (ch - 50),
             );
-            ctx.rotate(angle - Math.PI / 2); // 텍스트 방향 맞추기 (위쪽 기준으로 회전)
+
+            ctx.rotate(angle + Math.PI / 2);
 
             product[i].split(" ").forEach((text, j) => {
                 ctx.fillText(text, 0, 30 * j);
@@ -227,22 +227,18 @@
         $c.style.transition = `initial`;
 
         setTimeout(() => {
-            const arc = 360 / product.length; // 각 섹션의 각도 (도 단위)
-            const ran = Math.floor(Math.random() * product.length); // 랜덤으로 선택된 index
+            const ran = Math.floor(Math.random() * product.length);
 
-            // 추가 회전 값(랜덤)
-            const extraSpin = Math.random() * arc; // 0 ~ arc 사이 추가 회전
-            const baseRotation = 360 * 6; // 기본 회전 수(6바퀴)
-            const finalRotation = (ran * arc) + baseRotation + extraSpin;
+            const arc = 360 / product.length;
+            const rotate = (ran * arc) + 3620 + (arc * 3) - (arc / 4);
 
-            // 룰렛 회전 (천천히 감속)
-            $c.style.transform = `rotate(-${finalRotation}deg)`;
-            $c.style.transition = `4s cubic-bezier(0.17, 0.67, 0.83, 0.67)`; // 부드럽게 감속
+            $c.style.transform = `rotate(-${rotate}deg)`;
+            $c.style.transition = `2s`;
+
 
             // 선택된 값 확인 후 loading 화면으로 이동
             setTimeout(() => {
-                const correctedIndex = (product.length - Math.round(finalRotation / arc) % product.length) % product.length;
-                const selectedCharacter = product[correctedIndex];
+            	const selectedCharacter = product[ran];
                 console.log(selectedCharacter);
                 // 1.5초 후 페이지 이동
                 setTimeout(() => {
