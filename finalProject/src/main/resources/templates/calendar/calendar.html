@@ -45,14 +45,39 @@
 		.fc-daygrid-day-number {
     		color: black; /* 날짜 숫자를 검정으로 설정 */
 		}
-	    
+
 	    .fc-day-sun a {
-	    	color: red;
+	    	color: #fa98d9;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-mon a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-tue a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-wed a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-thu a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-fri a {
+	    	color: #83CADF;
 	    	text-decoration:none;
 	    }
 	    
 	   .fc-day-sat a {
-	    	color: blue;
+	    	color: #5ea6f7;
 	    	text-decoration:none;
 	    }
 	    
@@ -108,31 +133,25 @@
 	    }
 	
 	    .summary {
-	        margin-bottom: 10px;
+	        margin-left: 10px;
+	        margin-bottom: 20px;
 	        font-weight: bold;
-	        font-size: 14px;
+	        font-size: 16px;
 	    }
 	
 	    /* 버튼 스타일 */
 	    .feedback-buttons {
 	        display: flex;
 	        gap: 10px;
-	    }
-	
-		.feedback-buttons {
-		    display: flex; /* 수평 정렬 */
-		    align-items: center; /* 세로축 기준 정렬 */
+	        align-items: center; /* 세로축 기준 정렬 */
 		    gap: 10px; /* 요소 간 간격 */
-		}
-		
-		.feedback-buttons span {
-			
-		    margin-right: 10px; /* 텍스트와 이미지 사이 여백 */
-		}
+		    margin-bottom: 15px;
+		    margin-left: 10px;
+	    }
 		
 		.feedback-image {
-		    width: 30px; /* 이미지 너비 */
-		    height: 30px; /* 이미지 높이 */
+		    width: 50px; /* 이미지 너비 */
+		    height: 50px; /* 이미지 높이 */
 		    vertical-align: middle; /* 텍스트와 수평 정렬 */
 		    cursor: pointer; /* 클릭 가능 표시 */
 		}
@@ -156,7 +175,7 @@
 		    background-color: white; /* 모달 배경색 */
 		    border: 1px solid #ddd;
 		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		    padding: 20px;
+		    padding: 25px;
 		    width: 400px; /* 너비 조정 */
 		    height: 570px;
 		    border-radius: 8px; /* 둥근 모서리 */
@@ -187,9 +206,10 @@
 		
 		/* 입력 필드 스타일 */
 		#transactionModal input, #transactionModal select {
-		    width: calc(100% - 20px); /* 너비 조정 */
+		    width: 100%; /* 너비 조정 */
 		    padding: 10px;
-		    margin-bottom: 20px;
+		    margin-top: 5px;
+		    margin-bottom: 15px;
 		    border: 1px solid #ddd;
 		    border-radius: 4px;
 		    font-size: 14px;
@@ -201,7 +221,7 @@
 		    width: 100%;
 		    padding: 10px;
 		    border: none;
-		    background-color: #9ae3a7; /* 파란색 배경 */
+		    background-color: #83CADF; /* 파란색 배경 */
 		    color: white;
 		    font-size: 16px;
 		    font-weight: bold;
@@ -210,17 +230,17 @@
 		}
 		
 		#transactionModal button:hover {
-		    background-color: #0056b3; /* 어두운 파란색 배경 */
+		    background-color: #9ae3a7; /* 연두색 배경 */
 		}
 		
 		/* 모달의 전체 컨테이너와 조화롭게 배치 */
 		.modal-content {
 		    position: relative;
 		}
-		
+
 		/* 특정 커스텀 버튼 스타일 */
 		.fc-addEventBtn-button {
-		    background-color: #A6E5B1 !important; /* 커스텀 버튼 배경색 */
+		    background-color: #83CADF !important; /* 커스텀 버튼 배경색 */
 		    color: white !important;
 		    border: 2px solid #d3e3ed !important; /* 테두리 추가 */
 		    font-weight: bold !important; /* 글자 굵게 */
@@ -233,7 +253,7 @@
 		}
 		
 		.fc-prev-button, .fc-next-button {
-		    background-color: #A6E5B1 !important; /* 파란색 배경 */
+		    background-color: #83CADF !important; /* 파란색 배경 */
 		    color: white !important; /* 흰색 텍스트 */ 
 		    border: 2px solid #d3e3ed !important;
 		    padding: 5px 10px !important; /* 내부 여백 */
@@ -291,7 +311,7 @@
         
        	<!-- 해당 날짜의 소비 평가 -->
         <div class="feedback-buttons">
-            <span id="today">오늘의 소비는?</span>
+            <span id="today" style="font-size: 17px">오늘의 소비는 ?</span>
               <img src="/images/ThumbUp.png"  alt="좋아요" class="feedback-image" id="good-button" width="50" height="50">
   			  <img src="/images/ThumbDown.png" alt="별로에요" class="feedback-image" id="bad-button" width="50" height="50">
   			  <div id="feedback-result" class="feedback-result"></div>
@@ -304,15 +324,15 @@
 
 <!-- 내역 추가 모달 -->
    <div class="modal" id="transactionModal">
-        <div class="modal-content">
+        <div class="modal-content" style="border: none">
             <span class="close" id="closeModal">&times;</span>
             <h3>내역 추가</h3>
             <form id="transactionForm">
-                <label for="content">결제내용:</label>
+                <label for="content">결제내용 :</label>
                 <input type="text" id="content" name="content" required><br><br>
-                <label for="amount">금액:</label>
+                <label for="amount">금액 :</label>
                 <input type="number" id="amount" name="amount" required><br><br>
-                <label for="category">카테고리:</label>
+                <label for="category">카테고리 :</label>
                 <select id="category" name="category" required>
 				    <option value="편의점">편의점</option>
 				    <option value="카페/디저트">카페/디저트</option>
@@ -328,7 +348,7 @@
 				    <option value="여행/숙박">여행/숙박</option>
 				    <option value="대중교통">대중교통</option>
                 </select><br><br>
-                <label for="date">일시:</label>
+                <label for="date">일시 :</label>
                 <input type="datetime-local" id="date" name="date" required><br><br>
                 <button type="submit">입력</button>
             </form>
@@ -437,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(response => {
             const totalAmount = response.data || 0; // 총 금액 가져오기 (없으면 0)
             // 요약 문구 업데이트
-            summaryEl.textContent = `${selectedDate} 의 총 소비 ${totalAmount.toLocaleString()}원 입니다.`;
+            summaryEl.textContent = `${selectedDate} 총 소비 : ${totalAmount.toLocaleString()} 원`;
           })
           .catch(error => {
             console.error('총 소비 금액을 가져오는 중 오류 발생:', error);
@@ -568,3 +588,5 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
+calender.html
+calender.html 표시 중입니다.

@@ -134,8 +134,9 @@
     const ctx = $c.getContext(`2d`);
 
     const product = [
-        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "곰", "펭귄", "호랑이",
-        "사자", "북극곰", "거북이", "돌고래"
+        "햄스터", "다람쥐", "토끼", "고양이", "강아지", 
+        "수달", "곰", "호랑이",
+        "사자", "북극곰"
     ];
 
     const colors = [
@@ -146,32 +147,32 @@
 
     const newMake = () => {
         const [cw, ch] = [$c.width / 2, $c.height / 2];
-        const arc = Math.PI / (product.length / 2);
+        const arc = 2 * Math.PI / product.length; // 각 섹션의 라디안 각도 계산
 
         for (let i = 0; i < product.length; i++) {
+            // 섹션 채우기
             ctx.beginPath();
-            ctx.fillStyle = colors[i % (colors.length - 1)];
+            ctx.fillStyle = colors[i % colors.length];
             ctx.moveTo(cw, ch);
-            ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
+            ctx.arc(cw, ch, cw, arc * i, arc * (i + 1)); // 각 섹션 그리기
             ctx.fill();
             ctx.closePath();
         }
 
+        // 텍스트 설정
         ctx.fillStyle = "#fff";
         ctx.font = "18px Pretendard";
         ctx.textAlign = "center";
 
         for (let i = 0; i < product.length; i++) {
-            const angle = (arc * i) + (arc / 2);
+            const angle = arc * i + arc / 2; // 각 섹션의 중심 각도 계산
 
             ctx.save();
-
             ctx.translate(
-                cw + Math.cos(angle) * (cw - 50),
-                ch + Math.sin(angle) * (ch - 50),
+                cw + Math.cos(angle) * (cw - 50), // 중심에서 텍스트 위치까지의 거리
+                ch + Math.sin(angle) * (ch - 50)
             );
-
-            ctx.rotate(angle + Math.PI / 2);
+            ctx.rotate(angle - Math.PI / 2); // 텍스트 방향 맞추기 (위쪽 기준으로 회전)
 
             product[i].split(" ").forEach((text, j) => {
                 ctx.fillText(text, 0, 30 * j);
@@ -183,32 +184,71 @@
 
     const rotate = () => {
         const button = document.querySelector('button[onclick="rotate()"]');
+        const userSessionId = document.getElementById('userSessionId');
+        const userId = userSessionId.textContent.trim();
 
         // 버튼 비활성화
         button.disabled = true;
+        // 서버로 honey 검사 요청
+        fetch(`/roulette/checkHoneyAndSpin?userid=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // honey 차감 성공 -> 룰렛 돌림
+                    updateHoneyValueInHeader(data.currentHoney); // Header의 honey 값 업데이트
+                    performRouletteSpin(); // 룰렛 스핀 함수 호출
+                } else {
+                    // honey 부족 경고
+                    alert(data.message);
+                    button.disabled = false; // 버튼 다시 활성화
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
+                button.disabled = false; // 버튼 다시 활성화
+            });
+    };
+    // Header의 honey 값을 업데이트하는 함수
+    function updateHoneyValueInHeader(newHoneyValue) {
+        const honeyValueElement = document.getElementById('honey-score');
+        if (honeyValueElement) {
+            honeyValueElement.textContent = newHoneyValue;
+        }
+    }
+    // 룰렛 스핀 함수
+    function performRouletteSpin() {
         $c.style.transform = `initial`;
         $c.style.transition = `initial`;
 
         setTimeout(() => {
-            const ran = Math.floor(Math.random() * product.length);
+            const arc = 360 / product.length; // 각 섹션의 각도 (도 단위)
+            const ran = Math.floor(Math.random() * product.length); // 랜덤으로 선택된 index
 
-            const arc = 360 / product.length;
-            const rotate = (ran * arc) + 3628 + (arc * 3) - (arc / 4);
+            // 추가 회전 값(랜덤)
+            const extraSpin = Math.random() * arc; // 0 ~ arc 사이 추가 회전
+            const baseRotation = 360 * 6; // 기본 회전 수(6바퀴)
+            const finalRotation = (ran * arc) + baseRotation + extraSpin;
 
-            $c.style.transform = `rotate(-${rotate}deg)`;
-            $c.style.transition = `2s`;
+            // 룰렛 회전 (천천히 감속)
+            $c.style.transform = `rotate(-${finalRotation}deg)`;
+            $c.style.transition = `4s cubic-bezier(0.17, 0.67, 0.83, 0.67)`; // 부드럽게 감속
 
-            // Show loading screen and redirect
+            // 선택된 값 확인 후 loading 화면으로 이동
             setTimeout(() => {
-                // Redirect to loading screen
-                const selectedCharacter = product[ran];
+                const correctedIndex = (product.length - Math.round(finalRotation / arc) % product.length) % product.length;
+                const selectedCharacter = product[correctedIndex];
                 console.log(selectedCharacter);
                 // 1.5초 후 페이지 이동
                 setTimeout(() => {
                     window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
-                }, 500);
-
-            }, 2000);
+                }, 2000);
+            }, 4000);
         }, 1);
     };
 
