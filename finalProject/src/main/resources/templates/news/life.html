@@ -27,7 +27,7 @@
     <style>
     	
     	button {
-    		background: #97a5d3;
+    		background: #83CADF;
 			  display: block;
 			  position: relative;
 			  float: center;
@@ -63,10 +63,10 @@
                 <div class="col-12">
                     <div class="section-title">
                         <h3 class="wow zoomIn" data-wow-delay=".2s">Today's NEWS</h3>
-                        <h2 class="wow fadeInUp" data-wow-delay=".4s" th:if="${not #strings.isEmpty(session.userid)}">
+                        <h2 class="wow fadeInUp" style="margin-top: 10px;" data-wow-delay=".4s" th:if="${not #strings.isEmpty(session.userid)}">
                             <span th:text="${session.username + ' 님'}"></span>을 위한 뉴스
                         </h2>
-                        <p class="wow fadeInUp" data-wow-delay=".6s">생활경제 뉴스를 만나보세요!</p>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">생활경제 뉴스를 만나보세요 !</p>
                     </div>
                 </div>
             </div>

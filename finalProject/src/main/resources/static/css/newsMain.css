@@ -49,8 +49,8 @@ button:focus,
 }
 
 .form-check-input:checked {
-  background-color: #7E57FF;
-  border-color: #7E57FF;
+  background-color: #97A5D3;
+  border-color: #97A5D3;
 }
 
 select {
@@ -1036,7 +1036,7 @@ ol {
 }
 
 .section {
-  padding-top: 110px;
+  padding-top: 20px;
   padding-bottom: 110px;
   position: relative;
 }
@@ -1069,8 +1069,9 @@ ol {
   font-weight: 600;
   display: inline-block;
   margin-bottom: 20px;
-  color: #7E57FF;
+  color: #4f92d1;
   text-transform: capitalize;
+  border-color: #83CADF;
 }
 
 .section-title h2 {
@@ -1149,7 +1150,7 @@ ol {
   bottom: -1px;
   height: 2px;
   width: 50px;
-  background: #7E57FF;
+  background: #97A5D3;
   content: "";
 }
 
@@ -1163,12 +1164,12 @@ ol {
   margin-left: 0;
 }
 
-/* One Click Scrool Top Button*/
+/* One Click Scroll Top Button*/
 .scroll-top {
   width: 45px;
   height: 45px;
   line-height: 45px;
-  background: #7E57FF;
+  background: #97A5D3;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1195,7 +1196,7 @@ ol {
   box-shadow: 0 1rem 3rem rgba(35, 38, 45, 0.15) !important;
   -webkit-transform: translate3d(0, -5px, 0);
   transform: translate3d(0, -5px, 0);
-  background-color: #7E57FF;
+  background-color: #97A5D3;
 }
 
 /* Overlay */
@@ -1277,7 +1278,7 @@ ol {
 
 .pagination .pagination-list li.active a,
 .pagination .pagination-list li:hover a {
-  background: #7E57FF;
+  background: #97A5D3;
   color: #fff;
   border-color: transparent;
 }
@@ -1297,7 +1298,7 @@ ol {
   font-size: 15px;
   font-weight: 500;
   padding: 14px 30px;
-  background-color: #7E57FF;
+  background-color: #97A5D3;
   color: #fff;
   border: none;
   -webkit-transition: all 0.4s ease;
@@ -1365,7 +1366,7 @@ ol {
 }
 
 .button .btn-alt:hover {
-  background-color: #7E57FF !important;
+  background-color: #97A5D3 !important;
   color: #fff !important;
 }
 
@@ -1414,7 +1415,7 @@ ol {
   width: 100px;
   height: 100px;
   border-radius: 100%;
-  background: #7E57FF;
+  background: #97A5D3;
   -webkit-animation: preloader-fx 1.6s linear infinite;
   animation: preloader-fx 1.6s linear infinite;
 }
@@ -1500,7 +1501,7 @@ ol {
 }
 
 .hero-area .hero-content h4 {
-  color: #7E57FF;
+  color: #97A5D3;
   font-weight: 600;
   font-size: 15px;
   margin-bottom: 20px;
@@ -1622,6 +1623,13 @@ ol {
   background-color: #F4F7FA;
 }
 
+.services.section {
+  background-image: url('/images/back_green4.png'); /* 배경 이미지 경로 */
+  background-size: cover; /* 이미지가 요소를 완전히 덮도록 설정 */
+  background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
+  background-repeat: no-repeat; /* 이미지 반복 금지 */
+}
+
 .services .section-title {
   margin-bottom: 50px;
 }
@@ -1647,7 +1655,7 @@ ol {
 .services .upper-content .lasthead {
   font-size: 16px;
   font-weight: 600;
-  color: #7E57FF;
+  color: #97A5D3;
   margin-bottom: 15px;
 }
 
@@ -1685,8 +1693,8 @@ ol {
 .services .single-service:hover {
   -webkit-transform: scale(1.05);
           transform: scale(1.05);
-  border-top-color: #97a5d3;
-  border-bottom-color: #97a5d3;
+  border-top-color: #83CADF;
+  border-bottom-color: #A6E5B1;
 }
 
 .services .single-service .main-icon {
@@ -1748,7 +1756,7 @@ ol {
 }
 
 .about .content h4 {
-  color: #7E57FF;
+  color: #97A5D3;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 20px;
@@ -1801,7 +1809,7 @@ ol {
   text-align: center;
   display: block;
   border-radius: 50%;
-  color: #7E57FF;
+  color: #97A5D3;
   font-size: 11px;
   background-color: #fff;
   position: absolute;
@@ -1809,7 +1817,7 @@ ol {
   top: 0;
   -webkit-transition: all 0.4s ease;
   transition: all 0.4s ease;
-  background-color: #7E57FF;
+  background-color: #97A5D3;
   color: #fff;
 }
 
@@ -1873,7 +1881,7 @@ ol {
 }
 
 .call-action .text h2 span {
-  color: #7E57FF;
+  color: #97A5D3;
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -1892,7 +1900,7 @@ ol {
 
 .call-action .text h2 span {
   display: block;
-  color: #7E57FF;
+  color: #97A5D3;
 }
 
 .call-action .button {

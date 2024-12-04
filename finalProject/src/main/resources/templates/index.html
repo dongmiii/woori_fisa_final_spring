@@ -79,7 +79,7 @@
                         <span th:text="${session.usermail}"></span>
                         <th:block th:unless="${not #strings.isEmpty(session.userid)}">Welcome
                         <span class="color2 wow fadeInUp" data-wow-delay="1.6s">WalletBee</span>
-                        <p>WalletBee 에 오신걸 환영합니다! 꿀을 모아보세요! </p>
+                        <p style="font-size: 18px; margin-left:30px;">WalletBee 에 오신걸 환영합니다 ! 꿀을 모아보세요 ! </p>
                         </th:block></span>
                         <th:block th:each="line : ${session.promptLines}">
                             <span th:text="${line}" class="wow fadeInUp"></span>
@@ -189,7 +189,7 @@
 
 <!-- ========================= scroll-top ========================= -->
 <a href="#" class="scroll-top">
-    <i class="lni lni-chevron-up"></i>
+    <i class="lni lni-chevron-up" style="font-weight: 900;"></i>
 </a>
 
 <!-- ========================= JS here ========================= -->
