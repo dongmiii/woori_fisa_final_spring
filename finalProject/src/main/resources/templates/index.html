@@ -17,6 +17,19 @@
     <link rel="stylesheet" href="/css/tiny-slider.css" />
     <link rel="stylesheet" href="/css/glightbox.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
+    
+    <style>
+    
+
+		.image-cropper {
+		  width: 600px;
+		  height: 600px;
+		  position: relative;
+		  overflow: hidden;
+		  border-radius: 50%;
+		}
+		
+    </style>
 
 </head>
 
@@ -81,13 +94,13 @@
             <div class="col-lg-7 col-12">
                 <div class="app-image">
                     <div class="image-bg-shape"></div>
-                    <div th:if="${session.userImage != null}">
+                    <div class="image-cropper" th:if="${session.userImage != null}">
                         <!-- 로그인된 경우 사용자 이미지 표시 -->
                         <img th:src="${session.userImage}" alt="사용자 이미지">
                     </div>
-                    <div th:if="${session.userImage == null}">
-                        <!-- 기본 이미지 표시 -->
-                        <img src="/images/hero/app.svg" alt="기본 이미지">
+                    <div class="image-cropper" th:if="${session.userImage == null}">
+                        <!-- 기본 이미지 표시  -->
+                        <img src="/images/0_honeypot.png" alt="기본 이미지"> 
                     </div>
                 </div>
             </div>

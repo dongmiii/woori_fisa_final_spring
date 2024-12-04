@@ -167,87 +167,72 @@
 
     const rotate = () => {
         const button = document.querySelector('button[onclick="rotate()"]');
-        
-        // 꿀 확인 및 룰렛 돌리기 가능 여부 검증
-        fetch(`/roulette/checkHoneyAndSpin?usermail=${encodeURIComponent(userMail)}`, { method: 'POST' })
-			.then(response => response.json())
-			.then(data => {
-	               if (!data.success) {
-	                    alert(data.message);
-	                    button.disabled = false; // 버튼 재활성화
-	                    return;
-	                }
-			})
-			
-		const currentHoney = data.currentHoney;
-        document.getElementById('honey-score').textContent = currentHoney;
-        
+        const userSessionId = document.getElementById('userSessionId');
+        const userId = userSessionId.textContent.trim();
+
         // 버튼 비활성화
         button.disabled = true;
+        // 서버로 honey 검사 요청
+        fetch(`/roulette/checkHoneyAndSpin?userid=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // honey 차감 성공 -> 룰렛 돌림
+                    updateHoneyValueInHeader(data.currentHoney); // Header의 honey 값 업데이트
+                    performRouletteSpin(); // 룰렛 스핀 함수 호출
+                } else {
+                    // honey 부족 경고
+                    alert(data.message);
+                    button.disabled = false; // 버튼 다시 활성화
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
+                button.disabled = false; // 버튼 다시 활성화
+            });
+    };
+    // Header의 honey 값을 업데이트하는 함수
+    function updateHoneyValueInHeader(newHoneyValue) {
+        const honeyValueElement = document.getElementById('honey-score');
+        if (honeyValueElement) {
+            honeyValueElement.textContent = newHoneyValue;
+        }
+    }
+    // 룰렛 스핀 함수
+    function performRouletteSpin() {
         $c.style.transform = `initial`;
         $c.style.transition = `initial`;
 
         setTimeout(() => {
+
             const ran = Math.floor(Math.random() * product.length);
-
             const arc = 360 / product.length;
-            const rotate = (ran * arc) + 3628 + (arc * 3) - (arc/4);
 
-            $c.style.transform = `rotate(-${rotate}deg)`;
-            $c.style.transition = `2s`;
+            // 추가적인 회전 값(랜덤)으로 다양화
+            const extraSpin = Math.random() * 360; // 0 ~ 360도 사이 추가 회전
+            const baseRotation = 360 * 5; // 기본 회전 수(5바퀴)
+            const finalRotation = (ran * arc) + baseRotation + extraSpin;
 
+            $c.style.transform = `rotate(-${finalRotation}deg)`;
+            $c.style.transition = `3s ease-out`;
+            
             // Show loading screen and redirect
             setTimeout(() => {
                 // Redirect to loading screen
                 const selectedCharacter = product[ran];
                 console.log(selectedCharacter);
-                
                 // 1.5초 후 페이지 이동
                 setTimeout(() => {
                     window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
                 }, 500);
-
             }, 2000);
         }, 1);
-    };
-    
-    function rotate() {
-        spinButton.disabled = true;
-
-        fetch(`/roulette/checkHoneyAndSpin?userid=${encodeURIComponent(userId)}`, { method: 'POST' })
-        .then(response => {
-            console.log("HTTP Status:", response.status);
-            console.log("Content-Type:", response.headers.get("content-type"));
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Server Response:", data);
-            if (!data.success) {
-                alert(data.message);
-                spinButton.disabled = false;
-                return;
-            }
-            honeyScoreElement.textContent = data.currentHoney;
-            
-            const randomIndex = Math.floor(Math.random() * products.length);
-            const arc = 360 / products.length;
-            const rotateDegrees = (randomIndex * arc) + 720;
-            canvas.style.transform = `rotate(-${rotateDegrees}deg)`;
-            canvas.style.transition = "2s";
-
-            setTimeout(() => {
-                alert(`축하합니다! 선택된 캐릭터는 ${products[randomIndex]}입니다.`);
-                spinButton.disabled = false;
-            }, 2000);
-        })
-        .catch(err => {
-            console.error("Fetch Error:", err.message);
-            alert("서버와의 통신 중 문제가 발생했습니다.");
-            spinButton.disabled = false;
-        });
     };
 
     newMake();
