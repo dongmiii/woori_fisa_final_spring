@@ -6,7 +6,9 @@ import com.example.finalProject.domain.entity.MemberEntity;
 import com.example.finalProject.domain.repository.ConversationRepository;
 import com.example.finalProject.domain.repository.MessageRepository;
 import com.example.finalProject.dto.ChatRequestDTO;
+import com.example.finalProject.service.ChatService;
 import com.example.finalProject.service.MemberService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +27,23 @@ import java.util.Map;
 @RequestMapping("/cardchat")
 public class CardChatController {
 
-    private final String fastApiUrl = "http://localhost:8888/cardchat"; // FastAPI 서버 URL
+//    private final ChatService chatService;
+//
+//    @Autowired
+//    public ChatController(ChatService chatService) {
+//        this.chatService = chatService;
+//    }
+
+
+    @Value("${fastapi.url}")
+    private String fastApiurl;
+
+    private String fastApiUrl; // final을 제거
+
+    @PostConstruct
+    public void init() {
+        fastApiUrl = fastApiurl + "/cardchat";
+    }// FastAPI 서버 URL
     private final MemberService memberService;
 
     @Autowired
@@ -71,6 +90,8 @@ public class CardChatController {
             return ResponseEntity.status(500).body(Map.of("error", "Error: " + e.getMessage()));
         }
     }
+
+
 }
 
 //    private ConversationEntity saveConversation(String title) {
