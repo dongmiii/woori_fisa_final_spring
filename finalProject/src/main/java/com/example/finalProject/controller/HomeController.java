@@ -256,22 +256,22 @@ public class HomeController {
 		return "members/login";
 	}
 
-	@GetMapping("/members")
-	public String members(Model model) {
-		List<MemberResponseDTO> members = memberService.findMembers();
-		model.addAttribute("members",members);
-
-		return "/members/memberList";
-	}
+//	@GetMapping("/members")
+//	public String members(Model model) {
+//		List<MemberResponseDTO> members = memberService.findMembers();
+//		model.addAttribute("members",members);
+//
+//		return "/members/memberList";
+//	}
 
 	@GetMapping("/category/store")
 	public String store() {
-		return "/category/store";
+		return "category/store";
 	}
 
 	@GetMapping("/category/cafe")
 	public String cafe() {
-		return "/category/cafe";
+		return "category/cafe";
 	}
 
 	@GetMapping("/category/oil")
@@ -281,12 +281,12 @@ public class HomeController {
 
 	@GetMapping("/category/movie")
 	public String movie() {
-		return "/category/movie";
+		return "category/movie";
 	}
 
 	@GetMapping("/category/mart")
 	public String mart() {
-		return "/category/mart";
+		return "category/mart";
 	}
 
 
@@ -294,7 +294,7 @@ public class HomeController {
 	public String dashboard(Model model) {
 		try {
 			log.info("Dashboard controller called");
-			return "/dashboard/dashboard";
+			return "dashboard/dashboard";
 		} catch (Exception e) {
 			log.error("Error in dashboard controller", e);
 			return "error";
@@ -303,11 +303,11 @@ public class HomeController {
 
 	@GetMapping("/calendar")
 	public String calendar() {
-		return "/calendar/calendar"; // calendar.html로 매핑
+		return "calendar/calendar"; // calendar.html로 매핑
 	}
 	
 	@GetMapping("/card")
 	public String cardChatbot() {
-		return "/card/chatbot"; // chatbot.html로 매핑
+		return "card/chatbot"; // chatbot.html로 매핑
 	}
 }
