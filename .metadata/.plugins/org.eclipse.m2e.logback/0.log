@@ -1,8 +1,0 @@
-2024-11-21 10:56:08,694 [Worker-5: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is not available. Remote download required.
-2024-11-21 10:56:58,568 [Worker-1: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.example:finalProject:0.0.1-SNAPSHOT @ C:\Users\dongmi\Downloads\finalProject_backup\finalProject\pom.xml.
-2024-11-21 10:57:00,770 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
-2024-11-21 10:57:00,804 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 105 resources from src\main\resources to target\classes
-2024-11-21 10:57:01,032 [Worker-1: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\dongmi\Downloads\finalProject_backup\finalProject\src\test\resources
-2024-11-21 10:57:03,654 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
-2024-11-21 10:57:03,664 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 105 resources from src\main\resources to target\classes
-2024-11-21 10:57:03,918 [Worker-4: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\dongmi\Downloads\finalProject_backup\finalProject\src\test\resources
