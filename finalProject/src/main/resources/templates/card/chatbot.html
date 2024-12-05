@@ -176,7 +176,9 @@
             챗봇
         </div>
         <div class="chat-content" id="chatContent">
-            <div class="message bot">안녕하세요! 무엇을 도와드릴까요?</div>
+            <div class="message bot">[[${session.username}]]님, 안녕하세요! 무엇을 도와드릴까요?</div>
+            <div id="userSession" aria-hidden="true" style="display: none;">[[${session.username}]]</div>
+            <div id="userSessionId" aria-hidden="true" style="display: none;">[[${session.userid}]]</div>
         </div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
@@ -186,7 +188,6 @@
 </div>
 
 <script>
-    const fastApiUrl = "http://localhost:8888"; // FastAPI 서버 URL
 
     async function sendMessage() {
         const chatContent = document.getElementById('chatContent');
@@ -315,6 +316,22 @@
     function loadConversation(index) {
         const chatContent = document.getElementById('chatContent');
         chatContent.innerHTML = '';
+
+        // 대화 제목을 갱신
+        const chatHeader = document.getElementById('chatHeader');
+        chatHeader.textContent = `대화 ${index + 1}`; // "대화 1", "대화 2" 등으로 업데이트
+
+        const conversation = conversations[index];
+
+        // 해당 대화의 메시지를 채팅창에 추가
+        conversation.messages.forEach((message) => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.sender}`;
+            messageDiv.textContent = message.text;
+            chatContent.appendChild(messageDiv);
+        });
+
+
         activeConversationIndex = index;
     }
 
