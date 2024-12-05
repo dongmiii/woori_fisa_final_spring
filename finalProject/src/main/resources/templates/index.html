@@ -74,9 +74,9 @@
             <div class="col-lg-5 col-md-12 col-12">
                 <div class="hero-content">
                     <h1><span class="wow fadeInUp" data-wow-delay=".4s">
-                        <span th:text="${session.userid}"></span>
+                     <!--    <span th:text="${session.userid}"></span>
                         <span th:text="${session.username}"></span>
-                        <span th:text="${session.usermail}"></span>
+                        <span th:text="${session.usermail}"></span>  -->
                         <th:block th:unless="${not #strings.isEmpty(session.userid)}">Welcome
                         <span class="color2 wow fadeInUp" data-wow-delay="1.6s">WalletBee</span>
                         <p style="font-size: 18px; margin-left:30px;">WalletBee 에 오신걸 환영합니다 ! 꿀을 모아보세요 ! </p>
