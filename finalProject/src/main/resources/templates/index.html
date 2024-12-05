@@ -8,7 +8,7 @@
     <title>WalletBee</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="/images/0_honeypot.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="/images/logo/beeee.png" />
 
     <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -17,6 +17,19 @@
     <link rel="stylesheet" href="/css/tiny-slider.css" />
     <link rel="stylesheet" href="/css/glightbox.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
+    
+    <style>
+    
+
+		.image-cropper {
+		  width: 600px;
+		  height: 600px;
+		  position: relative;
+		  overflow: hidden;
+		  border-radius: 50%;
+		}
+		
+    </style>
 
 </head>
 
@@ -66,7 +79,7 @@
                         <span th:text="${session.usermail}"></span>
                         <th:block th:unless="${not #strings.isEmpty(session.userid)}">Welcome
                         <span class="color2 wow fadeInUp" data-wow-delay="1.6s">WalletBee</span>
-                        <p>WalletBee 에 오신걸 환영합니다! 꿀을 모아보세요! </p>
+                        <p style="font-size: 18px; margin-left:30px;">WalletBee 에 오신걸 환영합니다 ! 꿀을 모아보세요 ! </p>
                         </th:block></span>
                         <th:block th:each="line : ${session.promptLines}">
                             <span th:text="${line}" class="wow fadeInUp"></span>
@@ -81,13 +94,13 @@
             <div class="col-lg-7 col-12">
                 <div class="app-image">
                     <div class="image-bg-shape"></div>
-                    <div th:if="${session.userImage != null}">
+                    <div class="image-cropper" th:if="${session.userImage != null}">
                         <!-- 로그인된 경우 사용자 이미지 표시 -->
                         <img th:src="${session.userImage}" alt="사용자 이미지">
                     </div>
-                    <div th:if="${session.userImage == null}">
-                        <!-- 기본 이미지 표시 -->
-                        <img src="/images/hero/app.svg" alt="기본 이미지">
+                    <div class="image-cropper" th:if="${session.userImage == null}">
+                        <!-- 기본 이미지 표시  -->
+                        <img src="/images/0_honeypot.png" alt="기본 이미지"> 
                     </div>
                 </div>
             </div>
@@ -176,7 +189,7 @@
 
 <!-- ========================= scroll-top ========================= -->
 <a href="#" class="scroll-top">
-    <i class="lni lni-chevron-up"></i>
+    <i class="lni lni-chevron-up" style="font-weight: 900;"></i>
 </a>
 
 <!-- ========================= JS here ========================= -->

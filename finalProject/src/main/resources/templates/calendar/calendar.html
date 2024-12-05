@@ -5,10 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>가계부 달력</title>
+    <title>CALENDAR</title>
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet" />
-    <link rel="shortcut icon" type="image/x-icon" href="/images/logo/bee3.png" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="/images/logo/beeee.png" />
+
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -43,14 +45,39 @@
 		.fc-daygrid-day-number {
     		color: black; /* 날짜 숫자를 검정으로 설정 */
 		}
-	    
+
 	    .fc-day-sun a {
-	    	color: red;
+	    	color: #fa98d9;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-mon a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-tue a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-wed a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-thu a {
+	    	color: #83CADF;
+	    	text-decoration:none;
+	    }
+
+	    .fc-day-fri a {
+	    	color: #83CADF;
 	    	text-decoration:none;
 	    }
 	    
 	   .fc-day-sat a {
-	    	color: blue;
+	    	color: #5ea6f7;
 	    	text-decoration:none;
 	    }
 	    
@@ -106,31 +133,25 @@
 	    }
 	
 	    .summary {
-	        margin-bottom: 10px;
+	        margin-left: 10px;
+	        margin-bottom: 20px;
 	        font-weight: bold;
-	        font-size: 14px;
+	        font-size: 16px;
 	    }
 	
 	    /* 버튼 스타일 */
 	    .feedback-buttons {
 	        display: flex;
 	        gap: 10px;
-	    }
-	
-		.feedback-buttons {
-		    display: flex; /* 수평 정렬 */
-		    align-items: center; /* 세로축 기준 정렬 */
+	        align-items: center; /* 세로축 기준 정렬 */
 		    gap: 10px; /* 요소 간 간격 */
-		}
-		
-		.feedback-buttons span {
-			
-		    margin-right: 10px; /* 텍스트와 이미지 사이 여백 */
-		}
+		    margin-bottom: 15px;
+		    margin-left: 10px;
+	    }
 		
 		.feedback-image {
-		    width: 30px; /* 이미지 너비 */
-		    height: 30px; /* 이미지 높이 */
+		    width: 50px; /* 이미지 너비 */
+		    height: 50px; /* 이미지 높이 */
 		    vertical-align: middle; /* 텍스트와 수평 정렬 */
 		    cursor: pointer; /* 클릭 가능 표시 */
 		}
@@ -154,7 +175,7 @@
 		    background-color: white; /* 모달 배경색 */
 		    border: 1px solid #ddd;
 		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		    padding: 20px;
+		    padding: 25px;
 		    width: 400px; /* 너비 조정 */
 		    height: 570px;
 		    border-radius: 8px; /* 둥근 모서리 */
@@ -185,9 +206,10 @@
 		
 		/* 입력 필드 스타일 */
 		#transactionModal input, #transactionModal select {
-		    width: calc(100% - 20px); /* 너비 조정 */
+		    width: 100%; /* 너비 조정 */
 		    padding: 10px;
-		    margin-bottom: 20px;
+		    margin-top: 5px;
+		    margin-bottom: 15px;
 		    border: 1px solid #ddd;
 		    border-radius: 4px;
 		    font-size: 14px;
@@ -199,7 +221,7 @@
 		    width: 100%;
 		    padding: 10px;
 		    border: none;
-		    background-color: #007bff; /* 파란색 배경 */
+		    background-color: #83CADF; /* 파란색 배경 */
 		    color: white;
 		    font-size: 16px;
 		    font-weight: bold;
@@ -208,17 +230,17 @@
 		}
 		
 		#transactionModal button:hover {
-		    background-color: #0056b3; /* 어두운 파란색 배경 */
+		    background-color: #9ae3a7; /* 연두색 배경 */
 		}
 		
 		/* 모달의 전체 컨테이너와 조화롭게 배치 */
 		.modal-content {
 		    position: relative;
 		}
-		
+
 		/* 특정 커스텀 버튼 스타일 */
 		.fc-addEventBtn-button {
-		    background-color: #A6E5B1 !important; /* 커스텀 버튼 배경색 */
+		    background-color: #83CADF !important; /* 커스텀 버튼 배경색 */
 		    color: white !important;
 		    border: 2px solid #d3e3ed !important; /* 테두리 추가 */
 		    font-weight: bold !important; /* 글자 굵게 */
@@ -231,7 +253,7 @@
 		}
 		
 		.fc-prev-button, .fc-next-button {
-		    background-color: #A6E5B1 !important; /* 파란색 배경 */
+		    background-color: #83CADF !important; /* 파란색 배경 */
 		    color: white !important; /* 흰색 텍스트 */ 
 		    border: 2px solid #d3e3ed !important;
 		    padding: 5px 10px !important; /* 내부 여백 */
@@ -289,7 +311,7 @@
         
        	<!-- 해당 날짜의 소비 평가 -->
         <div class="feedback-buttons">
-            <span id="today">오늘의 소비는?</span>
+            <span id="today" style="font-size: 17px">오늘의 소비는 ?</span>
               <img src="/images/ThumbUp.png"  alt="좋아요" class="feedback-image" id="good-button" width="50" height="50">
   			  <img src="/images/ThumbDown.png" alt="별로에요" class="feedback-image" id="bad-button" width="50" height="50">
   			  <div id="feedback-result" class="feedback-result"></div>
@@ -302,31 +324,31 @@
 
 <!-- 내역 추가 모달 -->
    <div class="modal" id="transactionModal">
-        <div class="modal-content">
+        <div class="modal-content" style="border: none">
             <span class="close" id="closeModal">&times;</span>
             <h3>내역 추가</h3>
             <form id="transactionForm">
-                <label for="content">결제내용:</label>
+                <label for="content">결제내용 :</label>
                 <input type="text" id="content" name="content" required><br><br>
-                <label for="amount">금액:</label>
+                <label for="amount">금액 :</label>
                 <input type="number" id="amount" name="amount" required><br><br>
-                <label for="category">카테고리:</label>
+                <label for="category">카테고리 :</label>
                 <select id="category" name="category" required>
-				    <option value="store">편의점</option>
-				    <option value="cafe">카페/디저트</option>
-				    <option value="restaurant">외식</option>
-				    <option value="oil">주유</option>
-				    <option value="culture">영화/문화</option>
-				   	<option value="mart">마트</option>
-				    <option value="shopping">쇼핑</option>
-				    <option value="hospital">병원/약국</option>
-				    <option value="education">교육/육아</option>
-				    <option value="mobileCarrier">통신사</option>
-				   	<option value="car">자동차/하이패스</option>
-				    <option value="travel">여행/숙박</option>
-				    <option value="publicTransportation">대중교통</option>
+				    <option value="편의점">편의점</option>
+				    <option value="카페/디저트">카페/디저트</option>
+				    <option value="외식">외식</option>
+				    <option value="주유">주유</option>
+				    <option value="영화/문화">영화/문화</option>
+				   	<option value="마트">마트</option>
+				    <option value="쇼핑">쇼핑</option>
+				    <option value="병원/약국">병원/약국</option>
+				    <option value="교육/육아">교육/육아</option>
+				    <option value="통신사">통신사</option>
+				   	<option value="자동차/하이패스">자동차/하이패스</option>
+				    <option value="여행/숙박">여행/숙박</option>
+				    <option value="대중교통">대중교통</option>
                 </select><br><br>
-                <label for="date">일시:</label>
+                <label for="date">일시 :</label>
                 <input type="datetime-local" id="date" name="date" required><br><br>
                 <button type="submit">입력</button>
             </form>
@@ -398,6 +420,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
+      timeZone: 'Asia/Seoul',
       initialView: 'dayGridMonth', // 월간 보기
       selectable: true, // 날짜 선택 가능
       events: '/api/payments/user', // 전체 이벤트 가져오기
@@ -408,6 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
     		  text: "내역 추가",
     		  click: function(){
     			  transactionModal.style.display = 'block';
+    			  resetTransactionForm();
     		  }
     	  }  
       },
@@ -434,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(response => {
             const totalAmount = response.data || 0; // 총 금액 가져오기 (없으면 0)
             // 요약 문구 업데이트
-            summaryEl.textContent = `${selectedDate} 의 총 소비 ${totalAmount.toLocaleString()}원 입니다.`;
+            summaryEl.textContent = `${selectedDate} 총 소비 : ${totalAmount.toLocaleString()} 원`;
           })
           .catch(error => {
             console.error('총 소비 금액을 가져오는 중 오류 발생:', error);
@@ -452,9 +476,24 @@ document.addEventListener('DOMContentLoaded', function () {
           if (payments.length > 0) {
             // 결제 내역 추가
             payments.forEach(payment => {
+            	
+                const date = new Date(payment.datetime); // 서버에서 가져온 datetime
+                const options = {
+                    timeZone: 'Asia/Seoul', // KST 고정
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false // 24시간제로 설정
+                };
+                const formattedDate = new Intl.DateTimeFormat('ko-KR', options).format(date);
+            	
+            	
               const row = `
                   <tr>
-                    <td>${new Date(payment.datetime).toLocaleString()}</td>
+                    <td>${formattedDate}</td>
                     <td>${payment.categoryName}</td>
                     <td>${payment.storeName}</td>
                     <td>${payment.amount.toLocaleString()} 원</td>
@@ -538,6 +577,29 @@ document.addEventListener('DOMContentLoaded', function () {
     
     
     calendar.render();
+    
+ // 폼 초기화 함수
+    function resetTransactionForm() {
+        document.getElementById('content').value = ''; // 결제내용 필드 초기화
+        document.getElementById('amount').value = ''; // 금액 필드 초기화
+        document.getElementById('category').selectedIndex = 0; // 카테고리 첫 번째 옵션 선택
+        const dateInput = document.getElementById('date');
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // 월은 0부터 시작하므로 +1
+        let dd = today.getDate();
+        let hour = today.getHours();
+        let min = today.getMinutes();
+
+        if (mm < 10) mm = '0' + mm; // 월 10보다 작으면 앞에 0 추가
+        if (dd < 10) dd = '0' + dd; // 일이 10보다 작으면 앞에 0 추가
+        if (hour < 10) hour = '0' + hour;
+        if (min < 10) min = '0' + min;
+
+        const formattedDateTime = `${yyyy}-${mm}-${dd}T${hour}:${min}`;
+        dateInput.value = formattedDateTime; // 날짜 필드 초기화
+    }
+ 
   });
 </script>
 </body>

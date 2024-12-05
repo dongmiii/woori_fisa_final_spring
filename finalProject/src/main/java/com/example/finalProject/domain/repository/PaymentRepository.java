@@ -26,7 +26,7 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer>
     List<PaymentEntity> findByMemberId(@Param("memberId") Integer memberId);
 
 
-    @Query("SELECT p FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime BETWEEN :start AND :end")
+    @Query("SELECT p FROM PaymentEntity p WHERE p.memberId = :memberId AND  p.datetime >= :start AND p.datetime < :end")
     List<PaymentEntity> findByMemberIdAndDatetimeBetween(
         @Param("memberId") Integer memberId,
         @Param("start") LocalDateTime start,
@@ -34,7 +34,7 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer>
     );
 
 
-    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime BETWEEN :start AND :end")
+    @Query("SELECT COALESCE(SUM(p.amount), 0) FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime >= :start AND p.datetime < :end")
     Long calculateTotalAmountForUser(
         @Param("memberId") Integer memberId,
         @Param("start") LocalDateTime start,
@@ -42,7 +42,7 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Integer>
     );
 
     
-    @Query("SELECT COUNT(p) > 0 FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime BETWEEN :start AND :end")
+    @Query("SELECT COUNT(p) > 0 FROM PaymentEntity p WHERE p.memberId = :memberId AND p.datetime >= :start AND p.datetime < :end")
     boolean existsByMemberIdAndDatetimeBetween(
         @Param("memberId") Integer memberId,
         @Param("start") LocalDateTime start,

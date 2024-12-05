@@ -72,8 +72,8 @@ button:focus,
 }
 
 .form-check-input:checked {
-  background-color: #3080E3;
-  border-color: #3080E3;
+  background-color: #83CADF;
+  border-color: #83CADF;
 }
 
 select {
@@ -924,7 +924,7 @@ ol {
   padding-bottom: 50px;
   z-index: 2;
   text-align: left;
-  background: linear-gradient(-45deg, #fd723b, #3080E3);
+  background: linear-gradient(-45deg, #A6E5B1, #83CADF);
   -webkit-box-shadow: 0px 7px 30px rgba(0, 0, 0, 0.075);
           box-shadow: 0px 7px 30px rgba(0, 0, 0, 0.075);
 }
@@ -1077,8 +1077,8 @@ ol {
   font-weight: 500;
   display: inline-block;
   margin-bottom: 20px;
-  color: #3080E3;
-  border: 2px solid #3080E3;
+  color: #83CADF;
+  border: 2px solid #83CADF;
   border-radius: 30px;
   padding: 8px 30px;
   text-transform: capitalize;
@@ -1156,7 +1156,7 @@ ol {
   bottom: -1px;
   height: 2px;
   width: 50px;
-  background: #3080E3;
+  background: #83CADF;
   content: "";
 }
 
@@ -1170,12 +1170,12 @@ ol {
   margin-left: 0;
 }
 
-/* One Click Scrool Top Button*/
+/* One Click Scroll Top Button*/
 .scroll-top {
   width: 45px;
   height: 45px;
   line-height: 45px;
-  background: #3080E3;
+  background: #83CADF;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1185,7 +1185,7 @@ ol {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  font-size: 14px;
+  font-size: 15px;
   color: #fff !important;
   position: fixed;
   bottom: 30px;
@@ -1202,7 +1202,7 @@ ol {
   box-shadow: 0 1rem 3rem rgba(35, 38, 45, 0.15) !important;
   -webkit-transform: translate3d(0, -5px, 0);
   transform: translate3d(0, -5px, 0);
-  background-color: #fd723b;
+  background-color: #A6E5B1;
 }
 
 /* Overlay */
@@ -1284,7 +1284,7 @@ ol {
 
 .pagination .pagination-list li.active a,
 .pagination .pagination-list li:hover a {
-  background: #3080E3;
+  background: #83CADF;
   color: #fff;
   border-color: transparent;
 }
@@ -1343,7 +1343,7 @@ ol {
 
 .button .btn:hover {
   color: #fff;
-  background-color: #fd723b;
+  background-color: #83CADF;
 }
 
 .button {
@@ -1351,7 +1351,7 @@ ol {
 }
 
 .button .btn-alt {
-  background-color: #fd723b !important;
+  background-color: #A6E5B1 !important;
   color: #fff !important;
 }
 
@@ -1372,7 +1372,7 @@ ol {
 }
 
 .button .btn-alt:hover {
-  background-color: #3080E3 !important;
+  background-color: #A6E5B1 !important;
   color: #fff !important;
 }
 
@@ -1493,16 +1493,16 @@ ol {
     border-radius: 8px;
   }
   .header .navbar .navbar-nav .nav-item a:hover {
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar .navbar-nav .nav-item a.active {
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item {
     margin: 0;
   }
   .header .navbar-nav .nav-item:hover a {
-    color: #3080E3;
+    color: #83CADF;
   }
   .header .navbar-nav .nav-item a {
     padding: 12px 16px !important;
@@ -1526,7 +1526,7 @@ ol {
     padding: 12px 12px;
   }
   .header .navbar-nav .nav-item .sub-menu .nav-item a:hover {
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item a {
     color: #051441;
@@ -1544,7 +1544,7 @@ ol {
   }
   .header .navbar-nav .nav-item .sub-menu li.active {
     background: #fff !important;
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item .sub-menu .nav-item {
     margin: 0 !important;
@@ -1554,13 +1554,13 @@ ol {
   }
   .header .navbar-nav .nav-item .sub-menu li:hover {
     background: #fff !important;
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item a {
     font-size: 14px;
   }
   .header .navbar-nav .nav-item a:hover {
-    color: #3080E3;
+    color: #83CADF;
   }
 }
 
@@ -1587,16 +1587,16 @@ ol {
     border-radius: 8px;
   }
   .header .navbar .navbar-nav .nav-item a:hover {
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar .navbar-nav .nav-item a.active {
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item {
     margin: 0;
   }
   .header .navbar-nav .nav-item:hover a {
-    color: #3080E3;
+    color: #83CADF;
   }
   .header .navbar-nav .nav-item a {
     padding: 12px 16px !important;
@@ -1620,7 +1620,7 @@ ol {
     padding: 12px 12px;
   }
   .header .navbar-nav .nav-item .sub-menu .nav-item a:hover {
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item a {
     color: #051441;
@@ -1638,7 +1638,7 @@ ol {
   }
   .header .navbar-nav .nav-item .sub-menu li.active {
     background: #fff !important;
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item .sub-menu .nav-item {
     margin: 0 !important;
@@ -1648,13 +1648,13 @@ ol {
   }
   .header .navbar-nav .nav-item .sub-menu li:hover {
     background: #fff !important;
-    color: #3080E3 !important;
+    color: #83CADF !important;
   }
   .header .navbar-nav .nav-item a {
     font-size: 14px;
   }
   .header .navbar-nav .nav-item a:hover {
-    color: #3080E3;
+    color: #83CADF;
   }
 }
 
@@ -1681,12 +1681,12 @@ ol {
 }
 
 .header.sticky .button .btn {
-  background-color: #3080E3;
+  background-color: #83CADF;
   color: #fff;
 }
 
 .header.sticky .button .btn:hover {
-  background-color: #fd723b;
+  background-color: #A6E5B1;
   color: #fff;
 }
 
@@ -1708,11 +1708,11 @@ ol {
 }
 
 .header .navbar .navbar-nav .nav-item a.active {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .sticky .navbar .navbar-nav .nav-item a.active {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .sticky .navbar .navbar-nav .nav-item a {
@@ -1811,11 +1811,11 @@ ol {
 }
 
 .navbar-nav .nav-item:hover a {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .sticky .navbar-nav .nav-item:hover a {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .navbar-nav .nav-item a {
@@ -1944,7 +1944,7 @@ ol {
 }
 
 .navbar-nav .nav-item .sub-menu .nav-item a:hover {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .navbar-nav .nav-item .sub-menu.left-menu {
@@ -1971,7 +1971,7 @@ ol {
 }
 
 .navbar-nav .nav-item .sub-menu > li.active > a {
-  color: #3080E3 !important;
+  color: #83CADF !important;
 }
 
 .navbar-nav .nav-item .sub-menu > li > a {
@@ -2012,7 +2012,7 @@ ol {
 
 .button .signup:hover {
   color: #fff;
-  background-color: #fd723b;
+  background-color: #83CADF;
 }
 
 .sticky .button .signin {
@@ -2020,16 +2020,16 @@ ol {
 }
 
 .sticky .button .signin:hover {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .sticky .button .signup {
-  background-color: #3080E3;
+  background-color: #83CADF;
   color: #fff;
 }
 
 .sticky .button .signup:hover {
-  background-color: #fd723b;
+  background-color: #83CADF;
   color: #fff;
 }
 
@@ -2042,16 +2042,16 @@ ol {
 }
 
 .others-pages .button .signin:hover {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .others-pages .button .signup {
-  background-color: #3080E3;
+  background-color: #83CADF;
   color: #fff;
 }
 
 .others-pages .button .signup:hover {
-  background-color: #fd723b;
+  background-color: #83CADF;
   color: #fff;
 }
 
@@ -2060,14 +2060,14 @@ ol {
     color: #151515;
   }
   .header .button .signin:hover {
-    color: #3080E3;
+    color: #83CADF;
   }
   .header .button .signup {
-    background-color: #3080E3;
+    background-color: #83CADF;
     color: #fff;
   }
   .header .button .signup:hover {
-    background-color: #fd723b;
+    background-color: #83CADF;
     color: #fff;
   }
 }
@@ -2142,7 +2142,7 @@ ol {
   z-index: 2;
   width: 150px;
   height: 150px;
-  background: #97A5D3;
+  background: #a3ebff;
   position: absolute;
   border-radius: 50%;
 }
@@ -2174,7 +2174,7 @@ ol {
   left: 30px;
   width: 48px;
   height: 48px;
-  background: #32A2DB;
+  background: #97A5D3;
   position: absolute;
   border-radius: 50%;
 }
@@ -2191,8 +2191,6 @@ ol {
   border-radius: 20px;
   z-index: 2;
   position: relative;
-  -webkit-box-shadow: 0px 0px 30px #0000000f;
-          box-shadow: 0px 0px 30px #0000000f;
   z-index: 4;
 }
 
@@ -2219,7 +2217,7 @@ ol {
   left: -45px;
   width: 110px;
   height: 110px;
-  background: #00B5BD;
+  background: #87d4d6;
   position: absolute;
   border-radius: 50%;
   z-index: -1;
@@ -2298,8 +2296,10 @@ ol {
   overflow: hidden;
 }
 
+
+
 .hero-area .hero-content h1 span.color2 {
-  color: #fd723b;
+  color: #fed22c;
 }
 
 .hero-area .hero-content p {
@@ -2402,7 +2402,7 @@ ol {
   right: calc(50% - 1145px);
   width: 1000px;
   height: 1000px;
-  background: #3080E3;
+  background: #83CADF;
   position: absolute;
   border-radius: 50%;
   z-index: 1;
@@ -2436,7 +2436,7 @@ ol {
 }
 
 .hero-area.style2 .hero-content h1 .secondary-color {
-  color: #fd723b;
+  color: #83CADF;
 }
 
 .hero-area.style2 .hero-content p {
@@ -2487,13 +2487,13 @@ ol {
   text-align: center;
   display: inline-block;
   background-color: transparent;
-  color: #3080E3;
+  color: #83CADF;
   border-radius: 50%;
   border: 1px solid #e0e0e0;
 }
 
 .hero-area.style2 .hero-content .video:hover .video-icon {
-  background-color: #3080E3;
+  background-color: #83CADF;
   color: #fff;
   border-color: transparent;
 }
@@ -2629,17 +2629,17 @@ ol {
 }
 
 .pricing-table .single-table.middle .table-head .title {
-  border-color: #fd723b;
-  color: #fd723b;
+  border-color: #83CADF;
+  color: #83CADF;
 }
 
 .pricing-table .single-table .table-head .title {
   font-size: 15px;
   font-weight: 500;
   margin-bottom: 25px;
-  color: #3080e3;
+  color: #83CADF;
   padding: 8px 20px;
-  border: 2px solid #3080e3;
+  border: 2px solid #83CADF;
   display: inline-block;
   border-radius: 30px;
 }
@@ -2699,7 +2699,7 @@ ol {
 }
 
 .pricing-table .single-table .table-content .table-list li i {
-  color: #3080E3;
+  color: #83CADF;
   font-size: 14px;
   position: absolute;
   left: 0;
@@ -2712,11 +2712,11 @@ ol {
 }
 
 .pricing-table.style2 .single-table.middle .table-head .title {
-  color: #fd723b;
+  color: #83CADF;
 }
 
 .pricing-table.style2 .single-table .table-head .title {
-  color: #3080E3;
+  color: #83CADF;
   border: none;
   padding: 0;
   text-transform: uppercase;
@@ -2800,7 +2800,7 @@ ol {
     font-size: 24px; /* 텍스트 크기 */
     font-weight: bold; /* 굵은 글씨 */
     color: #333; /* 텍스트 색상 */
-    margin-top: 35px; /* 위아래 여백 */
+    margin-top: 110px; /* 위아래 여백 */
     padding-bottom: 0;
     letter-spacing: 1px; /* 글자 간격 */
     text-transform: uppercase; /* 텍스트를 대문자로 변환 (선택 사항) */
@@ -2814,7 +2814,7 @@ ol {
 }
 
 .call-action.style2 {
-  background-color: #3080E3;
+  background-color: #83CADF;
   padding: 0;
 }
 
@@ -2826,7 +2826,7 @@ ol {
   position: relative;
   padding: 50px;
   border-radius: 10px;
-  background-color: #3080E3;
+  background-color: #83CADF;
   z-index: 0;
   overflow: hidden;
 }
@@ -2874,7 +2874,7 @@ ol {
 
 .call-action .text h2 span {
   display: block;
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .call-action .button {
@@ -2887,7 +2887,7 @@ ol {
 }
 
 .call-action .button .btn:hover {
-  background-color: #fd723b;
+  background-color: #83CADF;
   color: #fff;
 }
 
@@ -2910,11 +2910,11 @@ ol {
 }
 
 .services.section {
-  background-image: url('/images/green.png'); /* 배경 이미지 경로 */
+  background-image: url('/images/back_green4.png'); /* 배경 이미지 경로 */
   background-size: cover; /* 이미지가 요소를 완전히 덮도록 설정 */
   background-position: center; /* 이미지가 중앙에 위치하도록 설정 */
   background-repeat: no-repeat; /* 이미지 반복 금지 */
-  padding: 20px; /* 상하 여백 */
+  margin-bottom: 40px;
 }
 
 .services .section-title {
@@ -2940,6 +2940,7 @@ ol {
   -webkit-transition: all 0.4s ease;
   transition: all 0.4s ease;
   border: 1px solid #eaeaea;
+  margin-top: 20px;
 }
 
 .services.style2 .single-service h3 {
@@ -2970,8 +2971,8 @@ ol {
   background-color: #A6E5B1;
   text-align: center;
   font-size: 30px;
-  -webkit-box-shadow: 0px 10px 30px rgba(48, 128, 227, 0.18);
-          box-shadow: 0px 10px 30px rgba(48, 128, 227, 0.18);
+  -webkit-box-shadow: 0px 10px 30px rgba(166, 229, 177, 0.18);
+          box-shadow: 0px 10px 30px rgba(166, 229, 177, 0.18);
 }
 
 .single-service h3 {
@@ -3006,8 +3007,8 @@ ol {
 
 .single-service.two .service-icon {
   background-color: #83CADF;
-  -webkit-box-shadow: 0px 10px 30px rgba(253, 114, 59, 0.25);
-          box-shadow: 0px 10px 30px rgba(253, 114, 59, 0.25);
+  -webkit-box-shadow: 0px 10px 30px rgba(131, 202, 223, 0.25);
+          box-shadow: 0px 10px 30px rgba(131, 202, 223, 0.25);
 }
 
 .single-service.two a {
@@ -3016,8 +3017,8 @@ ol {
 
 .single-service.three .service-icon {
   background-color: #97A5D3;
-  -webkit-box-shadow: 0px 10px 30px rgba(255, 168, 66, 0.26);
-          box-shadow: 0px 10px 30px rgba(255, 168, 66, 0.26);
+  -webkit-box-shadow: 0px 10px 30px rgba(151, 165, 211, 0.26);
+          box-shadow: 0px 10px 30px rgba(151, 165, 211, 0.26);
 }
 
 .single-service.three a {
@@ -3169,11 +3170,11 @@ ol {
 }
 
 .footer .single-footer.f-about .copyright-text a {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 .footer .single-footer.f-about .copyright-text a:hover {
-  color: #fd723b;
+  color: #83CADF;
 }
 
 .footer .single-footer.f-link li {
@@ -3192,7 +3193,7 @@ ol {
 }
 
 .footer .single-footer.f-link li a:hover {
-  color: #3080E3;
+  color: #83CADF;
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1399px), only screen and (min-width: 1400px) {
@@ -3241,11 +3242,11 @@ ol {
 }
 
 .footer .newsletter-form input:hover {
-  border-color: #3080E3;
+  border-color: #83CADF;
 }
 
 .footer .newsletter-form input:focus {
-  border-color: #3080E3;
+  border-color: #83CADF;
 }
 
 .footer .newsletter-form .button {
@@ -3275,5 +3276,5 @@ ol {
 
 .footer .newsletter-form .button .sub-btn:hover {
   color: #fff;
-  background-color: #fd723b;
+  background-color: #83CADF;
 }
