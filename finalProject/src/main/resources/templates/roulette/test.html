@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="/css/animate.css" />
+    <link rel="stylesheet" href="/css/tiny-slider.css" />
+    <link rel="stylesheet" href="/css/glightbox.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <style>
+        * {
+            font-family: Pretendard;
+        }
+
+        body {
+            background: #f7f8fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .roulette-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .roulette-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        canvas {
+            transition: 2s;
+            pointer-events: none;
+        }
+
+        button {
+            background: #febf00;
+            margin-top: 1rem;
+            padding: .8rem 1.8rem;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: .2s;
+            cursor: pointer;
+        }
+
+        button:active {
+            background: #444;
+            color: #f9f9f9;
+        }
+
+        .roulette {
+            width: 380px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .roulette::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 50px;
+            border-radius: 5px;
+            background: #000;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 22;
+        }
+
+        button:disabled {
+            background: #ccc; /* 비활성화 상태 배경색 */
+            cursor: not-allowed; /* 비활성화 상태 커서 */
+        }
+    </style>
+</head>
+<body>
+<header th:replace="fragments/header :: headerFragment"></header>
+<div class="roulette-container">
+    <div class="roulette-title">
+    <span th:if="${session.username != null}"
+          th:text="${session.username + '님만의 캐릭터를 골라봐요.'}"></span>
+        <span th:unless="${session.username != null}">로그인하고 나만의 캐릭터를 골라봐요.</span>
+    </div>
+    <div class="roulette">
+        <canvas width="380" height="380"></canvas>
+        <button th:if="${session.username != null}" onclick="rotate()">룰렛 돌리기</button>
+        <button th:unless="${session.username != null}"
+                onclick="location.href='/loginMain'">로그인하기</button>
+    </div>
+    <div id="userSessionId" style="display: none;" aria-hidden="true">[[${session.userid}]]</div>
+    <div id="userSessionMail" style="display: none;" aria-hidden="true">[[${session.usermail}]]</div>
+</div>
+
+<script>
+    const userSessionId = document.getElementById('userSessionId');
+    const userId = userSessionId.textContent.trim(); // 텍스트 내용 가져오기
+    
+
+    const userMail = document.getElementById('userSessionMail').textContent.trim();
+    console.log("userMail :: ", userMail);
+
+    const $c = document.querySelector("canvas");
+    const ctx = $c.getContext(`2d`);
+    
+    
+
+    const product = [
+        "햄스터", "다람쥐", "토끼", "고양이", "강아지", "수달", "아기곰", "펭귄", "아기호랑이",
+        "아기사자", "북극곰", "거북이", "참새", "돌고래", "고슴도치"
+    ];
+
+    const colors = [
+        "#dc0936", "#e6471d", "#f7a416", "#efe61f", "#60b236", "#209b6c", "#169ed8", "#3f297e",
+        "#87207b", "#be107f", "#e7167b", "#a29bfe", "#00cec9", "#6c5ce7", "#e17055"
+    ];
+    const newMake = () => {
+        const [cw, ch] = [$c.width / 2, $c.height / 2];
+        const arc = Math.PI / (product.length / 2);
+
+        for (let i = 0; i < product.length; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = colors[i % (colors.length -1)];
+            ctx.moveTo(cw, ch);
+            ctx.arc(cw, ch, cw, arc * (i - 1), arc * i);
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        ctx.fillStyle = "#fff";
+        ctx.font = "18px Pretendard";
+        ctx.textAlign = "center";
+
+        for (let i = 0; i < product.length; i++) {
+            const angle = (arc * i) + (arc / 2);
+
+            ctx.save();
+
+            ctx.translate(
+                cw + Math.cos(angle) * (cw - 50),
+                ch + Math.sin(angle) * (ch - 50),
+            );
+
+            ctx.rotate(angle + Math.PI / 2);
+
+            product[i].split(" ").forEach((text, j) => {
+                ctx.fillText(text, 0, 30 * j);
+            });
+
+            ctx.restore();
+        }
+    }
+
+    const rotate = () => {
+        const button = document.querySelector('button[onclick="rotate()"]');
+        const userSessionId = document.getElementById('userSessionId');
+        const userId = userSessionId.textContent.trim();
+
+        // 버튼 비활성화
+        button.disabled = true;
+        // 서버로 honey 검사 요청
+        fetch(`/roulette/checkHoneyAndSpin?userid=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // honey 차감 성공 -> 룰렛 돌림
+                    updateHoneyValueInHeader(data.currentHoney); // Header의 honey 값 업데이트
+                    performRouletteSpin(); // 룰렛 스핀 함수 호출
+                } else {
+                    // honey 부족 경고
+                    alert(data.message);
+                    button.disabled = false; // 버튼 다시 활성화
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다. 다시 시도해주세요.');
+                button.disabled = false; // 버튼 다시 활성화
+            });
+    };
+    // Header의 honey 값을 업데이트하는 함수
+    function updateHoneyValueInHeader(newHoneyValue) {
+        const honeyValueElement = document.getElementById('honey-score');
+        if (honeyValueElement) {
+            honeyValueElement.textContent = newHoneyValue;
+        }
+    }
+    // 룰렛 스핀 함수
+    function performRouletteSpin() {
+        $c.style.transform = `initial`;
+        $c.style.transition = `initial`;
+
+        setTimeout(() => {
+
+            const ran = Math.floor(Math.random() * product.length);
+            const arc = 360 / product.length;
+
+            // 추가적인 회전 값(랜덤)으로 다양화
+            const extraSpin = Math.random() * 360; // 0 ~ 360도 사이 추가 회전
+            const baseRotation = 360 * 5; // 기본 회전 수(5바퀴)
+            const finalRotation = (ran * arc) + baseRotation + extraSpin;
+
+            $c.style.transform = `rotate(-${finalRotation}deg)`;
+            $c.style.transition = `3s ease-out`;
+            
+            // Show loading screen and redirect
+            setTimeout(() => {
+                // Redirect to loading screen
+                const selectedCharacter = product[ran];
+                console.log(selectedCharacter);
+                // 1.5초 후 페이지 이동
+                setTimeout(() => {
+                    window.location.href = `/roulette/loading?character=${encodeURIComponent(selectedCharacter)}`;
+                }, 500);
+            }, 2000);
+        }, 1);
+    };
+
+    newMake();
+</script>
+</body>
+</html>
