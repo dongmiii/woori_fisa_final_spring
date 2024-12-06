@@ -73,11 +73,16 @@
         fetch("/api/fastapi-endpoints")
             .then(response => response.json())
             .then(config => {
-                const fastApiUrl = config.url; // FastAPI URL
-                const processUserDataEndpoint = config.processUserData; // 엔드포인트 경로
+                const fastApiUrl = config.url;  // FastAPI URL (예: "http://localhost:8000")
+                const processUserDataEndpoint = config.processUserData;  // 엔드포인트 경로 (예: "/api/process-user-data")
+
+                // URL 경로 결합 시, fastApiUrl 뒤에 슬래시가 있으면 processUserDataEndpoint 앞에 슬래시를 제거
+                const apiUrl = fastApiUrl.endsWith('/')
+                    ? `${fastApiUrl}${processUserDataEndpoint.slice(1)}`
+                    : `${fastApiUrl}${processUserDataEndpoint}`;
 
                 // FastAPI로 userId와 character를 POST 요청
-                return fetch(`${fastApiUrl}${processUserDataEndpoint}`, {
+                return fetch(apiUrl, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

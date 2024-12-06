@@ -199,9 +199,9 @@
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
+                    performRouletteSpin(); // 룰렛 스핀 함수 호출
                     // honey 차감 성공 -> 룰렛 돌림
                     updateHoneyValueInHeader(data.currentHoney); // Header의 honey 값 업데이트
-                    performRouletteSpin(); // 룰렛 스핀 함수 호출
                 } else {
                     // honey 부족 경고
                     alert(data.message);
