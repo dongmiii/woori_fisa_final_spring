@@ -12,10 +12,12 @@
             padding: 0;
             background-color: #f7f7f7;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            justify-content: center;  /* 가로로 중앙 정렬 */
+            align-items: center;      /* 세로로 중앙 정렬 */
+            height: 100vh;            /* 화면 전체 높이를 사용 */
+            flex-direction: column;   /* 세로 방향으로 정렬 */
         }
+
         .chat-container {
             display: flex;
             width: 900px;
@@ -24,15 +26,7 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .chat-history {
-            flex: 1;
-            background-color: #f1f1f1;
-            border-right: 1px solid #ccc;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
+            margin-top: 120px; /* header와의 간격 추가 */
         }
         .chat-history h3 {
             text-align: center;
@@ -52,22 +46,6 @@
         }
         .chat-history .history-item:hover {
             background-color: #e0e0e0;
-        }
-        .delete-button {
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            padding: 5px 8px;
-            font-size: 12px;
-        }
-        .delete-button:hover {
-            background-color: darkred;
-        }
-        .add-conversation {
-            margin-top: auto;
-            text-align: center;
         }
         .add-conversation button {
             padding: 8px 12px;
@@ -146,7 +124,43 @@
             text-align: center;
             padding: 10px 0;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            margin-top: auto; /* footer를 콘텐츠 아래로 밀기 */
+            margin-top: auto;  /* 이 부분이 footer를 페이지 하단으로 밀어줍니다 */
+        }
+
+            .card-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+
+            .card-item {
+                display: block;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .card-table td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: center;
+                vertical-align: top;
+                width: 33.33%; /* 3개의 열로 나누기 */
+            }
+
+            /* 카드 이미지 스타일 */
+            .card-image {
+                width: 150px;  /* 이미지 가로 크기 */
+                height: 200px; /* 이미지 세로 크기 */
+                object-fit: cover; /* 이미지가 비율에 맞게 잘리도록 */
+                margin-bottom: 10px;
+            }
+            .message.bot {
+                background-color: #f1f1f1;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 10px 0;
+                word-wrap: break-word;
+            }
         }
     </style>
     <link rel="shortcut icon" type="image/x-icon" href="/images/logo/beeee.png" />
@@ -162,15 +176,7 @@
 <body>
 <header th:replace="~{fragments/header :: headerFragment}"></header> <!-- Thymeleaf fragment 수정 -->
 <div class="chat-container">
-    <div class="chat-history">
-        <h3>대화 내역</h3>
-        <div id="historyContent">
-            <!-- 대화 내역이 여기에 추가됩니다 -->
-        </div>
-        <div class="add-conversation">
-            <button onclick="addNewConversation()">새로운 대화 추가</button>
-        </div>
-    </div>
+
     <div class="chatbot-container">
         <div class="chat-header" id="chatHeader">
             챗봇
@@ -184,10 +190,14 @@
             <input type="text" id="userInput" placeholder="메시지를 입력하세요...">
             <button id="sendButton" onclick="sendMessage()">전송</button> <!-- id 추가 -->
         </div>
-    </div>
-</div>
 
+    </div>
+
+</div>
+<footer th:replace="fragments/footer :: footerFragment"></footer>
 <script>
+
+
 
     async function sendMessage() {
         const chatContent = document.getElementById('chatContent');
@@ -221,17 +231,42 @@
             const botMessage = data.response || "서버에서 응답이 없습니다.";
             updateLastBotMessageRaw(botMessage);
 
-            // 카드 정보 출력
+            // 카드 정보 출력 (3개의 카드로 나누어 표시)
             if (data.cards && data.cards.length > 0) {
-                data.cards.forEach((card, index) => {
-                    const cardInfo = `
-                    <div class="message bot">
-                        <strong>${card}</strong><br>
-                        <img src="${data.img_urls[index]}" alt="${card}" style="width: 150px; height: auto; margin-bottom: 10px; object-fit: cover;"><br>
-                    </div>
-                `;
-                    chatContent.innerHTML += cardInfo;
+                const table = document.createElement('table');
+                table.className = 'card-table';
+
+                let row = document.createElement('tr'); // 새로운 행 생성
+
+                // 3개 카드만 한 행에 나열
+                data.cards.slice(0, 3).forEach((card, index) => {
+                    const imageUrl = data.img_urls[index];
+                    const img = new Image();
+                    img.src = imageUrl;
+
+                    img.onload = function() {
+                        let transformStyle = '';
+                        // 이미지의 가로 세로 비율을 확인하여 회전 여부 결정
+                        if (img.width > img.height) {
+                            transformStyle = 'transform: rotate(90deg);';  // 가로가 더 길면 세로로 회전
+                        }
+
+                        const cardCell = `
+                        <td class="card-item">
+                            <strong>${card}</strong><br>
+                            <img src="${imageUrl}" alt="${card}" class="card-image" style="${transformStyle}">
+                        </td>
+                    `;
+                        row.innerHTML += cardCell;
+                    };
                 });
+
+                table.appendChild(row); // 행을 테이블에 추가
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+                messageDiv.appendChild(table); // 테이블을 말풍선에 추가
+                chatContent.appendChild(messageDiv);
             }
         } catch (error) {
             console.error('Error:', error);
@@ -240,6 +275,8 @@
 
         chatContent.scrollTop = chatContent.scrollHeight;
     }
+
+
 
     // raw 메시지 처리 (줄바꿈을 <br>로 변환)
     function updateLastBotMessageRaw(message) {
@@ -282,67 +319,6 @@
         document.getElementById('sendButton').addEventListener('click', sendMessage); // 버튼 클릭 이벤트 추가
     });
 
-    let conversations = [];
-    let activeConversationIndex = 0;
-
-    function addNewConversation() {
-        const historyContent = document.getElementById('historyContent');
-        const newConversation = { title: `대화 ${conversations.length + 1}`, messages: [] };
-        conversations.push(newConversation);
-
-        const historyItem = document.createElement('div');
-        historyItem.className = 'history-item';
-        historyItem.dataset.index = conversations.length - 1;
-
-        historyItem.onclick = () => loadConversation(conversations.length - 1);
-
-        const titleDiv = document.createElement('span');
-        titleDiv.textContent = newConversation.title;
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'delete-button';
-        deleteButton.textContent = '삭제';
-        deleteButton.onclick = (e) => {
-            e.stopPropagation();
-            deleteConversation(conversations.length - 1);
-        };
-
-        historyItem.appendChild(titleDiv);
-        historyItem.appendChild(deleteButton);
-        historyContent.appendChild(historyItem);
-        loadConversation(conversations.length - 1);
-    }
-
-    function loadConversation(index) {
-        const chatContent = document.getElementById('chatContent');
-        chatContent.innerHTML = '';
-
-        // 대화 제목을 갱신
-        const chatHeader = document.getElementById('chatHeader');
-        chatHeader.textContent = `대화 ${index + 1}`; // "대화 1", "대화 2" 등으로 업데이트
-
-        const conversation = conversations[index];
-
-        // 해당 대화의 메시지를 채팅창에 추가
-        conversation.messages.forEach((message) => {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${message.sender}`;
-            messageDiv.textContent = message.text;
-            chatContent.appendChild(messageDiv);
-        });
-
-
-        activeConversationIndex = index;
-    }
-
-    function deleteConversation(index) {
-        if (activeConversationIndex === index) {
-            alert('현재 활성화된 대화는 삭제할 수 없습니다.');
-            return;
-        }
-        conversations.splice(index, 1);
-        loadConversation(0);
-    }
 </script>
 
 </body>
