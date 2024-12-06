@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:sec=""
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-	
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<title>DASHBOARD</title>
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0 15%;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-container {
+            width: 70%;
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+            margin: 0;
+        }
+    </style>
 
-	 <!-- ========================= CSS here ========================= -->
+    <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
     <link rel="stylesheet" href="/css/animate.css" />
@@ -17,80 +31,143 @@
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/dashboardmain.css" />
     <link rel="shortcut icon" type="image/x-icon" href="/images/logo/beeee.png" />
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
-<!-- - 시각화 - 
+<!-- - 시각화 -
      이번달 소비 대분류 관련 그래프(가장 많이 소비한 카테고리),
-     카드 별 지출 내역, 
-     최근 일주일 소비 내역(라인차트), 
+     카드 별 지출 내역,
+     최근 일주일 소비 내역(라인차트),
      이번달 지출이 가장 많았던 날 -->
-    
 <header th:replace="fragments/header :: headerFragment"></header>
+<h1>User Spending Dashboard</h1>
 
-    <section class="hero-area">
-        <div class="container">
-            <div class="col-lg-7">
-              <div class="card-style mb-30">
-                <div class="title d-flex flex-wrap justify-content-between">
-                  <div class="left">
-                    <h6 class="text-medium mb-10">Yearly Stats</h6>
-                    <h3 class="text-bold">$245,479</h3>
-                  </div>
-                  <div class="right">
-                    <div class="select-style-1">
-                      <div class="select-position select-sm">
-                        <select class="light-bg">
-                          <option value="">Yearly</option>
-                          <option value="">Monthly</option>
-                          <option value="">Weekly</option>
-                        </select>
-                      </div>
-                    </div>
-                    <!-- end select -->
-                  </div>
-                </div>
-                <!-- End Title -->
-                <div class="chart">
-                  <canvas id="Chart1" style="width: 100%; height: 400px; margin-left: -35px;"></canvas>
-                </div>
-                <!-- End Chart -->
-              </div>
-            </div>
-            <!-- End Col -->
-            <div class="col-lg-5">
-              <div class="card-style mb-30">
-                <div class="title d-flex flex-wrap align-items-center justify-content-between">
-                  <div class="left">
-                    <h6 class="text-medium mb-30">Sales/Revenue</h6>
-                  </div>
-                  <div class="right">
-                    <div class="select-style-1">
-                      <div class="select-position select-sm">
-                        <select class="light-bg">
-                          <option value="">Yearly</option>
-                          <option value="">Monthly</option>
-                          <option value="">Weekly</option>
-                        </select>
-                      </div>
-                    </div>
-                    <!-- end select -->
-                  </div>
-                </div>
-                <!-- End Title -->
-                <div class="chart">
-                  <canvas id="Chart2" style="width: 100%; height: 400px; margin-left: -45px;"></canvas>
-                </div>
-                <!-- End Chart -->
-              </div>
-            </div>
-            <!-- End Col -->
-          </div>
-    </section>
+<!-- Bar Graph: Last Month's Categorical Spending -->
+<div class="chart-container">
+    <h3>Last Month's Spending by Category</h3>
+    <canvas id="categoryBarGraph"></canvas>
+</div>
 
+<!-- Bar Graph: Spending Amount Per Card -->
+<div class="chart-container">
+    <h3>Last Month's Spending Per Card</h3>
+    <canvas id="cardBarGraph"></canvas>
+</div>
 
+<!-- Line Graph: Last 7 Days Spending Tendency -->
+<div class="chart-container">
+    <h3>Last 7 Days Spending Trend</h3>
+    <canvas id="tendencyLineGraph"></canvas>
+</div>
 
-<footer th:replace="fragments/footer :: footerFragment"></footer>
+<!-- Bar Graph: Most Spent Day vs Average Daily Spending -->
+<div class="chart-container">
+    <h3>Most Spent Day of Last Month vs Average Daily Spending</h3>
+    <canvas id="dayComparisonBarGraph"></canvas>
+</div>
 
+<script>
+    // Bar Graph: Last Month's Spending by Category
+    const categoryData = /*[[${categoryPercentages}]]*/ {};
+    const categoryBarCtx = document.getElementById('categoryBarGraph').getContext('2d');
+    new Chart(categoryBarCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(categoryData),
+            datasets: [{
+                label: 'Spending Percentage (%)',
+                data: Object.values(categoryData),
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Bar Graph: Spending Amount Per Card
+    const cardData = /*[[${cardSpendingData}]]*/ {};
+    const cardBarCtx = document.getElementById('cardBarGraph').getContext('2d');
+    new Chart(cardBarCtx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(cardData),
+            datasets: [{
+                label: 'Spending Amount',
+                data: Object.values(cardData),
+                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Line Graph: Last 7 Days Spending Trend
+    const tendencyData = /*[[${spendingTendencyData}]]*/ {};
+    const tendencyLineCtx = document.getElementById('tendencyLineGraph').getContext('2d');
+    new Chart(tendencyLineCtx, {
+        type: 'line',
+        data: {
+            labels: Object.keys(tendencyData),
+            datasets: [{
+                label: 'Daily Spending',
+                data: Object.values(tendencyData),
+                backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                fill: false,
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Bar Graph: Most Spent Day vs Average Daily Spending
+    const comparisonData = {
+        "mostSpentDay": 150.0,
+        "averageDaily": 50.0
+    }; // Mock data for testing
+<!--    const comparisonData = /*[[${dayComparisonData}]]*/ {};-->
+    const dayComparisonCtx = document.getElementById('dayComparisonBarGraph').getContext('2d');
+    new Chart(dayComparisonCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Most Spent Day', 'Average Daily Spending'],
+            datasets: [{
+                label: 'Amount',
+                data: [comparisonData.mostSpentDay, comparisonData.averageDaily],
+                backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>
