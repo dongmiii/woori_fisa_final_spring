@@ -127,33 +127,33 @@
             margin-top: auto;  /* 이 부분이 footer를 페이지 하단으로 밀어줍니다 */
         }
 
-            .card-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
-            }
+        ..card-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
 
-            .card-item {
-                display: block;
-                text-align: center;
-                padding: 10px;
-            }
+        .card-item {
+            display: block;
+            text-align: center;
+            padding: 10px;
+        }
 
-            .card-table td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: center;
-                vertical-align: top;
-                width: 33.33%; /* 3개의 열로 나누기 */
-            }
+        .card-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+            width: 33.33%; /* 3개의 열로 나누기 */
+        }
 
-            /* 카드 이미지 스타일 */
-            .card-image {
-                width: 150px;  /* 이미지 가로 크기 */
-                height: 200px; /* 이미지 세로 크기 */
-                object-fit: cover; /* 이미지가 비율에 맞게 잘리도록 */
-                margin-bottom: 10px;
-            }
+        /* 카드 이미지 스타일 */
+        .card-image {
+            width: 150px;  /* 이미지 가로 크기 */
+            height: 200px; /* 이미지 세로 크기 */
+            object-fit: cover; /* 이미지가 비율에 맞게 잘리도록 */
+            margin-bottom: 10px;
+        }
             .message.bot {
                 background-color: #f1f1f1;
                 padding: 10px;
@@ -197,8 +197,6 @@
 <footer th:replace="fragments/footer :: footerFragment"></footer>
 <script>
 
-
-
     async function sendMessage() {
         const chatContent = document.getElementById('chatContent');
         const userInput = document.getElementById('userInput');
@@ -231,41 +229,22 @@
             const botMessage = data.response || "서버에서 응답이 없습니다.";
             updateLastBotMessageRaw(botMessage);
 
-            // 카드 정보 출력 (3개의 카드로 나누어 표시)
+            // 카드 정보 출력 (이름1 이름2 이름3<br> 사진1 사진2 사진3)
             if (data.cards && data.cards.length > 0) {
-                const table = document.createElement('table');
-                table.className = 'card-table';
-
-                let row = document.createElement('tr'); // 새로운 행 생성
-
-                // 3개 카드만 한 행에 나열
-                data.cards.slice(0, 3).forEach((card, index) => {
-                    const imageUrl = data.img_urls[index];
-                    const img = new Image();
-                    img.src = imageUrl;
-
-                    img.onload = function() {
-                        let transformStyle = '';
-                        // 이미지의 가로 세로 비율을 확인하여 회전 여부 결정
-                        if (img.width > img.height) {
-                            transformStyle = 'transform: rotate(90deg);';  // 가로가 더 길면 세로로 회전
-                        }
-
-                        const cardCell = `
-                        <td class="card-item">
-                            <strong>${card}</strong><br>
-                            <img src="${imageUrl}" alt="${card}" class="card-image" style="${transformStyle}">
-                        </td>
-                    `;
-                        row.innerHTML += cardCell;
-                    };
-                });
-
-                table.appendChild(row); // 행을 테이블에 추가
-
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message bot';
-                messageDiv.appendChild(table); // 테이블을 말풍선에 추가
+
+                // 카드 이름 1행에 나열
+                let cardNames = data.cards.slice(0, 3).join(' | ');
+                messageDiv.innerHTML += `<p>${cardNames}</p>`;
+
+                // 카드 이미지 2행에 나열
+                let cardImages = data.img_urls.slice(0, 3).map((imageUrl) => {
+                    return `<img src="${imageUrl}" alt="Card Image" class="card-image">`;
+                }).join(' ');
+
+                messageDiv.innerHTML += `<p>${cardImages}</p>`;
+
                 chatContent.appendChild(messageDiv);
             }
         } catch (error) {
@@ -275,7 +254,6 @@
 
         chatContent.scrollTop = chatContent.scrollHeight;
     }
-
 
 
     // raw 메시지 처리 (줄바꿈을 <br>로 변환)
