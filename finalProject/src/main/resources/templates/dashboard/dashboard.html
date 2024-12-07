@@ -1,173 +1,302 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:sec=""
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<title>DASHBOARD</title>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            margin: 0;
-            padding: 0 15%;
-            display: flex;
-            flex-direction: column;
-        }
-        .chart-container {
-            width: 70%;
-            margin: 20px auto;
-        }
-        h1 {
-            text-align: center;
-            margin: 0;
-        }
-    </style>
-
-    <!-- ========================= CSS here ========================= -->
+    <title>DASHBOARD</title>
+    
+        <!-- ========================= CSS here ========================= -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/LineIcons.3.0.css" />
     <link rel="stylesheet" href="/css/animate.css" />
     <link rel="stylesheet" href="/css/tiny-slider.css" />
     <link rel="stylesheet" href="/css/glightbox.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/dashboardmain.css" />
     <link rel="shortcut icon" type="image/x-icon" href="/images/logo/beeee.png" />
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+		<style>
+		    .chart-main {
+		        display: flex; /* Flexbox 활성화 */
+		        flex-direction: row; /* 가로 정렬 */
+		        flex-wrap: wrap; /* 화면 크기에 따라 줄 바꿈 */
+		        justify-content: space-between; /* 그래프 간 간격 균등 분배 */
+		        gap: 20px; /* 그래프 간 간격 */
+		        padding: 20px;
+		    }
+		
+		    .chart-category {
+		        flex: 0 1 48%; /* 전체 너비의 약 50% 차지 */
+		        max-width: 48%; /* 최대 너비 48% */
+		        padding: 20px;
+		        box-sizing: border-box;
+		        background: #ffffff;
+		        border-radius: 8px;
+		        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    }
+		
+		    .chart-card {
+		        flex: 0 1 48%; /* 전체 너비의 약 50% 차지 */
+		        max-width: 48%; /* 최대 너비 48% */
+		        padding: 20px;
+		        box-sizing: border-box;
+		        background: #ffffff;
+		        border-radius: 8px;
+		        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    }
+		
+		    canvas {
+		        width: 100%; /* 캔버스가 부모 요소 너비에 맞게 확장 */
+		        height: auto; /* 비율에 맞춰 높이 조정 */
+		    }
+		
+		    h3 {
+		        text-align: center;
+		        margin-bottom: 15px;
+		    }
+		    
+		    img{
+		    	 margin-bottom: 15px;
+		    }
+		</style>
+
+
 </head>
 
 <body>
+<header th:replace="fragments/header :: headerFragment"></header>
 <!-- - 시각화 -
      이번달 소비 대분류 관련 그래프(가장 많이 소비한 카테고리),
      카드 별 지출 내역,
      최근 일주일 소비 내역(라인차트),
      이번달 지출이 가장 많았던 날 -->
-<header th:replace="fragments/header :: headerFragment"></header>
-<h1>User Spending Dashboard</h1>
 
-<!-- Bar Graph: Last Month's Categorical Spending -->
-<div class="chart-container">
-    <h3>Last Month's Spending by Category</h3>
-    <canvas id="categoryBarGraph"></canvas>
+
+    <div class="hero-area">
+     
+		<div style="display: flex; align-items: center; justify-content: center;">
+		    <img src="/images/chart1.png" alt="chart1" width="50" height="50">
+		    <h3 style="margin-left: 5px; margin-right: 5px;"> 
+		    	<span th:text="${session.username}"></span> 님의 Spending Dashboard 
+		    </h3>
+		    <img src="/images/chart2.png" alt="chart2" width="50" height="50">
+		</div>
+
+    		
+        <div class="chart-main">
+
+			<!-- Bar Graph: Last Month's Categorical Spending -->
+			<div class="chart-category">
+			    <h3>Last Month's Spending by Category</h3>
+			    <canvas id="categoryBarGraph"></canvas>
+			</div>
+			
+			<!-- Bar Graph: Spending Amount Per Card -->
+			<div class="chart-card">
+			    <h3>Last Month's Spending Per Card</h3>
+			    <canvas id="cardBarGraph"></canvas>
+			</div>
+			
+			<!-- Line Graph: Last 7 Days Spending Tendency 
+			<div class="chart-container">
+			    <h3>Last 7 Days Spending Trend</h3>
+			    <canvas id="tendencyLineGraph"></canvas>
+			</div> -->
+			
+			<!-- Bar Graph: Most Spent Day vs Average Daily Spending 
+			<div class="chart-container">
+			    <h3>Most Spent Day of Last Month vs Average Daily Spending</h3>
+			    <canvas id="dayComparisonBarGraph"></canvas>
+			</div> -->
+			
+			
+			<div id="categoryPercentages" style="display: none;" aria-hidden="true">[[${categoryPercentages}]]</div>
+			<div id="cardSpendingData" style="display: none;" aria-hidden="true">[[${cardSpendingData}]]</div>
+			
+		</div>
 </div>
 
-<!-- Bar Graph: Spending Amount Per Card -->
-<div class="chart-container">
-    <h3>Last Month's Spending Per Card</h3>
-    <canvas id="cardBarGraph"></canvas>
-</div>
+<footer th:replace="fragments/footer :: footerFragment"></footer>
 
-<!-- Line Graph: Last 7 Days Spending Tendency -->
-<div class="chart-container">
-    <h3>Last 7 Days Spending Trend</h3>
-    <canvas id="tendencyLineGraph"></canvas>
-</div>
+	<script>
+	
+			document.addEventListener('DOMContentLoaded', function () {
+				
+			    // 숨겨진 <div> 태그에서 데이터 가져오기
+			    const categoryPercentagesElement = document.getElementById('categoryPercentages').textContent;
+			    const cardSpendingDataElement = document.getElementById('cardSpendingData').textContent;
+		
+			    // JSON 데이터로 파싱
+			    const categoryData = JSON.parse(categoryPercentagesElement || '{}');
+			    const cardData = JSON.parse(cardSpendingDataElement || '{}');
+		
+			    console.log("Category Data:", categoryData);
+			    console.log("Card Data:", cardData);
+		
+			    // Category Graph
+			    const categoryBarCtx = document.getElementById('categoryBarGraph').getContext('2d');
+			    new Chart(categoryBarCtx, {
+			        type: 'bar',
+			        data: {
+			            labels: Object.keys(categoryData),
+			            datasets: [{
+			                label: 'Spending Percentage (%)',
+			                data: Object.values(categoryData),
+			                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+			                borderColor: 'rgba(75, 192, 192, 1)',
+			                borderWidth: 1
+			            }]
+			        },
+			        options: {
+			            scales: {
+			                y: {
+			                    beginAtZero: true
+			                }
+			            }
+			        }
+			    });
+		
+			    // Card Graph
+			    const cardBarCtx = document.getElementById('cardBarGraph').getContext('2d');
+			    new Chart(cardBarCtx, {
+			        type: 'bar',
+			        data: {
+			            labels: Object.keys(cardData),
+			            datasets: [{
+			                label: 'Spending Amount',
+			                data: Object.values(cardData),
+			                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+			                borderColor: 'rgba(153, 102, 255, 1)',
+			                borderWidth: 1
+			            }]
+			        },
+			        options: {
+			            scales: {
+			                y: {
+			                    beginAtZero: true
+			                }
+			            }
+			        }
+			    });
+			});
 
-<!-- Bar Graph: Most Spent Day vs Average Daily Spending -->
-<div class="chart-container">
-    <h3>Most Spent Day of Last Month vs Average Daily Spending</h3>
-    <canvas id="dayComparisonBarGraph"></canvas>
-</div>
-
-<script>
-    // Bar Graph: Last Month's Spending by Category
-    const categoryData = /*[[${categoryPercentages}]]*/ {};
-    const categoryBarCtx = document.getElementById('categoryBarGraph').getContext('2d');
-    new Chart(categoryBarCtx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(categoryData),
-            datasets: [{
-                label: 'Spending Percentage (%)',
-                data: Object.values(categoryData),
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    // Bar Graph: Spending Amount Per Card
-    const cardData = /*[[${cardSpendingData}]]*/ {};
-    const cardBarCtx = document.getElementById('cardBarGraph').getContext('2d');
-    new Chart(cardBarCtx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(cardData),
-            datasets: [{
-                label: 'Spending Amount',
-                data: Object.values(cardData),
-                backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    // Line Graph: Last 7 Days Spending Trend
-    const tendencyData = /*[[${spendingTendencyData}]]*/ {};
-    const tendencyLineCtx = document.getElementById('tendencyLineGraph').getContext('2d');
-    new Chart(tendencyLineCtx, {
-        type: 'line',
-        data: {
-            labels: Object.keys(tendencyData),
-            datasets: [{
-                label: 'Daily Spending',
-                data: Object.values(tendencyData),
-                backgroundColor: 'rgba(255, 159, 64, 0.6)',
-                borderColor: 'rgba(255, 159, 64, 1)',
-                fill: false,
-                tension: 0.1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    // Bar Graph: Most Spent Day vs Average Daily Spending
-    const comparisonData = {
-        "mostSpentDay": 150.0,
-        "averageDaily": 50.0
-    }; // Mock data for testing
-<!--    const comparisonData = /*[[${dayComparisonData}]]*/ {};-->
-    const dayComparisonCtx = document.getElementById('dayComparisonBarGraph').getContext('2d');
-    new Chart(dayComparisonCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Most Spent Day', 'Average Daily Spending'],
-            datasets: [{
-                label: 'Amount',
-                data: [comparisonData.mostSpentDay, comparisonData.averageDaily],
-                backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
-                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
+	
+	    // Bar Graph: Last Month's Spending by Category
+	  // 	const categoryData = JSON.parse(/*[[${categoryPercentages}]]*/ '{}');
+	    
+	/*     console.log("Category Data:", categoryData);
+	    
+	    const categoryBarCtx = document.getElementById('categoryBarGraph').getContext('2d');
+	    console.log(document.getElementById('categoryBarGraph'));
+	    
+	    new Chart(categoryBarCtx, {
+	        type: 'bar',
+	        data: {
+	            labels: Object.keys(categoryData),
+	            datasets: [{
+	                label: 'Spending Percentage (%)',
+	                data: Object.values(categoryData),
+	                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+	                borderColor: 'rgba(75, 192, 192, 1)',
+	                borderWidth: 1
+	            }]
+	        },
+	        options: {
+	            scales: {
+	                y: {
+	                    beginAtZero: true
+	                }
+	            }
+	        }
+	    });
+	
+	
+	    // Bar Graph: Spending Amount Per Card
+	  //  const cardData = JSON.parse(/*[[${cardSpendingData}]]*/  // '{}');
+	    
+	/*     if (cardData['null']) {
+	        cardData['Unknown'] = cardData['null'];
+	        delete cardData['null'];
+	    }
+	    
+	    console.log("Card Data:", cardData);
+	    
+	    const cardBarCtx = document.getElementById('cardBarGraph').getContext('2d');
+	    console.log(document.getElementById('cardBarGraph'));
+	    
+	    new Chart(cardBarCtx, {
+	        type: 'bar',
+	        data: {
+	            labels: Object.keys(cardData),
+	            datasets: [{
+	                label: 'Spending Amount',
+	                data: Object.values(cardData),
+	                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+	                borderColor: 'rgba(153, 102, 255, 1)',
+	                borderWidth: 1
+	            }]
+	        },
+	        options: {
+	            scales: {
+	                y: {
+	                    beginAtZero: true
+	                }
+	            }
+	        }
+	    });  */
+	
+	
+	    // Line Graph: Last 7 Days Spending Trend
+	  //  const tendencyData = /*[[${spendingTendencyData}]]*/ {};
+	/*     const tendencyLineCtx = document.getElementById('tendencyLineGraph').getContext('2d');
+	    new Chart(tendencyLineCtx, {
+	        type: 'line',
+	        data: {
+	            labels: Object.keys(tendencyData),
+	            datasets: [{
+	                label: 'Daily Spending',
+	                data: Object.values(tendencyData),
+	                backgroundColor: 'rgba(255, 159, 64, 0.6)',
+	                borderColor: 'rgba(255, 159, 64, 1)',
+	                fill: false,
+	                tension: 0.1
+	            }]
+	        },
+	        options: {
+	            scales: {
+	                y: {
+	                    beginAtZero: true
+	                }
+	            }
+	        }
+	    }); */
+	
+	    // Bar Graph: Most Spent Day vs Average Daily Spending
+	//	const comparisonData = /*[[${dayComparisonData}]]*/ {};
+	/*     const dayComparisonCtx = document.getElementById('dayComparisonBarGraph').getContext('2d');
+	    new Chart(dayComparisonCtx, {
+	        type: 'bar',
+	        data: {
+	            labels: ['Most Spent Day', 'Average Daily Spending'],
+	            datasets: [{
+	                label: 'Amount',
+	                data: [comparisonData.mostSpentDay, comparisonData.averageDaily],
+	                backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)'],
+	                borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+	                borderWidth: 1
+	            }]
+	        },
+	        options: {
+	            scales: {
+	                y: {
+	                    beginAtZero: true
+	                }
+	            }
+	        }
+	    }); */
+	</script>
 </body>
 </html>

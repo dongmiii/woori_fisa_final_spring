@@ -290,17 +290,6 @@ public class HomeController {
 	}
 
 
-	@GetMapping("/dashboard")
-	public String dashboard(Model model) {
-		try {
-			log.info("Dashboard controller called");
-			return "dashboard/dashboard";
-		} catch (Exception e) {
-			log.error("Error in dashboard controller", e);
-			return "error";
-		}
-	}
-
 	@GetMapping("/calendar")
 	public String calendar() {
 		return "calendar/calendar"; // calendar.html로 매핑
