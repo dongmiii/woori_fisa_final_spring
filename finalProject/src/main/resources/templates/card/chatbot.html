@@ -182,7 +182,7 @@
             챗봇
         </div>
         <div class="chat-content" id="chatContent">
-            <div class="message bot">[[${session.username}]]님, 안녕하세요! 무엇을 도와드릴까요?</div>
+            <div class="message bot">[[${session.username != null ? session.username : 'WalletBee'}]]님, 안녕하세요! 무엇을 도와드릴까요?</div>
             <div id="userSession" aria-hidden="true" style="display: none;">[[${session.username}]]</div>
             <div id="userSessionId" aria-hidden="true" style="display: none;">[[${session.userid}]]</div>
         </div>
