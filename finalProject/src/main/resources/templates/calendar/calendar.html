@@ -25,22 +25,29 @@
     <link rel="stylesheet" href="/css/main.css" />
     
 <style>
-    /* 네비게이션 바와 콘텐츠 사이 여백 추가 */
-	    #main-content {
-	        margin-top: 150px; /* 여백을 150px로 설정 */
-	        display: flex; /* Flexbox 활성화 */
-	        flex-direction: row; /* 가로 방향 배치 */
-	        justify-content: center; /* 가운데 정렬 */
-	        gap: 20px; /* 요소 간 간격 */
-	        margin-bottom: 20px;
-	    }
-	
-	    /* 캘린더 영역 */
-	    #calendar {
-	        flex: 4; /* 비율 6 */
-	        max-width: 60%; /* 최대 너비 설정 */
-	        padding: 10px; /* 내부 여백 */
-	    }
+		
+		#main-content {
+		    height: 80vh; /* 화면 전체 높이의 80%로 조정 */
+		    width: 70%; /* 화면 너비의 70% */
+		    display: flex;
+		    flex-direction: row;
+		    justify-content: space-between; /* 내부 요소 간 균등 분배 */
+		    align-items: center; /* 세로축 기준 정렬 */
+		    gap: 15px; /* 요소 간 간격 */
+		    padding: 5px; /* 내부 여백 */
+		    margin: 0 auto; /* 가로축 기준 중앙 정렬 */
+		    margin-top: 10vh; /* 상단 여백 (화면 비율 기준) */
+		    box-sizing: border-box;
+		}
+		
+		#calendar {
+		    flex: 1;
+		    height: 90%; /* main-content 높이의 90% */
+		    background-color: #f9f9f9;
+		    border-radius: 8px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    overflow: hidden; /* 내용 넘침 방지 */ 
+		}
 	    
 		.fc-daygrid-day-number {
     		color: black; /* 날짜 숫자를 검정으로 설정 */
@@ -82,13 +89,16 @@
 	    }
 	    
 	
-	    /* 결제 내역 표 영역 */
-	    #payment-details-container {
-	        flex: 6;
-	        padding: 10px;
-	        align-items: center;
-	        gap: 20px; /* 표와 문구/버튼 간 간격 */
-	    }
+		#payment-details-container {
+		    flex-grow: 1; /* 남은 공간 차지 */
+		    overflow-y: auto; /* 테이블 스크롤 활성화 */
+		}
+		
+		#payment-details {
+		    width: 100%; /* 테이블 전체 너비 */
+		    border-collapse: collapse;
+		    table-layout: auto; /* 고정된 레이아웃 */
+		}
 	
 	    /* 표 컨테이너 */
 	    .table-container {
@@ -96,41 +106,42 @@
 	        justify-content: center;
 	    }
 	
-	    /* 결제 내역 표 스타일 */
-	    #payment-details {
-	        width: 100%; /* 표 너비 */
-	        border-collapse: collapse;
-			table-layout:auto;
-	    }
 	
-	    #payment-details th, #payment-details td {
-	        border: 1px solid #ddd;
-	        padding: 8px;
-	        text-align: center;
-	        white-space:nowrap;
-	    }
-	
-	    #payment-details th {
-	        background-color: #f4f4f4;
-	        font-weight: bold;
-	    }
+		#payment-details th, #payment-details td {
+		    border: 1px solid #ddd;
+		    padding: 8px;
+		    text-align: center;
+		    overflow: hidden; /* 넘침 숨기기 */
+		    text-overflow: ellipsis; /* 긴 텍스트 줄임표 */
+		    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+		}
+		
+		#payment-details th {
+		    background-color: #f4f4f4;
+		    font-weight: bold;
+		}
+
 	
 	    #payment-details tr:hover {
 	        background-color: #f1f1f1;
 	    }
 	    
-	    .payment-all{
-	    	display: flex;
-	        flex-direction: column;
-	        margin-top: 57px;
-	    	
-	    }
+		.payment-all {
+		    flex: 1;
+		    height: 90%; /* main-content 높이의 90% */
+		    background-color: #f9f9f9;
+		    border-radius: 8px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: space-between; /* 내부 요소 간 간격 유지 */
+		    overflow: hidden;
+		}
 	
-	    /* 요약 문구 및 버튼 컨테이너 */
-	    .summary-container {
-	        width: 90%; /* 동일한 너비로 정렬 */
-	        text-align: center;
-	    }
+		#summary-container {
+		    padding: 10px;
+		    text-align: center;
+		}
 	
 	    .summary {
 	        margin-left: 10px;
@@ -141,12 +152,8 @@
 	
 	    /* 버튼 스타일 */
 	    .feedback-buttons {
-	        display: flex;
-	        gap: 10px;
-	        align-items: center; /* 세로축 기준 정렬 */
-		    gap: 10px; /* 요소 간 간격 */
-		    margin-bottom: 15px;
-		    margin-left: 10px;
+		    padding: 10px;
+		    text-align: center;
 	    }
 		
 		.feedback-image {
@@ -265,15 +272,7 @@
 		    background-color: #9ae3a7 !important;
 		}
 	
-	    /* 네비게이션 바에 z-index 설정 */
-	    header {
-	        position: fixed; /* 상단 고정 */
-	        top: 0;
-	        left: 0;
-	        width: 100%;
-	        z-index: 1000; /* 캘린더보다 위에 위치 */
-	        background-color: #fff; /* 배경색 설정 */
-	    }
+
 </style>
 
 
@@ -299,7 +298,10 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- 동적으로 추가될 데이터 -->
+                    <!-- 동적으로 추가될 데이터 -->
+                    <tr>
+                        <td colspan="4">데이터가 없습니다.</td>
+                    </tr>
             </tbody>
         </table>
     </div>

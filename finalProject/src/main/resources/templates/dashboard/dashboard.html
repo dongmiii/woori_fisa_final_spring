@@ -58,14 +58,22 @@
 		        margin-bottom: 15px;
 		    }
 		    
-		    img{
+		    .chart-img{
 		    	 margin-bottom: 15px;
 		    }
-		</style>
+
+	    #main-content {
+	        margin-top: 150px; /* 여백을 150px로 설정 */
+	        display: flex; /* Flexbox 활성화 */
+	        flex-direction: column; /* 가로 방향 배치 */
+	        justify-content: center; /* 가운데 정렬 */
+	        gap: 20px; /* 요소 간 간격 */
+	        margin-bottom: 20px;
+	    }
+</style>
 
 
 </head>
-
 <body>
 <header th:replace="fragments/header :: headerFragment"></header>
 <!-- - 시각화 -
@@ -75,14 +83,14 @@
      이번달 지출이 가장 많았던 날 -->
 
 
-    <div class="hero-area">
+   <div id="main-content">
      
 		<div style="display: flex; align-items: center; justify-content: center;">
-		    <img src="/images/chart1.png" alt="chart1" width="50" height="50">
+		    <img class="chart-img" src="/images/chart1.png" alt="chart1" width="50" height="50">
 		    <h3 style="margin-left: 5px; margin-right: 5px;"> 
 		    	<span th:text="${session.username}"></span> 님의 Spending Dashboard 
 		    </h3>
-		    <img src="/images/chart2.png" alt="chart2" width="50" height="50">
+		    <img class="chart-img" src="/images/chart2.png" alt="chart2" width="50" height="50">
 		</div>
 
     		
