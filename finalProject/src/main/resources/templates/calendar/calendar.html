@@ -28,7 +28,7 @@
 		
 		#main-content {
 		    height: 80vh; /* 화면 전체 높이의 80%로 조정 */
-		    width: 70%; /* 화면 너비의 70% */
+		    width: 80%; /* 화면 너비의 80% */
 		    display: flex;
 		    flex-direction: row;
 		    justify-content: space-between; /* 내부 요소 간 균등 분배 */
@@ -41,7 +41,7 @@
 		}
 		
 		#calendar {
-		    flex: 1;
+		    flex: 0 0 60%; /* 가로 비율 60% */
 		    height: 90%; /* main-content 높이의 90% */
 		    background-color: #f9f9f9;
 		    border-radius: 8px;
@@ -127,7 +127,7 @@
 	    }
 	    
 		.payment-all {
-		    flex: 1;
+		    flex: 0 0 40%; /* 가로 비율 40% */
 		    height: 90%; /* main-content 높이의 90% */
 		    background-color: #f9f9f9;
 		    border-radius: 8px;
@@ -313,7 +313,7 @@
         
        	<!-- 해당 날짜의 소비 평가 -->
         <div class="feedback-buttons">
-            <span id="today" style="font-size: 17px">오늘의 소비는 ?</span>
+            <span id="today" style="font-size: 17px">오늘의 소비는 ?  </span>
               <img src="/images/ThumbUp.png"  alt="좋아요" class="feedback-image" id="good-button" width="50" height="50">
   			  <img src="/images/ThumbDown.png" alt="별로에요" class="feedback-image" id="bad-button" width="50" height="50">
   			  <div id="feedback-result" class="feedback-result"></div>

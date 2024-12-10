@@ -14,19 +14,18 @@
             display: flex;
             justify-content: center;  /* 가로로 중앙 정렬 */
             align-items: center;      /* 세로로 중앙 정렬 */
-            height: 100vh;            /* 화면 전체 높이를 사용 */
             flex-direction: column;   /* 세로 방향으로 정렬 */
         }
 
         .chat-container {
             display: flex;
             width: 900px;
-            height: 600px;
+            height: 700px;
             background-color: white;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 120px; /* header와의 간격 추가 */
+            margin-top: 140px; /* header와의 간격 추가 */
         }
         .chat-history h3 {
             text-align: center;
@@ -49,7 +48,7 @@
         }
         .add-conversation button {
             padding: 8px 12px;
-            background-color: #0078d7;
+            background-color: #83CADF;
             color: white;
             border: none;
             border-radius: 5px;
@@ -57,7 +56,7 @@
             margin-top: 10px;
         }
         .add-conversation button:hover {
-            background-color: #005bb5;
+            background-color: #A6E5B1;
         }
         .chatbot-container {
             flex: 2;
@@ -65,7 +64,9 @@
             flex-direction: column;
         }
         .chat-header {
-            background-color: #0078d7;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            background-color: #83CADF;
             color: white;
             text-align: center;
             padding: 10px;
@@ -86,7 +87,7 @@
             max-width: 70%;
         }
         .chat-content .message.user {
-            background-color: #0078d7;
+            background-color: #83CADF;
             color: white;
             margin-left: auto;
         }
@@ -98,6 +99,7 @@
             display: flex;
             padding: 10px;
             border-top: 1px solid #ccc;
+            margin-top: auto;
         }
         .chat-input input {
             flex: 1;
@@ -109,7 +111,7 @@
         .chat-input button {
             margin-left: 10px;
             padding: 10px 15px;
-            background-color: #0078d7;
+            background-color: #83CADF;
             color: white;
             border: none;
             border-radius: 5px;
@@ -118,14 +120,7 @@
         .chat-input button:hover {
             background-color: #005bb5;
         }
-        footer {
-            background-color: #f9f9f9;
-            height: 60px;
-            text-align: center;
-            padding: 10px 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            margin-top: auto;  /* 이 부분이 footer를 페이지 하단으로 밀어줍니다 */
-        }
+
 
         ..card-table {
             width: 100%;
@@ -176,7 +171,6 @@
 <body>
 <header th:replace="~{fragments/header :: headerFragment}"></header> <!-- Thymeleaf fragment 수정 -->
 <div class="chat-container">
-
     <div class="chatbot-container">
         <div class="chat-header" id="chatHeader">
             챗봇
@@ -194,7 +188,6 @@
     </div>
 
 </div>
-<footer th:replace="fragments/footer :: footerFragment"></footer>
 <script>
 
     async function sendMessage() {
@@ -298,6 +291,6 @@
     });
 
 </script>
-
+<footer th:replace="fragments/footer :: footerFragment"></footer>
 </body>
 </html>
