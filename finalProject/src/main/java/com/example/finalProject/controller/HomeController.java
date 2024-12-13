@@ -144,18 +144,26 @@ public class HomeController {
 	}
 
 	@GetMapping("/")
-	public String Home(@RequestParam(value = "forceRefresh", required = false) String forceRefresh,
+	public String Home(@RequestParam(value = "forceRefresh", defaultValue = "false") String forceRefresh,
 					   HttpSession session,
 					   Model model) {
+		
+		 System.out.println("Home method called with forceRefresh=" + forceRefresh);
+		
+		
 		// 특정 세션 속성 초기화 로직
 		if ("true".equals(forceRefresh)) {
+			 System.out.println("Force refresh triggered");
 			// 기존 세션 속성 제거
 			session.removeAttribute("userImage");
 			session.removeAttribute("prompt");
 			// 새로운 데이터를 불러오기
+			
 			String userEmail = (String) session.getAttribute("usermail"); // 세션에서 사용자 이메일 가져오기
 			
 			if (userEmail != null) {
+				  System.out.println("Fetching updated member data for email: " + userEmail);
+				  
 				// 사용자 정보 가져오기
 				MemberEntity member = memberService.findByEmail(userEmail); // 이메일로 사용자 조회
 				if (member != null) {
@@ -199,6 +207,7 @@ public class HomeController {
 	    if (userEmail != null) {
 	        int currentHoney = (int) session.getAttribute("honey");
 	        model.addAttribute("honey", currentHoney);
+	        System.out.println("Current honey value added to model: " + currentHoney);
 	    }
 		
 		return "index";

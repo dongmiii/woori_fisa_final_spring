@@ -90,7 +90,7 @@
 		<div style="display: flex; align-items: center; justify-content: center;">
 		    <img class="chart-img" src="/images/chart1.png" alt="chart1" width="50" height="50">
 		    <h3 style="margin-left: 5px; margin-right: 5px;"> 
-		    	<span th:text="${session.username}"></span> 님의 Spending Dashboard 
+		    	<span th:text="${session.username}"></span> 님의 소비 분석 대시보드
 		    </h3>
 		    <img class="chart-img" src="/images/chart2.png" alt="chart2" width="50" height="50">
 		</div>
@@ -100,13 +100,13 @@
 
 			<!-- Bar Graph: Last Month's Categorical Spending -->
 			<div class="chart-category">
-			    <h3>Last Month's Spending by Category</h3>
+			    <h3>지난달 카테고리별 소비 비율</h3>
 			    <canvas id="categoryBarGraph"></canvas>
 			</div>
 			
 			<!-- Bar Graph: Spending Amount Per Card -->
 			<div class="chart-card">
-			    <h3>Last Month's Spending Per Card</h3>
+			    <h3>지난달 카드별 소비 금액</h3>
 			    <canvas id="cardBarGraph"></canvas>
 			</div>
 			
