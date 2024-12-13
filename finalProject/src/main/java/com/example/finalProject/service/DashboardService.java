@@ -65,7 +65,7 @@ public class DashboardService {
         Map<String, Double> cardTotals = new HashMap<>();
         for (PaymentEntity payment : payments) {
         	 System.out.println("Processing Payment: " + payment);
-        	String cardName = payment.getCardName() != null ? payment.getCardName() : "Unknown";
+        	String cardName = payment.getCardName() != null ? payment.getCardName() : "기타";
         	cardTotals.merge(cardName, payment.getAmount().doubleValue(), Double::sum);
 //            cardTotals.merge(payment.getCardName(), payment.getAmount().doubleValue(), Double::sum);
         }

@@ -174,8 +174,21 @@ public class PaymentController {
         boolean alreadyAdd = paymentRepository.existsByMemberIdAndDatetimeBetween(
                 memberId, today.atStartOfDay(), today.plusDays(1).atStartOfDay());
 
-        if(!alreadyAdd) {
-        	memberService.addHoney(memberId, 1);
+        // Honey 값 업데이트 (한 번만 추가하거나 조건에 맞춰 갱신)
+//        if (!alreadyAdd) {
+//            memberService.addHoney(memberId, 1); // Honey 값 추가
+//            System.out.println("Honey 값 증가: +1");
+//        } else {
+//            System.out.println("오늘 이미 Honey가 증가되었습니다.");
+//        }
+        
+        memberService.addHoney(memberId, 1); // Honey 값 추가
+        
+        // 최신화된 Honey 값 가져오기
+        Integer updatedHoney = memberService.getHoneyById(memberId); // 최신 Honey 값 조회
+        if (updatedHoney != null) {
+            session.setAttribute("honey", updatedHoney); // 세션에 최신화된 Honey 값 저장
+            System.out.println("세션에 저장된 Honey 값: " + updatedHoney);
         }
         
         // 데이터 저장
