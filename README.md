@@ -21,7 +21,11 @@
 
 ## 개선 사항
 - **캘린더 기능 수정**
-  - 사용자가 입력하는 식이 아닌 이미 사용중인 캘린더를 연동하여 보여줍니다.
+  - 사용자가 입력하는 식이 아닌 이미 사용중인 캘린더를 연동하여 보여주기
+
+- **소비 예측 모델**
+  - 시계열을 반영하여 모델링하기
+  - 다양한 모델 사용해보기
 
 ---
 
@@ -39,19 +43,12 @@
   - 연령대마다 소비 카테고리 비율 차이
 
 ## 시스템 아키텍처
-
+![그림3](https://github.com/user-attachments/assets/8f5e02d6-d9fd-4570-ab83-85f77fb0895b)
 
 ## 세팅 방법
-```bash
-$ git clone {repository} {directory}
-$ pip install -r requirements.txt
-$ streamlit run main.py
-```
+
 
 ## 참고
-- [서울 열린 데이터 광장](https://data.seoul.go.kr/dataList/OA-21235/S/1/datasetView.do)
-- [pydeck](https://deckgl.readthedocs.io/en/latest/)
-- [geopy](https://geopy.readthedocs.io/en/stable/)
-- [requests](https://docs.python-requests.org/en/master/)
+- 
 
 
