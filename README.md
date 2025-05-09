@@ -1,8 +1,4 @@
-### Members
-
-- [@dongmiii](https://github.com/dongmiii)
-
-# 우리FISA :: “개인 맞춤 종합 소비 플랫폼”
+# 우리FISA :: 개인 맞춤 종합 소비 플랫폼
 
 ![image](https://github.com/user-attachments/assets/98eba53a-1446-4b71-84bf-fb78c6ee695c)
 
@@ -51,8 +47,3 @@
 - **소비 예측 모델**
   - 시계열을 반영하여 모델링하기
   - 다양한 모델 사용해보기
-
-## 참고
-- 
-
-
